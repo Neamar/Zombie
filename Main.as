@@ -29,6 +29,8 @@
 			Main.stage = this.stage;
 			
 			addChild(new Level());
+			
+			addChild(new movieMonitor());
 		}
 		
 	}

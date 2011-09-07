@@ -1,5 +1,6 @@
 package 
 {
+	import flash.display.BitmapData;
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
@@ -25,9 +26,11 @@ package
 		public var bindings:Object = { UP:38, DOWN:40, LEFT:37, RIGHT:39 };
 		public var downKeys:Vector.<int> = new Vector.<int>();
 		public var hitmapTest:Function;
+		public var heatmap:Heatmap;
+		public var influence:Shape = new Shape();
 		public var lightMask:Shape = new Shape();
 		
-		public function Player()
+		public function Player(parent:Level)
 		{
 			x = 200;
 			y = 200;
@@ -42,8 +45,13 @@ package
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
-			var that:Player = this;
-			addEventListener(Event.ADDED_TO_STAGE, function(e:Event):void { that.hitmapTest = (that.parent as Level).hitmap.bitmapData.getPixel32; } );
+			hitmapTest = parent.hitmap.bitmapData.getPixel32;
+			heatmap = parent.heatmap;
+			heatmap.addNewLayer('player');
+			var transformationMatrix:Matrix = new Matrix();
+			transformationMatrix.createGradientBox(Main.WIDTH, Main.HEIGHT, 0, -Main.WIDTH2, -Main.HEIGHT2);
+			influence.graphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, .5], [0, 255], transformationMatrix);
+			influence.graphics.drawCircle(0, 0, Main.WIDTH);
 		}
 		
 		protected function onKeyDown(e:KeyboardEvent):void
@@ -142,6 +150,15 @@ package
 				
 				maskGraphics.lineTo(x, y);
 				maskGraphics.endFill();
+				
+				//Influence
+				if (Math.random() * 10 > 9.5)
+				{
+					var playerInfluence:BitmapData = heatmap.getLayer('player');
+					playerInfluence.fillRect(heatmap.rect, 0x00FFFFFF);
+					playerInfluence.draw(influence, new Matrix(1, 0, 0, 1, x, y));
+					heatmap.apply();
+				}
 			}
 		}
 	}

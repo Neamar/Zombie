@@ -41,6 +41,11 @@ package
 			layers[name] = bd;
 			apply();
 		}
+		
+		public function getLayer(name:String):BitmapData
+		{
+			return layers[name];
+		}
 	}
 	
 }

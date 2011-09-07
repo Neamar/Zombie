@@ -1,10 +1,12 @@
 package 
 {
+	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Matrix;
 	
 	/**
 	 * ...
@@ -17,7 +19,7 @@ package
 		public const HIGH_VISIBILITY2:int = 30;
 		public const LOW_VISIBILITY2:int = 80;
 		public const HIGH_RESOLUTION:int = 15;
-		public const LOW_RESOLUTION:int = 5;
+		public const LOW_RESOLUTION:int = 25;
 		public const TO_RADIANS:Number = 0.0174532925;
 		public const TO_DEGREE:Number = 57.2957795;
 		public var bindings:Object = { UP:38, DOWN:40, LEFT:37, RIGHT:39 };
@@ -112,40 +114,18 @@ package
 				var step:Number;
 				
 				maskGraphics.clear();
-				maskGraphics.beginFill(0, .8);
-				maskGraphics.drawRect(0, 0, Main.WIDTH, Main.HEIGHT);
-				maskGraphics.endFill();
 				//Nearly-visible "left"-part
 				maskGraphics.moveTo(x, y);
-				maskGraphics.beginFill(0, .4);
+				var transformationMatrix:Matrix = new Matrix();
+				transformationMatrix.createGradientBox(Main.WIDTH, Main.HEIGHT, 0, -Main.WIDTH2 + x, -Main.HEIGHT2 + y);
+				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);
 				step = Math.abs(startAngleLowResolution - startAngleHighResolution) / LOW_RESOLUTION;
-				for (theta = startAngleLowResolution; theta <= startAngleHighResolution + .01; theta += step)
+				for (theta = startAngleLowResolution; theta <= endAngleLowResolution + .01; theta += step)
 				{
 					radius = raycast(theta);
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
-				maskGraphics.moveTo(x, y);
-				maskGraphics.endFill();
 				
-				//Visible part
-				maskGraphics.beginFill(0, 0);
-				step = Math.abs(startAngleHighResolution - endAngleHighResolution) / HIGH_RESOLUTION;
-				for (theta = startAngleHighResolution; theta <= endAngleHighResolution + .01; theta += step)
-				{
-					radius = raycast(theta);
-					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
-				}
-				maskGraphics.lineTo(x, y);
-				maskGraphics.endFill();
-				
-				//Nearly-visible "right"-part
-				maskGraphics.beginFill(0, .4);
-				step = Math.abs(endAngleHighResolution - endAngleLowResolution) / LOW_RESOLUTION;
-				for (theta = endAngleHighResolution; theta <= endAngleLowResolution + .01; theta += step)
-				{
-					radius = raycast(theta);
-					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
-				}
 				maskGraphics.lineTo(x, y);
 				maskGraphics.endFill();
 			}

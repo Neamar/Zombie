@@ -24,7 +24,10 @@ package
 			addChild(new BitmapLevel());
 			addChild(player);
 			addChild(player.lightMask);
-			//mask = player.lightMask;
+			
+			player.lightMask.cacheAsBitmap = true;
+			this.cacheAsBitmap = true;
+			mask = player.lightMask;
 		}
 	}
 	

@@ -1,6 +1,7 @@
 ﻿package 
 {
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 	
 	/**
@@ -9,6 +10,7 @@
 	 */
 	public class Main extends Sprite 
 	{
+		public static var stage:Stage;
 		
 		public function Main():void 
 		{
@@ -20,6 +22,9 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
+			Main.stage = this.stage;
+			
+			addChild(new Level());
 		}
 		
 	}

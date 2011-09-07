@@ -18,7 +18,7 @@ package
 		{
 			hitmap = new Hitmap();
 			player = new Player();
-			
+			hitmap.bitmapData.lock();
 			addChild(hitmap);
 			addChild(player);
 		}

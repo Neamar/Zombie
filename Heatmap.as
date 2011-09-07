@@ -2,6 +2,8 @@ package
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.IBitmapDrawable;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
@@ -34,13 +36,16 @@ package
 		 */
 		public function apply():void
 		{
+			bitmapData.lock();
 			//Clean
 			bitmapData.fillRect(rect, 0xFFFFFFFF);
 			
 			//Redraw
-			for each(var layer:* in layers)
+			for each(var layer:Object in layers)
 			{
-				bitmapData.draw(layer);
+				var ibd:IBitmapDrawable = layer.ibd;
+				var matrix:Matrix = layer.matrix;
+				bitmapData.draw(ibd, matrix);
 			}
 		}
 		
@@ -52,27 +57,27 @@ package
 		public function addNewLayer(name:String):BitmapData
 		{
 			var newLayer:BitmapData = new BitmapData(Main.LEVEL_WIDTH, Main.LEVEL_HEIGHT, true, 0x00FFFFFF);
-			addLayer(name, newLayer);
+			setLayer(name, newLayer);
 			return newLayer;
 		}
 		
 		/**
 		 * Add existing bitmap data as layer.
 		 * @param	name
-		 * @param	bd
+		 * @param	ibd
 		 */
-		public function addLayer(name:String, bd:BitmapData):void
+		public function setLayer(name:String, ibd:IBitmapDrawable, matrix:Matrix = null):void
 		{
-			layers[name] = bd;
+			layers[name] = {ibd:ibd, matrix:matrix};
 			apply();
 		}
 		
 		/**
 		 * Retrieve layer by name
 		 * @param	name
-		 * @return layer (or undefined)
+		 * @return layer & matrix (or undefined)
 		 */
-		public function getLayer(name:String):BitmapData
+		public function getLayer(name:String):Object
 		{
 			return layers[name];
 		}

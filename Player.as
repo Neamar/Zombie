@@ -102,10 +102,9 @@ package
 			
 			hitmapTest = parent.hitmap.bitmapData.getPixel32;
 			heatmap = parent.heatmap;
-			heatmap.addNewLayer('player');
 			var transformationMatrix:Matrix = new Matrix();
 			transformationMatrix.createGradientBox(Main.WIDTH, Main.HEIGHT, 0, -Main.WIDTH2, -Main.HEIGHT2);
-			influence.graphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, .5], [0, 255], transformationMatrix);
+			influence.graphics.beginGradientFill(GradientType.RADIAL, [0xFFFFFF, 0xFFFFFF], [1, .5], [0, 255], transformationMatrix);
 			influence.graphics.drawCircle(0, 0, Main.WIDTH);
 		}
 		
@@ -210,12 +209,9 @@ package
 				maskGraphics.endFill();
 				
 				//Influence
-				if (Math.random() * 10 > 9.5)
+				if (Math.random() * 10 >= 5)
 				{
-					var playerInfluence:BitmapData = heatmap.getLayer('player');
-					playerInfluence.fillRect(heatmap.rect, 0x00FFFFFF);
-					playerInfluence.draw(influence, new Matrix(1, 0, 0, 1, x, y));
-					heatmap.apply();
+					heatmap.setLayer('player', influence, new Matrix(1, 0, 0, 1, x, y));
 				}
 			}
 		}

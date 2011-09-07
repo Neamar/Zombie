@@ -45,9 +45,9 @@ package
 			hitmap.bitmapData.lock();
 			
 			//Landscape influence, to allow foe to escape obstacles.
-			var landscapeInfluence:BitmapData = heatmap.addNewLayer('landscape');
+			var landscapeInfluence:BitmapData = new BitmapData(Main.LEVEL_WIDTH, Main.LEVEL_HEIGHT, true, 0x00FFFFFF);
 			landscapeInfluence.applyFilter(hitmap.bitmapData, hitmap.bitmapData.rect, new Point(), new GlowFilter(0, 1, 30, 30, 2, 12 ));
-			heatmap.apply();
+			heatmap.setLayer('landscape', landscapeInfluence);
 			
 			//Layouting everything on the display list
 			addChild(bitmapLevel);

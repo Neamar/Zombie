@@ -11,6 +11,10 @@
 	public class Main extends Sprite 
 	{
 		public static var stage:Stage;
+		public static const WIDTH:int = 400;
+		public static const WIDTH2:int = WIDTH / 2;
+		public static const HEIGHT:int = 400;
+		public static const HEIGHT2:int = HEIGHT / 2;
 		
 		public function Main():void 
 		{

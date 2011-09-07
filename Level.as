@@ -55,6 +55,31 @@ package
 			this.cacheAsBitmap = true;
 			mask = player.lightMask;
 			
+			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, toggleDebugMode);
 		}
+		
+		public function toggleDebugMode(e:KeyboardEvent):void
+		{
+			if(e.keyCode == 84)
+			{
+				if (bitmapLevel.parent == this)
+				{
+					removeChild(bitmapLevel);
+					removeChild(player.lightMask);
+					addChild(heatmap);
+					mask = null;
+				}
+				else
+				{
+					removeChild(heatmap);
+					addChild(bitmapLevel);
+					addChild(player.lightMask);
+					mask = player.lightMask;
+				}
+				
+				setChildIndex(player, numChildren - 1);
+			}
+		}
+	}
 	
 }

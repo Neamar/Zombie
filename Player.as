@@ -6,6 +6,7 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	
 	/**
@@ -16,7 +17,8 @@ package
 	{
 		public const RADIUS:int = 10;
 		public const SPEED:int = 4;
-		public const VISIBILITY2:int = 60;
+		public const ANGULAR_VISIBILITY2:int = 50;
+		public const DEPTH_VISIBILITY:int = Main.WIDTH2;
 		public const RESOLUTION:int = 25;
 		public const TO_RADIANS:Number = 0.0174532925;
 		public const TO_DEGREE:Number = 57.2957795;
@@ -34,6 +36,7 @@ package
 			this.graphics.beginFill(0xAAAAAA, 1);
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineTo(0, 0);
+			lightMask.filters = [new BlurFilter()];
 			
 			addEventListener(Event.ENTER_FRAME, onFrame);
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
@@ -99,8 +102,8 @@ package
 			if (hasMoved)
 			{
 				//Torch & masking
-				var startAngle:Number = ((rotation - VISIBILITY2) % 360) * TO_RADIANS;
-				var endAngle:Number = ((rotation + VISIBILITY2) % 360) * TO_RADIANS;
+				var startAngle:Number = ((rotation - ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
+				var endAngle:Number = ((rotation + ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
 				
 				var maskGraphics:Graphics = lightMask.graphics;
 				var theta:Number;
@@ -120,7 +123,7 @@ package
 				maskGraphics.moveTo(x, y);
 				
 				var transformationMatrix:Matrix = new Matrix();
-				transformationMatrix.createGradientBox(Main.WIDTH, Main.HEIGHT, 0, -Main.WIDTH2 + x, -Main.HEIGHT2 + y);
+				transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0, -DEPTH_VISIBILITY + x, -DEPTH_VISIBILITY + y);
 				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);
 				step = Math.abs(startAngle - endAngle) / RESOLUTION;
 				for (theta = startAngle; theta <= endAngle + .01; theta += step)
@@ -129,7 +132,7 @@ package
 					while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) == 0)
 					{
 						radius += 2;
-						if (radius > Main.WIDTH2)
+						if (radius > DEPTH_VISIBILITY)
 						{
 							break;
 						}

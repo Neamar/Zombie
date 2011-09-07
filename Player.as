@@ -108,7 +108,17 @@ package
 				var step:Number;
 				
 				maskGraphics.clear();
+				
+				//Tout gris
+				maskGraphics.beginFill(0, .05);
+				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.HEIGHT2, Main.WIDTH, Main.HEIGHT);
+				//Player visible
+				maskGraphics.beginFill(0, 1);
+				maskGraphics.drawCircle(x, y, RADIUS);
+				maskGraphics.endFill();
+				//Lampe torche
 				maskGraphics.moveTo(x, y);
+				
 				var transformationMatrix:Matrix = new Matrix();
 				transformationMatrix.createGradientBox(Main.WIDTH, Main.HEIGHT, 0, -Main.WIDTH2 + x, -Main.HEIGHT2 + y);
 				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);

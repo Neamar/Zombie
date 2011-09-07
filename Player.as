@@ -46,7 +46,8 @@ package
 		
 		protected function onFrame(e:Event):void
 		{
-			trace(downKeys.length);
+			var angle:Number = Math.atan2(y - parent.mouseY, x - parent.mouseX);
+			rotation = (Math.PI + angle) * 57.2957795;
 			for each(var downKey:int in downKeys)
 			{
 				if (downKey == bindings.UP)
@@ -58,14 +59,6 @@ package
 				{
 					x -= SPEED * Math.cos(rotation * 0.0174532925);
 					y -= SPEED * Math.sin(rotation * 0.0174532925);
-				}
-				else if (downKey == bindings.LEFT)
-				{
-					rotation -= SPEED;
-				}
-				else if (downKey == bindings.RIGHT)
-				{
-					rotation += SPEED;
 				}
 			}
 		}

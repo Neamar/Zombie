@@ -48,17 +48,24 @@ package
 		{
 			var angle:Number = Math.atan2(y - parent.mouseY, x - parent.mouseX);
 			rotation = (Math.PI + angle) * 57.2957795;
-			for each(var downKey:int in downKeys)
+			if (downKeys.length > 0)
 			{
-				if (downKey == bindings.UP)
+				var cos:Number = Math.cos(rotation * 0.0174532925);
+				var sin:Number = Math.sin(rotation * 0.0174532925);
+				var hitmapTest:Function = (parent as Level).hitmap.bitmapData.getPixel32;
+				
+				for each(var downKey:int in downKeys)
 				{
-					x += SPEED * Math.cos(rotation * 0.0174532925);
-					y += SPEED * Math.sin(rotation * 0.0174532925);
-				}
-				else if (downKey == bindings.DOWN)
-				{
-					x -= SPEED * Math.cos(rotation * 0.0174532925);
-					y -= SPEED * Math.sin(rotation * 0.0174532925);
+					if (downKey == bindings.UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) == 0)
+					{
+						x += SPEED * Math.cos(rotation * 0.0174532925);
+						y += SPEED * Math.sin(rotation * 0.0174532925);
+					}
+					else if (downKey == bindings.DOWN && hitmapTest(x - RADIUS * cos, y - RADIUS * sin) == 0)
+					{
+						x -= SPEED * Math.cos(rotation * 0.0174532925);
+						y -= SPEED * Math.sin(rotation * 0.0174532925);
+					}
 				}
 			}
 		}

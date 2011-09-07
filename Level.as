@@ -1,6 +1,7 @@
 package 
 {
 	import flash.display.Bitmap;
+	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	
 	/**
@@ -9,7 +10,8 @@ package
 	 */
 	public class Level extends Sprite
 	{
-		[Embed(source = "assets/testlevel.png")] private static var Hitmap:Class;
+		[Embed(source = "assets/testlevelHitmap.png")] private static var Hitmap:Class;
+		[Embed(source = "assets/testlevelBitmap.png")] private static var BitmapLevel:Class;
 		
 		public var player:Player;
 		public var hitmap:Bitmap;
@@ -19,8 +21,10 @@ package
 			hitmap = new Hitmap();
 			player = new Player();
 			hitmap.bitmapData.lock();
-			addChild(hitmap);
+			addChild(new BitmapLevel());
 			addChild(player);
+			addChild(player.lightMask);
+			//mask = player.lightMask;
 		}
 	}
 	

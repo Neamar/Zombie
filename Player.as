@@ -1,6 +1,7 @@
 package 
 {
 	import flash.display.Graphics;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -24,6 +25,7 @@ package
 		public var lowResolution:int = LOW_RESOLUTION;
 		public var highResolution:int = HIGH_RESOLUTION;
 		public var hitmapTest:Function;
+		public var lightMask:Shape = new Shape();
 		
 		public function Player()
 		{
@@ -99,41 +101,70 @@ package
 			if (hasMoved)
 			{
 				//Torch & masking
-				this.graphics.clear();
-				this.graphics.lineStyle(2);
-				this.graphics.beginFill(0xAAAAAA, 1);
-				this.graphics.drawCircle(0, 0, RADIUS);
-				this.graphics.endFill();
-				this.graphics.lineTo(0, 0);
-				
 				var startAngleLowResolution:Number = ((rotation - LOW_VISIBILITY2) % 360) * TO_RADIANS;
 				var startAngleHighResolution:Number = ((rotation - HIGH_VISIBILITY2) % 360) * TO_RADIANS;
 				var endAngleHighResolution:Number = ((rotation + HIGH_VISIBILITY2) % 360) * TO_RADIANS;
 				var endAngleLowResolution:Number = ((rotation + LOW_VISIBILITY2) % 360) * TO_RADIANS;
 				
-				var parentGraphics:Graphics = (this.parent as Level).graphics;
-				parentGraphics.clear();
-				parentGraphics.moveTo(x, y);
-				parentGraphics.lineStyle(2, 0xFF);
+				var maskGraphics:Graphics = lightMask.graphics;
+				var theta:Number;
+				var radius:int;
+				var step:Number;
 				
-				for (var theta:Number = startAngleHighResolution; theta <= endAngleHighResolution; theta += Math.abs(startAngleHighResolution - endAngleHighResolution) / HIGH_RESOLUTION)
+				maskGraphics.clear();
+				maskGraphics.beginFill(0, .8);
+				maskGraphics.drawRect(0, 0, Main.WIDTH, Main.HEIGHT);
+				maskGraphics.endFill();
+				//Nearly-visible "left"-part
+				maskGraphics.moveTo(x, y);
+				maskGraphics.beginFill(0, .4);
+				step = Math.abs(startAngleLowResolution - startAngleHighResolution) / LOW_RESOLUTION;
+				for (theta = startAngleLowResolution; theta <= startAngleHighResolution + .01; theta += step)
 				{
-					//Raycast
-					var radius:int = 0;
-					while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) == 0)
-					{
-						radius += 2;
-						if (radius > Main.WIDTH2)
-						{
-							break;
-						}
-					}
-					
-					parentGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
+					radius = raycast(theta);
+					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
-				parentGraphics.lineTo(x, y);
+				maskGraphics.moveTo(x, y);
+				maskGraphics.endFill();
+				
+				//Visible part
+				maskGraphics.beginFill(0, 0);
+				step = Math.abs(startAngleHighResolution - endAngleHighResolution) / HIGH_RESOLUTION;
+				for (theta = startAngleHighResolution; theta <= endAngleHighResolution + .01; theta += step)
+				{
+					radius = raycast(theta);
+					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
+				}
+				maskGraphics.lineTo(x, y);
+				maskGraphics.endFill();
+				
+				//Nearly-visible "right"-part
+				maskGraphics.beginFill(0, .4);
+				step = Math.abs(endAngleHighResolution - endAngleLowResolution) / LOW_RESOLUTION;
+				for (theta = endAngleHighResolution; theta <= endAngleLowResolution + .01; theta += step)
+				{
+					radius = raycast(theta);
+					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
+				}
+				maskGraphics.lineTo(x, y);
+				maskGraphics.endFill();
 			}
 		}
+		
+		protected function raycast(theta:Number):int
+		{
+			//Raycast
+			var radius:int = 0;
+			while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) == 0)
+			{
+				radius += 2;
+				if (radius > Main.WIDTH2)
+				{
+					break;
+				}
+			}
+			
+			return radius;
+		}
 	}
-	
 }

@@ -16,31 +16,86 @@ package
 	 */
 	public class Player extends Sprite
 	{
+		/**
+		 * Player radius
+		 */
 		public const RADIUS:int = 10;
+		
+		/**
+		 * Player speed when moving
+		 */
 		public const SPEED:int = 4;
+		
+		/**
+		 * Half-angular visiblity. Should be 180° in realistic game, however 100 gives more fun.
+		 */
 		public const ANGULAR_VISIBILITY2:int = 50;
+		
+		/**
+		 * Max width one may see if no obstacles in front.
+		 */
 		public const DEPTH_VISIBILITY:int = Main.WIDTH2;
+		
+		/**
+		 * Number of rays to throw.
+		 */
 		public const RESOLUTION:int = 25;
+		
+		/**
+		 * Mathematic constant = Math.PI / 180
+		 * rad = deg * TO_RADIANS
+		 */
 		public const TO_RADIANS:Number = 0.0174532925;
+		
+		/**
+		 * Mathematic constant = 180 / Math.PI
+		 * deg = rad * TO_DEGREE;
+		 */
 		public const TO_DEGREE:Number = 57.2957795;
-		public var bindings:Object = { UP:38, DOWN:40, LEFT:37, RIGHT:39 };
+		
+		/**
+		 * Key-binding for moving.
+		 */
+		public var bindings:Object = { UP:38, DOWN:40 };
+		
+		/**
+		 * Which keys are currently pressed ?
+		 */
 		public var downKeys:Vector.<int> = new Vector.<int>();
+		
+		/**
+		 * Function to use to know if we may go through a given pixel.
+		 */
 		public var hitmapTest:Function;
+		
+		/**
+		 * Shortcut to the level heatmap.
+		 */
 		public var heatmap:Heatmap;
+		
+		/**
+		 * Shape to use to draw influence.
+		 */
 		public var influence:Shape = new Shape();
+		
+		/**
+		 * Mask for the level, depending on the direction player is facing.
+		 */
 		public var lightMask:Shape = new Shape();
 		
 		public function Player(parent:Level)
 		{
-			x = 200;
-			y = 200;
+			x = Main.WIDTH2;
+			y = Main.HEIGHT2;
 			
+			//Player graphics
 			this.graphics.lineStyle(2);
 			this.graphics.beginFill(0xAAAAAA, 1);
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineTo(0, 0);
 			lightMask.filters = [new BlurFilter()];
 			
+			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -69,8 +124,10 @@ package
 		
 		protected function onFrame(e:Event):void
 		{
+			//When true, recompute.
 			var hasMoved:Boolean = false;
 			
+			//Shall we turn the player ?
 			var angle:Number = Math.atan2(y - parent.mouseY, x - parent.mouseX);
 			var newRotation:Number = (Math.PI + angle) * TO_DEGREE;
 			if (rotation != newRotation)
@@ -79,9 +136,10 @@ package
 				hasMoved = true;
 			}
 			
+			//Shall we move the player ?
 			if (downKeys.length > 0)
 			{
-				//Précomputing
+				//Precomputing
 				var cos:Number = Math.cos(rotation * TO_RADIANS);
 				var sin:Number = Math.sin(rotation * TO_RADIANS);
 				
@@ -102,7 +160,7 @@ package
 					}
 				}
 				
-				//Landscape move
+				//Move the landscape
 				parent.x = Main.WIDTH2 - x;
 				parent.y = Main.HEIGHT2 - y;
 			}
@@ -120,16 +178,16 @@ package
 				
 				maskGraphics.clear();
 				
-				//Tout gris
+				//Everything is gray-dark
 				maskGraphics.beginFill(0, .05);
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.HEIGHT2, Main.WIDTH, Main.HEIGHT);
-				//Player visible
+				//Except for the player
 				maskGraphics.beginFill(0, 1);
 				maskGraphics.drawCircle(x, y, RADIUS);
 				maskGraphics.endFill();
-				//Lampe torche
-				maskGraphics.moveTo(x, y);
 				
+				//And his line of sight
+				maskGraphics.moveTo(x, y);
 				var transformationMatrix:Matrix = new Matrix();
 				transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0, -DEPTH_VISIBILITY + x, -DEPTH_VISIBILITY + y);
 				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);

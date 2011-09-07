@@ -16,16 +16,12 @@ package
 	{
 		public const RADIUS:int = 10;
 		public const SPEED:int = 4;
-		public const HIGH_VISIBILITY2:int = 30;
-		public const LOW_VISIBILITY2:int = 80;
-		public const HIGH_RESOLUTION:int = 15;
-		public const LOW_RESOLUTION:int = 25;
+		public const VISIBILITY2:int = 60;
+		public const RESOLUTION:int = 25;
 		public const TO_RADIANS:Number = 0.0174532925;
 		public const TO_DEGREE:Number = 57.2957795;
 		public var bindings:Object = { UP:38, DOWN:40, LEFT:37, RIGHT:39 };
 		public var downKeys:Vector.<int> = new Vector.<int>();
-		public var lowResolution:int = LOW_RESOLUTION;
-		public var highResolution:int = HIGH_RESOLUTION;
 		public var hitmapTest:Function;
 		public var lightMask:Shape = new Shape();
 		
@@ -103,10 +99,8 @@ package
 			if (hasMoved)
 			{
 				//Torch & masking
-				var startAngleLowResolution:Number = ((rotation - LOW_VISIBILITY2) % 360) * TO_RADIANS;
-				var startAngleHighResolution:Number = ((rotation - HIGH_VISIBILITY2) % 360) * TO_RADIANS;
-				var endAngleHighResolution:Number = ((rotation + HIGH_VISIBILITY2) % 360) * TO_RADIANS;
-				var endAngleLowResolution:Number = ((rotation + LOW_VISIBILITY2) % 360) * TO_RADIANS;
+				var startAngle:Number = ((rotation - VISIBILITY2) % 360) * TO_RADIANS;
+				var endAngle:Number = ((rotation + VISIBILITY2) % 360) * TO_RADIANS;
 				
 				var maskGraphics:Graphics = lightMask.graphics;
 				var theta:Number;
@@ -114,37 +108,28 @@ package
 				var step:Number;
 				
 				maskGraphics.clear();
-				//Nearly-visible "left"-part
 				maskGraphics.moveTo(x, y);
 				var transformationMatrix:Matrix = new Matrix();
 				transformationMatrix.createGradientBox(Main.WIDTH, Main.HEIGHT, 0, -Main.WIDTH2 + x, -Main.HEIGHT2 + y);
 				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);
-				step = Math.abs(startAngleLowResolution - startAngleHighResolution) / LOW_RESOLUTION;
-				for (theta = startAngleLowResolution; theta <= endAngleLowResolution + .01; theta += step)
+				step = Math.abs(startAngle - endAngle) / RESOLUTION;
+				for (theta = startAngle; theta <= endAngle + .01; theta += step)
 				{
-					radius = raycast(theta);
+					radius = 0;
+					while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) == 0)
+					{
+						radius += 2;
+						if (radius > Main.WIDTH2)
+						{
+							break;
+						}
+					}
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
 				
 				maskGraphics.lineTo(x, y);
 				maskGraphics.endFill();
 			}
-		}
-		
-		protected function raycast(theta:Number):int
-		{
-			//Raycast
-			var radius:int = 0;
-			while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) == 0)
-			{
-				radius += 2;
-				if (radius > Main.WIDTH2)
-				{
-					break;
-				}
-			}
-			
-			return radius;
 		}
 	}
 }

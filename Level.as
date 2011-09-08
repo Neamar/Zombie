@@ -29,6 +29,11 @@ package
 		public var bitmapLevel:Bitmap;
 		
 		/**
+		 * Zombies
+		 */
+		public var zombies:Vector.<Zombie> = new Vector.<Zombie>();
+		
+		/**
 		 * Influence map, to compute easily multiples pathfindings without burying CPU
 		 * 
 		 * @see http://aigamedev.com/open/tutorials/potential-fields/
@@ -41,6 +46,7 @@ package
 			hitmap = new Hitmap();
 			player = new Player(this);
 			bitmapLevel = new BitmapLevel();
+			zombies.push(new Zombie(this));
 			//Small optimisation, available since we never update the hitmap
 			hitmap.bitmapData.lock();
 			
@@ -52,6 +58,7 @@ package
 			//Layouting everything on the display list
 			addChild(bitmapLevel);
 			addChild(player);
+			addChild(zombies[0]);
 			addChild(player.lightMask);//Mask ought to be added, else it ain't taken into account
 			
 			player.lightMask.cacheAsBitmap = true;//If not cached, mask won't apply alpha.
@@ -86,6 +93,10 @@ package
 				
 				//Player ought to be visible at any time
 				setChildIndex(player, numChildren - 1);
+				for each(var zombie:Zombie in zombies)
+				{
+					setChildIndex(zombie, numChildren - 2);
+				}
 			}
 		}
 	}

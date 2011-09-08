@@ -14,7 +14,7 @@ package
 	 * ...
 	 * @author Neamar
 	 */
-	public class Player extends Sprite
+	public class Player extends Entity
 	{
 		/**
 		 * Player radius
@@ -64,16 +64,6 @@ package
 		public var downKeys:Vector.<int> = new Vector.<int>();
 		
 		/**
-		 * Function to use to know if we may go through a given pixel.
-		 */
-		public var hitmapTest:Function;
-		
-		/**
-		 * Shortcut to the level heatmap.
-		 */
-		public var heatmap:Heatmap;
-		
-		/**
 		 * Shape to use to draw influence.
 		 */
 		public var influence:Shape = new Shape();
@@ -85,6 +75,8 @@ package
 		
 		public function Player(parent:Level)
 		{
+			super(parent);
+			
 			x = Main.WIDTH2;
 			y = Main.HEIGHT2;
 			
@@ -100,8 +92,6 @@ package
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
-			hitmapTest = parent.hitmap.bitmapData.getPixel32;
-			heatmap = parent.heatmap;
 			var transformationMatrix:Matrix = new Matrix();
 			transformationMatrix.createGradientBox(Main.WIDTH, Main.HEIGHT, 0, -Main.WIDTH2, -Main.HEIGHT2);
 			influence.graphics.beginGradientFill(GradientType.RADIAL, [0xFFFFFF, 0xFFFFFF], [1, .5], [0, 255], transformationMatrix);

@@ -14,8 +14,7 @@ package
 		public const RESOLUTION:int = 10;
 		public const THRESHOLD:Number = 1 / 3;
 		public const PER_FRAME:int = 200;
-		public const DECAY_FACTOR:int = 5;
-		public const MAX_INFLUENCE:int = DECAY_FACTOR * Main.WIDTH / 2;
+		public const MAX_INFLUENCE:int = Main.WIDTH;
 		public const BASE_ALPHA:uint = 0xff000000;
 		
 		public var baseInfluence:BitmapData;
@@ -30,19 +29,19 @@ package
 		public function Heatmap(hitmap:BitmapData)
 		{
 			influenceWidth = hitmap.width / RESOLUTION;
-			influenceHeight = hitmap.height / RESOLUTION
+			influenceHeight = hitmap.height / RESOLUTION;
 			baseInfluence = new BitmapData(influenceWidth, influenceHeight, false, 255);
 			baseInfluence.lock();
 			var rect:Rectangle = new Rectangle();
 			rect.width = RESOLUTION;
 			rect.height = RESOLUTION;
 			
-			for (var i:int = 0; i < baseInfluence.width; i++)
+			for (var i:int = 0; i < influenceWidth; i++)
 			{
-				for (var j:int = 0; j < baseInfluence.height; j++)
+				for (var j:int = 0; j < influenceHeight; j++)
 				{
-					rect.x= j * RESOLUTION;
-					rect.y = i * RESOLUTION;
+					rect.x = i * RESOLUTION;
+					rect.y = j * RESOLUTION;
 					var pixels:Vector.<uint> = hitmap.getVector(rect);
 					var thresholdCount:int = 0;
 					for each(var pixel:uint in pixels)
@@ -53,7 +52,7 @@ package
 
 					if (thresholdCount > pixels.length * THRESHOLD)
 					{
-						baseInfluence.setPixel32(j, i, 0);
+						baseInfluence.setPixel32(i, j, 0);
 					}
 				}
 			}
@@ -88,19 +87,13 @@ package
 			while (offsetToCompute.length > 0)
 			{
 				if (nbIterations++ > PER_FRAME)
-				{
-					trace(offsetToCompute.length);
 					return;
-				}
 					
 				var currentOffset:int = offsetToCompute.shift();
 				var currentX:int = xFromOffset(currentOffset);
 				var currentY:int = yFromOffset(currentOffset);
-				
-				if (currentX < 2 || currentX > influenceWidth - 2 || currentY < 2 ||currentY > influenceHeight - 2)
-					continue;
 					
-				var currentValue:uint = valueToCompute.shift() - DECAY_FACTOR;
+				var currentValue:uint = valueToCompute.shift() - 3;
 				
 				for (var i:int = -1; i <= 1; i++)
 				{

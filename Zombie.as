@@ -9,6 +9,7 @@ package
 	public class Zombie extends Entity 
 	{
 		public const RADIUS:int = 5;
+		public const SPEED:int = 3;
 		
 		public function Zombie(parent:Level)
 		{
@@ -25,7 +26,33 @@ package
 		
 		public function onFrame(e:Event):void
 		{
+			var xScaled:int = x / Heatmap.RESOLUTION;
+			var yScaled:int = y / Heatmap.RESOLUTION;
 			
+			var minI:int = 0;
+			var minJ:int = 0;
+			var minValue:int = heatmap.bitmapData.getPixel(xScaled , yScaled);
+			
+			for (var i:int = -1; i <= 1; i++)
+			{
+				for (var j:int = -1; j <= 1; j++)
+				{
+					if ( i == 0 && j == 0)
+						continue;
+					
+					if (heatmap.bitmapData.getPixel(xScaled + i, yScaled + j) > minValue)
+					{
+						minValue = heatmap.bitmapData.getPixel(xScaled + i, yScaled + j);
+						minI = i;
+						minJ = j;
+					}
+				}
+			}
+			
+
+			x += SPEED * minI;
+			y += SPEED * minJ;
+
 		}
 	}
 	

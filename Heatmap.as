@@ -11,7 +11,7 @@ package
 	 */
 	public class Heatmap extends Bitmap
 	{
-		public const RESOLUTION:int = 10;
+		public static const RESOLUTION:int = 10;
 		public const THRESHOLD:Number = 1 / 3;
 		public const PER_FRAME:int = 200;
 		public const MAX_INFLUENCE:int = Main.WIDTH;
@@ -24,12 +24,14 @@ package
 		
 		protected var offsetToCompute:Vector.<int>;
 		protected var valueToCompute:Vector.<int>;
+		protected var level:Level;
 		
-		
-		public function Heatmap(hitmap:BitmapData)
+		public function Heatmap(level:Level)
 		{
-			influenceWidth = hitmap.width / RESOLUTION;
-			influenceHeight = hitmap.height / RESOLUTION;
+			this.level = level;
+			
+			influenceWidth = level.hitmap.width / RESOLUTION;
+			influenceHeight = level.hitmap.height / RESOLUTION;
 			baseInfluence = new BitmapData(influenceWidth, influenceHeight, false, 255);
 			baseInfluence.lock();
 			var rect:Rectangle = new Rectangle();
@@ -42,7 +44,7 @@ package
 				{
 					rect.x = i * RESOLUTION;
 					rect.y = j * RESOLUTION;
-					var pixels:Vector.<uint> = hitmap.getVector(rect);
+					var pixels:Vector.<uint> = level.hitmap.bitmapData.getVector(rect);
 					var thresholdCount:int = 0;
 					for each(var pixel:uint in pixels)
 					{
@@ -77,7 +79,7 @@ package
 			nextInfluence = baseInfluence.getVector(baseInfluence.rect);
 			offsetToCompute = new Vector.<int>();
 			valueToCompute = new Vector.<int>();
-			offsetToCompute.push(fromXY(Level.level.player.y / RESOLUTION, Level.level.player.x / RESOLUTION));
+			offsetToCompute.push(fromXY(level.player.y / RESOLUTION, level.player.x / RESOLUTION));
 			valueToCompute.push(BASE_ALPHA + MAX_INFLUENCE);
 		}
 		
@@ -93,7 +95,7 @@ package
 				var currentX:int = xFromOffset(currentOffset);
 				var currentY:int = yFromOffset(currentOffset);
 					
-				var currentValue:uint = valueToCompute.shift() - 3;
+				var currentValue:uint = valueToCompute.shift() - 7;
 				
 				for (var i:int = -1; i <= 1; i++)
 				{
@@ -104,11 +106,12 @@ package
 						
 						var newOffset:int = fromXY(currentX + i, currentY + j);
 
-						if (nextInfluence[newOffset] != BASE_ALPHA && nextInfluence[newOffset] < currentValue)
+						var v:uint =  currentValue - Math.abs(i) - Math.abs(j);
+						if (nextInfluence[newOffset] != BASE_ALPHA && nextInfluence[newOffset] < v)
 						{
-							nextInfluence[newOffset] = currentValue;
+							nextInfluence[newOffset] = v;
 							offsetToCompute.push(newOffset);
-							valueToCompute.push(currentValue);
+							valueToCompute.push(v);
 						}
 					}
 				}

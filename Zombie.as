@@ -1,6 +1,7 @@
 package 
 {
 	import flash.events.Event;
+	import flash.filters.BlurFilter;
 	
 	/**
 	 * ...
@@ -10,6 +11,9 @@ package
 	{
 		public const RADIUS:int = 5;
 		public const SPEED:int = 3;
+		public const REPULSION:int = 15;
+		
+		public var sleeping:int = 50;
 		
 		public function Zombie(parent:Level, x:int, y:int)
 		{
@@ -26,12 +30,18 @@ package
 		
 		public function onFrame(e:Event):void
 		{
+			if (sleeping > 0)
+			{
+				sleeping--;
+				return;
+			}
+			
 			var xScaled:int = x / Heatmap.RESOLUTION;
 			var yScaled:int = y / Heatmap.RESOLUTION;
 			
-			var minI:int = 0;
-			var minJ:int = 0;
-			var minValue:int = heatmap.bitmapData.getPixel(xScaled , yScaled);
+			var maxI:int = 0;
+			var maxJ:int = 0;
+			var maxValue:int = heatmap.bitmapData.getPixel(xScaled , yScaled);
 			
 			for (var i:int = -1; i <= 1; i++)
 			{
@@ -40,21 +50,29 @@ package
 					if ( i == 0 && j == 0)
 						continue;
 					
-					if (heatmap.bitmapData.getPixel(xScaled + i, yScaled + j) > minValue)
+					if (heatmap.bitmapData.getPixel(xScaled + i, yScaled + j) > maxValue)
 					{
-						minValue = heatmap.bitmapData.getPixel(xScaled + i, yScaled + j);
-						minI = i;
-						minJ = j;
+						maxValue = heatmap.bitmapData.getPixel(xScaled + i, yScaled + j);
+						maxI = i;
+						maxJ = j;
 					}
 				}
 			}
 			
-			heatmap.bitmapData.setPixel(xScaled, yScaled, heatmap.bitmapData.getPixel(xScaled , yScaled) - 15);
+			if (maxI != 0 || maxJ != 0)
+			{
+				heatmap.bitmapData.setPixel(xScaled, yScaled, heatmap.bitmapData.getPixel(xScaled , yScaled) - REPULSION);
 
-			x += SPEED * minI;
-			y += SPEED * minJ;
+				x += SPEED * maxI;
+				y += SPEED * maxJ;
+				
+				heatmap.bitmapData.setPixel(x / Heatmap.RESOLUTION, y / Heatmap.RESOLUTION, heatmap.bitmapData.getPixel(xScaled , yScaled) + REPULSION);
+			}
 			
-			heatmap.bitmapData.setPixel(x / Heatmap.RESOLUTION, y / Heatmap.RESOLUTION, heatmap.bitmapData.getPixel(xScaled , yScaled) + 15);
+			if(maxValue == 255)
+			{
+				sleeping = 30;
+			}
 
 		}
 	}

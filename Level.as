@@ -46,20 +46,32 @@ package
 			player = new Player(this);
 			heatmap = new Heatmap(this);
 			bitmapLevel = new BitmapLevel();
-			zombies.push(new Zombie(this, 300, 200));
-			zombies.push(new Zombie(this, 200, 200));
-			zombies.push(new Zombie(this, 100, 200));
-			zombies.push(new Zombie(this, 200, 100));
 			//Small optimisation, available since we never update the hitmap
 			hitmap.bitmapData.lock();
+			
 			
 			//Layouting everything on the display list
 			addChild(bitmapLevel);
 			addChild(player);
-			addChild(zombies[0]);
-			addChild(zombies[1]);
-			addChild(zombies[2]);
-			addChild(zombies[3]);
+			
+			for (var i:int = 0; i < 100; i++)
+			{
+				var x:int = Main.LEVEL_WIDTH * Math.random();
+				var y:int = Main.LEVEL_HEIGHT * Math.random();
+				
+				if (hitmap.bitmapData.getPixel32(x, y) != 0)
+				{
+					i--;
+				}
+				else
+				{
+					trace(x, y);
+					var foe:Zombie = new Zombie(this, x, y);
+					zombies.push(foe);
+					addChild(foe);
+				}
+			}
+
 			addChild(player.lightMask);//Mask ought to be added, else it ain't taken into account
 			
 			player.lightMask.cacheAsBitmap = true;//If not cached, mask won't apply alpha.

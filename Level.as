@@ -13,6 +13,8 @@ package
 	 */
 	public class Level extends Sprite
 	{
+		public static var level:Level;
+		
 		[Embed(source = "assets/testlevelHitmap.png")] private static var Hitmap:Class;
 		[Embed(source = "assets/testlevelBitmap.png")] private static var BitmapLevel:Class;
 		
@@ -42,18 +44,15 @@ package
 		
 		public function Level()
 		{
-			heatmap= new Heatmap();
+			level = this;
+			
 			hitmap = new Hitmap();
 			player = new Player(this);
+			heatmap = new Heatmap(hitmap.bitmapData);
 			bitmapLevel = new BitmapLevel();
 			zombies.push(new Zombie(this));
 			//Small optimisation, available since we never update the hitmap
 			hitmap.bitmapData.lock();
-			
-			//Landscape influence, to allow foe to escape obstacles.
-			var landscapeInfluence:BitmapData = new BitmapData(Main.LEVEL_WIDTH, Main.LEVEL_HEIGHT, true, 0x00FFFFFF);
-			landscapeInfluence.applyFilter(hitmap.bitmapData, hitmap.bitmapData.rect, new Point(), new GlowFilter(0, 1, 30, 30, 2, 12 ));
-			heatmap.setLayer('landscape', landscapeInfluence);
 			
 			//Layouting everything on the display list
 			addChild(bitmapLevel);

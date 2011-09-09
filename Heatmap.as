@@ -2,85 +2,141 @@ package
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.IBitmapDrawable;
-	import flash.geom.Matrix;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 	
 	/**
 	 * ...
 	 * @author Neamar
 	 */
-	public class Heatmap extends Bitmap 
+	public class Heatmap extends Bitmap
 	{
-		/**
-		 * Layers to use to draw the heatmap
-		 * @see apply()
-		 */
-		public var layers:Dictionary = new Dictionary();
+		public const RESOLUTION:int = 10;
+		public const THRESHOLD:Number = 1 / 3;
+		public const PER_FRAME:int = 200;
+		public const DECAY_FACTOR:int = 5;
+		public const MAX_INFLUENCE:int = DECAY_FACTOR * Main.WIDTH / 2;
+		public const BASE_ALPHA:uint = 0xff000000;
 		
-		/**
-		 * Precomputed shortcut for this.bitmapData.rect.
-		 */
-		public var rect:Rectangle;
+		public var baseInfluence:BitmapData;
+		public var nextInfluence:Vector.<uint>;
+		public var influenceWidth:int;
+		public var influenceHeight:int;
 		
-		public function Heatmap()
+		protected var offsetToCompute:Vector.<int>;
+		protected var valueToCompute:Vector.<int>;
+		
+		
+		public function Heatmap(hitmap:BitmapData)
 		{
-			super(new BitmapData(Main.LEVEL_WIDTH, Main.LEVEL_HEIGHT, true));
-			rect = bitmapData.rect;
-		}
-		
-		/**
-		 * Recompute the heatmap.
-		 * !!CPU intensive!!
-		 */
-		public function apply():void
-		{
-			bitmapData.lock();
-			//Clean
-			bitmapData.fillRect(rect, 0xFFFFFFFF);
+			influenceWidth = hitmap.width / RESOLUTION;
+			influenceHeight = hitmap.height / RESOLUTION
+			baseInfluence = new BitmapData(influenceWidth, influenceHeight, false, 255);
+			baseInfluence.lock();
+			var rect:Rectangle = new Rectangle();
+			rect.width = RESOLUTION;
+			rect.height = RESOLUTION;
 			
-			//Redraw
-			for each(var layer:Object in layers)
+			for (var i:int = 0; i < baseInfluence.width; i++)
 			{
-				var ibd:IBitmapDrawable = layer.ibd;
-				var matrix:Matrix = layer.matrix;
-				bitmapData.draw(ibd, matrix);
+				for (var j:int = 0; j < baseInfluence.height; j++)
+				{
+					rect.x= j * RESOLUTION;
+					rect.y = i * RESOLUTION;
+					var pixels:Vector.<uint> = hitmap.getVector(rect);
+					var thresholdCount:int = 0;
+					for each(var pixel:uint in pixels)
+					{
+						if (pixel != 0)
+							thresholdCount++;
+					}
+
+					if (thresholdCount > pixels.length * THRESHOLD)
+					{
+						baseInfluence.setPixel32(j, i, 0);
+					}
+				}
 			}
+			
+			
+			baseInfluence.unlock();
+			super(baseInfluence.clone());
+			this.scaleX = this.scaleY = RESOLUTION;
+			
+			recomputeInfluence();
+			addEventListener(Event.ENTER_FRAME, updateInfluence);
 		}
 		
-		/**
-		 * Add new layer to the heatmap.
-		 * @param	name to use
-		 * @return new layer. Don't forget to apply() once intialised.
-		 */
-		public function addNewLayer(name:String):BitmapData
+		public function recomputeInfluence():void
 		{
-			var newLayer:BitmapData = new BitmapData(Main.LEVEL_WIDTH, Main.LEVEL_HEIGHT, true, 0x00FFFFFF);
-			setLayer(name, newLayer);
-			return newLayer;
+			if (nextInfluence)
+			{
+				bitmapData.setVector(bitmapData.rect, nextInfluence);
+				bitmapData.unlock();
+			}
+
+			nextInfluence = baseInfluence.getVector(baseInfluence.rect);
+			offsetToCompute = new Vector.<int>();
+			valueToCompute = new Vector.<int>();
+			offsetToCompute.push(fromXY(Level.level.player.y / RESOLUTION, Level.level.player.x / RESOLUTION));
+			valueToCompute.push(BASE_ALPHA + MAX_INFLUENCE);
 		}
 		
-		/**
-		 * Add existing bitmap data as layer.
-		 * @param	name
-		 * @param	ibd
-		 */
-		public function setLayer(name:String, ibd:IBitmapDrawable, matrix:Matrix = null):void
+		public function updateInfluence(e:Event = null):void
 		{
-			layers[name] = {ibd:ibd, matrix:matrix};
-			apply();
+			var nbIterations:int = 0;
+			while (offsetToCompute.length > 0)
+			{
+				if (nbIterations++ > PER_FRAME)
+				{
+					trace(offsetToCompute.length);
+					return;
+				}
+					
+				var currentOffset:int = offsetToCompute.shift();
+				var currentX:int = xFromOffset(currentOffset);
+				var currentY:int = yFromOffset(currentOffset);
+				
+				if (currentX < 2 || currentX > influenceWidth - 2 || currentY < 2 ||currentY > influenceHeight - 2)
+					continue;
+					
+				var currentValue:uint = valueToCompute.shift() - DECAY_FACTOR;
+				
+				for (var i:int = -1; i <= 1; i++)
+				{
+					for (var j:int = -1; j <= 1; j++)
+					{
+						if (i == 0 && j == 0)
+							continue;
+						
+						var newOffset:int = fromXY(currentX + i, currentY + j);
+
+						if (nextInfluence[newOffset] != BASE_ALPHA && nextInfluence[newOffset] < currentValue)
+						{
+							nextInfluence[newOffset] = currentValue;
+							offsetToCompute.push(newOffset);
+							valueToCompute.push(currentValue);
+						}
+					}
+				}
+			}
+			
+			recomputeInfluence();
 		}
 		
-		/**
-		 * Retrieve layer by name
-		 * @param	name
-		 * @return layer & matrix (or undefined)
-		 */
-		public function getLayer(name:String):Object
+		public function fromXY(x:int, y:int):int
 		{
-			return layers[name];
+			return influenceWidth * x + y;
+		}
+		
+		public function xFromOffset(offset:int):int
+		{
+			return Math.floor(offset / influenceWidth);
+		}
+		
+		public function yFromOffset(offset:int):int
+		{
+			return offset % influenceWidth;
 		}
 	}
-	
 }

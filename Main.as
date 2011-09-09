@@ -32,7 +32,7 @@
 			
 			addChild(new Level());
 			
-			addChild(new movieMonitor());
+			//addChild(new movieMonitor());
 		}
 		
 	}

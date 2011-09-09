@@ -46,7 +46,10 @@ package
 			player = new Player(this);
 			heatmap = new Heatmap(this);
 			bitmapLevel = new BitmapLevel();
-			zombies.push(new Zombie(this));
+			zombies.push(new Zombie(this, 300, 200));
+			zombies.push(new Zombie(this, 200, 200));
+			zombies.push(new Zombie(this, 100, 200));
+			zombies.push(new Zombie(this, 200, 100));
 			//Small optimisation, available since we never update the hitmap
 			hitmap.bitmapData.lock();
 			
@@ -54,6 +57,9 @@ package
 			addChild(bitmapLevel);
 			addChild(player);
 			addChild(zombies[0]);
+			addChild(zombies[1]);
+			addChild(zombies[2]);
+			addChild(zombies[3]);
 			addChild(player.lightMask);//Mask ought to be added, else it ain't taken into account
 			
 			player.lightMask.cacheAsBitmap = true;//If not cached, mask won't apply alpha.

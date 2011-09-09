@@ -11,10 +11,10 @@ package
 		public const RADIUS:int = 5;
 		public const SPEED:int = 3;
 		
-		public function Zombie(parent:Level)
+		public function Zombie(parent:Level, x:int, y:int)
 		{
-			x = 300;
-			y = 200;
+			this.x = x;
+			this.y = y;
 			super(parent);
 			
 			this.graphics.lineStyle(1, 0xFF0000);
@@ -49,9 +49,12 @@ package
 				}
 			}
 			
+			heatmap.bitmapData.setPixel(xScaled, yScaled, heatmap.bitmapData.getPixel(xScaled , yScaled) - 15);
 
 			x += SPEED * minI;
 			y += SPEED * minJ;
+			
+			heatmap.bitmapData.setPixel(x / Heatmap.RESOLUTION, y / Heatmap.RESOLUTION, heatmap.bitmapData.getPixel(xScaled , yScaled) + 15);
 
 		}
 	}

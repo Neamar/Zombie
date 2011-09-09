@@ -7,8 +7,11 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import weapon.Handgun;
+	import weapon.Weapon;
 	
 	/**
 	 * ...
@@ -45,13 +48,13 @@ package
 		 * Mathematic constant = Math.PI / 180
 		 * rad = deg * TO_RADIANS
 		 */
-		public const TO_RADIANS:Number = 0.0174532925;
+		public static const TO_RADIANS:Number = 0.0174532925;
 		
 		/**
 		 * Mathematic constant = 180 / Math.PI
 		 * deg = rad * TO_DEGREE;
 		 */
-		public const TO_DEGREE:Number = 57.2957795;
+		public static const TO_DEGREE:Number = 57.2957795;
 		
 		/**
 		 * Key-binding for moving.
@@ -73,6 +76,9 @@ package
 		 */
 		public var lightMask:Shape = new Shape();
 		
+		
+		public var currentWeapon:Weapon;
+		
 		public function Player(parent:Level)
 		{
 			super(parent);
@@ -89,8 +95,11 @@ package
 			
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
+			Main.stage.addEventListener(MouseEvent.CLICK, onClick);
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			
+			this.currentWeapon = new Handgun(parent);
 		}
 		
 		protected function onKeyDown(e:KeyboardEvent):void
@@ -104,6 +113,14 @@ package
 		protected function onKeyUp(e:KeyboardEvent):void
 		{
 			downKeys.splice(downKeys.indexOf(e.keyCode), 1);
+		}
+		
+		protected function onClick(e:MouseEvent):void
+		{
+			if (currentWeapon.isAbleToFire())
+			{
+				currentWeapon.fire();
+			}
 		}
 		
 		protected function onFrame(e:Event):void

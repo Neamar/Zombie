@@ -2,6 +2,7 @@ package
 {
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
+	import flash.geom.Matrix;
 	
 	/**
 	 * ...
@@ -9,7 +10,7 @@ package
 	 */
 	public class Zombie extends Entity 
 	{
-		public const RADIUS:int = 5;
+		public static const RADIUS:int = 5;
 		public const SPEED:int = 3;
 		public const REPULSION:int = 15;
 		
@@ -26,6 +27,17 @@ package
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.moveTo(0, 0);
 			addEventListener(Event.ENTER_FRAME, onFrame);
+		}
+		
+		public function kill():void
+		{
+			this.filters = [new BlurFilter(8, 8, 2)];
+			(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
+			(parent as Level).zombies.splice((parent as Level).zombies.indexOf(this), 1);
+			removeEventListener(Event.ENTER_FRAME, onFrame);
+			parent.removeChild(this);
+			this.graphics.clear();
+
 		}
 		
 		public function onFrame(e:Event):void
@@ -68,10 +80,13 @@ package
 				
 				heatmap.bitmapData.setPixel(x / Heatmap.RESOLUTION, y / Heatmap.RESOLUTION, heatmap.bitmapData.getPixel(xScaled , yScaled) + REPULSION);
 			}
-			
-			if(maxValue == 255)
+			else if(maxValue == 255)
 			{
 				sleeping = 30;
+			}
+			else
+			{
+				sleeping = 5;
 			}
 
 		}

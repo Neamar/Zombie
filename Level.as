@@ -65,7 +65,6 @@ package
 				}
 				else
 				{
-					trace(x, y);
 					var foe:Zombie = new Zombie(this, x, y);
 					zombies.push(foe);
 					addChild(foe);

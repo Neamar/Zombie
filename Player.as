@@ -79,6 +79,8 @@ package
 		
 		public var currentWeapon:Weapon;
 		
+		public var hasShot:int = 10;
+		
 		public function Player(parent:Level)
 		{
 			super(parent);
@@ -119,7 +121,7 @@ package
 		{
 			if (currentWeapon.isAbleToFire())
 			{
-				currentWeapon.fire();
+				hasShot = currentWeapon.fire();
 			}
 		}
 		
@@ -166,7 +168,7 @@ package
 				parent.y = Main.HEIGHT2 - y;
 			}
 			
-			if (hasMoved)
+			if (hasMoved || hasShot > 0)
 			{
 				//Torch & masking
 				var startAngle:Number = ((rotation - ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
@@ -180,7 +182,7 @@ package
 				maskGraphics.clear();
 				
 				//Everything is gray-dark
-				maskGraphics.beginFill(0, .05);
+				maskGraphics.beginFill(0, .05 * (hasShot + 1));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.HEIGHT2, Main.WIDTH, Main.HEIGHT);
 				//Except for the player
 				maskGraphics.beginFill(0, 1);
@@ -209,6 +211,11 @@ package
 				
 				maskGraphics.lineTo(x, y);
 				maskGraphics.endFill();
+				
+				if (hasShot > 0)
+				{
+					hasShot = hasShot >> 1;
+				}
 			}
 		}
 	}

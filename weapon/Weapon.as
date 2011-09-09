@@ -22,7 +22,7 @@ package weapon
 			return true;
 		}
 		
-		public function fire():void
+		public function fire():int
 		{
 			throw new Error("Méthode abstraite : fire().");
 		}

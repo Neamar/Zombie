@@ -12,9 +12,10 @@ package weapon
 			super(level);
 		}
 		
-		public override function fire():void
-		{
+		public override function fire():int		{
 			raycast(0);
+			
+			return 5;
 		}
 	}
 

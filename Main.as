@@ -3,6 +3,7 @@
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	/**
 	 * ...
@@ -32,7 +33,9 @@
 			
 			addChild(new Level());
 			
-			addChild(new movieMonitor());
+			var movieMonitor:MovieMonitor = new MovieMonitor();
+			addChild(movieMonitor);
+			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );
 		}
 		
 	}

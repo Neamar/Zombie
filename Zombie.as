@@ -32,7 +32,7 @@ package
 		public function kill():void
 		{
 			this.filters = [new BlurFilter(8, 8, 2)];
-			(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
+			(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1.4, 0, 0, 1.4, x, y));
 			(parent as Level).zombies.splice((parent as Level).zombies.indexOf(this), 1);
 			removeEventListener(Event.ENTER_FRAME, onFrame);
 			parent.removeChild(this);
@@ -73,12 +73,17 @@ package
 			
 			if (maxI != 0 || maxJ != 0)
 			{
-				heatmap.bitmapData.setPixel(xScaled, yScaled, heatmap.bitmapData.getPixel(xScaled , yScaled) - REPULSION);
-
+				if (!(parent as Level).heatmap.hasJustRedrawn)
+				{
+					heatmap.bitmapData.setPixel(xScaled, yScaled, heatmap.bitmapData.getPixel(xScaled , yScaled) + REPULSION);
+				}
+				
 				x += SPEED * maxI;
 				y += SPEED * maxJ;
 				
-				heatmap.bitmapData.setPixel(x / Heatmap.RESOLUTION, y / Heatmap.RESOLUTION, heatmap.bitmapData.getPixel(xScaled , yScaled) + REPULSION);
+				xScaled = x / Heatmap.RESOLUTION;
+				yScaled = y / Heatmap.RESOLUTION;
+				heatmap.bitmapData.setPixel(xScaled, yScaled, Math.max(0, heatmap.bitmapData.getPixel(xScaled, yScaled) - REPULSION));
 			}
 			else if(maxValue == 255)
 			{

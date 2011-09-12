@@ -54,7 +54,7 @@ package
 			addChild(bitmapLevel);
 			addChild(player);
 			
-			for (var i:int = 0; i < 100; i++)
+			for (var i:int = 0; i < 200; i++)
 			{
 				var x:int = Main.LEVEL_WIDTH * Math.random();
 				var y:int = Main.LEVEL_HEIGHT * Math.random();
@@ -78,15 +78,17 @@ package
 			mask = player.lightMask;
 			
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, toggleDebugMode);
+			
+			toggleDebugMode()
 		}
 		
 		/**
 		 * Press T to toggle debug mode and view the influence map.
 		 * @param	e
 		 */
-		public function toggleDebugMode(e:KeyboardEvent):void
+		public function toggleDebugMode(e:KeyboardEvent = null):void
 		{
-			if(e.keyCode == 84)
+			if(e == null || e.keyCode == 84)
 			{
 				if (bitmapLevel.parent == this)
 				{

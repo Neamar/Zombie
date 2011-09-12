@@ -21,7 +21,10 @@ package
 		public var nextInfluence:Vector.<uint>;
 		public var influenceWidth:int;
 		public var influenceHeight:int;
-		
+		public var startX:int = -1;
+		public var startY:int = -1;
+		public var isAttracting:Boolean = true;
+		public var hasJustRedrawn:Boolean = false;
 		protected var offsetToCompute:Vector.<int>;
 		protected var valueToCompute:Vector.<int>;
 		protected var level:Level;
@@ -74,17 +77,45 @@ package
 			{
 				bitmapData.setVector(bitmapData.rect, nextInfluence);
 				bitmapData.unlock();
+				hasJustRedrawn = true;
 			}
 
 			nextInfluence = baseInfluence.getVector(baseInfluence.rect);
 			offsetToCompute = new Vector.<int>();
 			valueToCompute = new Vector.<int>();
-			offsetToCompute.push(fromXY(level.player.y / RESOLUTION, level.player.x / RESOLUTION));
-			valueToCompute.push(BASE_ALPHA + MAX_INFLUENCE);
+			
+			var startNewX:int = level.player.x / RESOLUTION;
+			var startNewY:int = level.player.y / RESOLUTION;
+			offsetToCompute.push(fromXY(startNewY, startNewX));
+			
+			//If player is not moving to zombies, then zombies will be moving to player !
+			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
+			if (startNewX == startX && startNewY == startY)
+			{
+				startInfluence = BASE_ALPHA + 1.5 * MAX_INFLUENCE;
+				isAttracting = true;
+			}
+			else
+			{
+				isAttracting = false;
+			}
+			valueToCompute.push(startInfluence);
+			startX = startNewX;
+			startY = startNewY;
 		}
 		
 		public function updateInfluence(e:Event = null):void
 		{
+			hasJustRedrawn = false;
+			
+			if (isAttracting && (Math.floor(level.player.x / RESOLUTION) != startX || Math.floor(level.player.y / RESOLUTION)  != startY))
+			{
+				//We were calling zombie cause the player was still. However, he moved, so now we revert to standard computing
+				//Else, the game lags and zombie keeps swarming around the previous computed spot.
+				recomputeInfluence();
+				return;
+			}
+			
 			var nbIterations:int = 0;
 			while (offsetToCompute.length > 0)
 			{
@@ -106,7 +137,7 @@ package
 						
 						var newOffset:int = fromXY(currentX + i, currentY + j);
 
-						var v:uint =  currentValue - Math.abs(i) - Math.abs(j);
+						var v:uint = currentValue - Math.abs(i) - Math.abs(j);
 						if (nextInfluence[newOffset] != BASE_ALPHA && nextInfluence[newOffset] < v)
 						{
 							nextInfluence[newOffset] = v;

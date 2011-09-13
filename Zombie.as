@@ -3,6 +3,7 @@ package
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import Utilitaires.geom.Vector;
 	
 	/**
 	 * ...
@@ -11,10 +12,36 @@ package
 	public class Zombie extends Entity 
 	{
 		public static const RADIUS:int = 5;
+		public const SLEEP_DURATION:int = 30;
 		public const SPEED:int = 3;
 		public const REPULSION:int = 15;
 		
-		public var sleeping:int = 50;
+		public static var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(100);
+		public static var frameNumber:int = 0;
+		
+		public static function init():void
+		{
+			
+			Main.stage.addEventListener(Event.ENTER_FRAME, onFrame);
+			for (frameNumber = 0; frameNumber < frameWaker.length; frameNumber++)
+			{
+				frameWaker[frameNumber] = new Vector.<Zombie>();
+			}
+			frameNumber = 0;
+		}
+		
+		public static function onFrame(e:Event = null):void
+		{
+			frameNumber = (frameNumber + 1) % frameWaker.length;
+			
+			var currentFrame:Vector.<Zombie> = frameWaker[frameNumber];
+			while(currentFrame.length > 0)
+			{
+				currentFrame.pop().move();
+			}
+		}
+		
+		public var move:Function = onMove;
 		
 		public function Zombie(parent:Level, x:int, y:int)
 		{
@@ -26,7 +53,9 @@ package
 			this.graphics.beginFill(0xF00000);
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.moveTo(0, 0);
-			addEventListener(Event.ENTER_FRAME, onFrame);
+			
+			nextWakeIn(30 + SLEEP_DURATION * Math.random());
+			
 		}
 		
 		public function kill():void
@@ -37,17 +66,12 @@ package
 			removeEventListener(Event.ENTER_FRAME, onFrame);
 			parent.removeChild(this);
 			this.graphics.clear();
+			move = function():void { };
 
 		}
 		
-		public function onFrame(e:Event):void
+		public function onMove():void
 		{
-			if (sleeping > 0)
-			{
-				sleeping--;
-				return;
-			}
-			
 			var xScaled:int = x / Heatmap.RESOLUTION;
 			var yScaled:int = y / Heatmap.RESOLUTION;
 			
@@ -84,16 +108,20 @@ package
 				xScaled = x / Heatmap.RESOLUTION;
 				yScaled = y / Heatmap.RESOLUTION;
 				heatmap.bitmapData.setPixel(xScaled, yScaled, Math.max(0, heatmap.bitmapData.getPixel(xScaled, yScaled) - REPULSION));
-			}
-			else if(maxValue == 255)
-			{
-				sleeping = 30;
+				
+				nextWakeIn(1);
 			}
 			else
 			{
-				sleeping = 5;
+				nextWakeIn(10 + SLEEP_DURATION * Math.random());
 			}
 
+			
+		}
+		
+		public function nextWakeIn(duration:int):void
+		{
+			frameWaker[(frameNumber + duration) % frameWaker.length].push(this);
 		}
 	}
 	

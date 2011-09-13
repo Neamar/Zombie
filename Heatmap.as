@@ -14,8 +14,8 @@ package
 		public static const RESOLUTION:int = 10;
 		public const THRESHOLD:Number = 1 / 3;
 		public const PER_FRAME:int = 200;
-		public const MAX_INFLUENCE:int = Main.WIDTH;
-		public const BASE_ALPHA:uint = 0xff000000;
+		public static const MAX_INFLUENCE:int = Main.WIDTH;
+		public static const BASE_ALPHA:uint = 0xff000000;
 		
 		public var baseInfluence:BitmapData;
 		public var nextInfluence:Vector.<uint>;
@@ -86,7 +86,8 @@ package
 			
 			var startNewX:int = level.player.x / RESOLUTION;
 			var startNewY:int = level.player.y / RESOLUTION;
-			offsetToCompute.push(fromXY(startNewY, startNewX));
+			var startOffset:int = fromXY(startNewY, startNewX)
+			offsetToCompute.push(startOffset);
 			
 			//If player is not moving to zombies, then zombies will be moving to player !
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
@@ -100,6 +101,7 @@ package
 				isAttracting = false;
 			}
 			valueToCompute.push(startInfluence);
+			nextInfluence[startOffset] = startInfluence + 31; // Avoid blinking when zombie reach destination and is alone.
 			startX = startNewX;
 			startY = startNewY;
 		}

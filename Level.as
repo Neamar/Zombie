@@ -12,7 +12,9 @@ package
 	 * @author Neamar
 	 */
 	public class Level extends Sprite
-	{		
+	{
+		public static var current:Level;
+		
 		[Embed(source = "assets/testlevelHitmap.png")] private static var Hitmap:Class;
 		[Embed(source = "assets/testlevelBitmap.png")] private static var BitmapLevel:Class;
 		
@@ -41,7 +43,9 @@ package
 		public var heatmap:Heatmap;
 		
 		public function Level()
-		{			
+		{
+			Level.current = this;
+			
 			hitmap = new Hitmap();
 			player = new Player(this);
 			heatmap = new Heatmap(this);
@@ -54,7 +58,8 @@ package
 			addChild(bitmapLevel);
 			addChild(player);
 			
-			for (var i:int = 0; i < 100; i++)
+			//Generate Zombies
+			for (var i:int = 0; i < 400; i++)
 			{
 				var x:int = Main.LEVEL_WIDTH * Math.random();
 				var y:int = Main.LEVEL_HEIGHT * Math.random();

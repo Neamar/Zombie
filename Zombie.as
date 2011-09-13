@@ -16,14 +16,15 @@ package
 		public const SPEED:int = 3;
 		public const REPULSION:int = 15;
 		
-		public static var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(100);
+		public static const MAX_DURATION:int = 100;
+		public static var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(MAX_DURATION);
 		public static var frameNumber:int = 0;
 		
 		public static function init():void
 		{
 			
 			Main.stage.addEventListener(Event.ENTER_FRAME, onFrame);
-			for (frameNumber = 0; frameNumber < frameWaker.length; frameNumber++)
+			for (frameNumber = 0; frameNumber < MAX_DURATION; frameNumber++)
 			{
 				frameWaker[frameNumber] = new Vector.<Zombie>();
 			}
@@ -32,7 +33,7 @@ package
 		
 		public static function onFrame(e:Event = null):void
 		{
-			frameNumber = (frameNumber + 1) % frameWaker.length;
+			frameNumber = (frameNumber + 1) % MAX_DURATION;
 			
 			var currentFrame:Vector.<Zombie> = frameWaker[frameNumber];
 			while(currentFrame.length > 0)
@@ -121,7 +122,7 @@ package
 		
 		public function nextWakeIn(duration:int):void
 		{
-			frameWaker[(frameNumber + duration) % frameWaker.length].push(this);
+			frameWaker[(frameNumber + duration) % MAX_DURATION].push(this);
 		}
 	}
 	

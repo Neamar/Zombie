@@ -37,12 +37,15 @@
 			<sectionLabel>Garbage: </sectionLabel>
 			<garbageMemory>-</garbageMemory>
 			<sectionTitle>STAGE MONITOR</sectionTitle>
-			<sectionLabel>Width: </sectionLabel>
-			<widthPx>-</widthPx>
-			<sectionLabel>Height: </sectionLabel>
-			<heightPx>-</heightPx>
 			<sectionLabel>Children: </sectionLabel>
 			<nChildren>-</nChildren>
+			<sectionTitle>GAME MONITOR</sectionTitle>
+			<sectionLabel>Zombie:</sectionLabel>
+			<nZombie>-</nZombie>
+			<sectionLabel>--active:</sectionLabel>
+			<nActiveZombie>-</nActiveZombie>
+			<sectionLabel>Weapon:</sectionLabel>
+			<currentWeapon>-</currentWeapon>
 			</xml>;
 			var style:StyleSheet = new StyleSheet();
 			style.setStyle("xml",{fontSize:"9px",fontFamily:"arial"});
@@ -55,9 +58,10 @@
 			style.setStyle("veryTotalMemory",{color:"#FFFFFF"});
 			style.setStyle("garbageMemory",{color:"#FFFFFF"});
 			style.setStyle("directMemoryMax",{color:"#FFFFFF"});
-			style.setStyle("widthPx",{color:"#FFFFFF"});
-			style.setStyle("heightPx",{color:"#FFFFFF"});
 			style.setStyle("nChildren",{color:"#FFFFFF"});
+			style.setStyle("nZombie",{color:"#FFFFFF"});
+			style.setStyle("nActiveZombie",{color:"#FFFFFF"});
+			style.setStyle("currentWeapon",{color:"#FFFFFF"});
 			theText = new TextField();
 			theText.alpha=0.8;
 			theText.autoSize=TextFieldAutoSize.LEFT;
@@ -87,14 +91,17 @@
 				maxMemory=Math.max(directMemory,maxMemory);
 				xml.directMemory=(directMemory/1048576).toFixed(3);
 				xml.directMemoryMax=(maxMemory/1048576).toFixed(3);
-				xml.framesPerSecond=fps+" / "+stage.frameRate;
-				xml.widthPx=stage.width+" / "+stage.stageWidth;
-				xml.heightPx=stage.height+" / "+stage.stageHeight;
+				xml.framesPerSecond = fps + " / " + stage.frameRate;
 				childrenCount=0;
 				countDisplayList(stage);
 				xml.nChildren=childrenCount;
 				fps=0;
-				lastTimeCheck=timer;
+				lastTimeCheck = timer;
+				
+				xml.nZombie = Level.current.zombies.length.toString();
+				xml.nActiveZombie = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].length.toString();
+				xml.currentWeapon = Level.current.player.currentWeapon;
+				xml.currentWeapon = xml.currentWeapon.toString().replace('object ', '');
 			}
 			fps++;
 			xml.msFrame=(timer-ms);

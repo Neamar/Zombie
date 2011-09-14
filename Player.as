@@ -80,6 +80,7 @@ package
 		public var lightMask:Shape = new Shape();
 
 		public var currentWeapon:Weapon;
+		public var availableWeapon:Vector.<Weapon> = new Vector.<Weapon>();
 		public var frameNumber:int = 0;
 
 		public var hasShot:int = 10;
@@ -102,10 +103,13 @@ package
 			addEventListener(Event.ENTER_FRAME, onFrame);
 			Main.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			Main.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			Main.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 
-			this.currentWeapon = new Uzi(parent);
+			this.availableWeapon.push(new Handgun(parent));
+			this.availableWeapon.push(new Uzi(parent));
+			this.currentWeapon = this.availableWeapon[this.availableWeapon.length - 1];
 		}
 
 		protected function onKeyDown(e:KeyboardEvent):void
@@ -131,6 +135,17 @@ package
 			}
 		}
 		protected function onMouseUp(e:MouseEvent):void { isClicked = false; }
+		
+		protected function onMouseWheel(e:MouseEvent):void
+		{
+			var offset:int = (availableWeapon.indexOf(currentWeapon) + e.delta / Math.abs(e.delta)) % availableWeapon.length;
+			if (offset < 0)
+			{
+				offset = availableWeapon.length + offset;
+			}
+			
+			currentWeapon = availableWeapon[offset];
+		}
 
 		protected function onFrame(e:Event):void
 		{

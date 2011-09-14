@@ -11,6 +11,8 @@ package
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	import weapon.Handgun;
+	import weapon.Railgun;
+	import weapon.Shotgun;
 	import weapon.Uzi;
 	import weapon.Weapon;
 
@@ -109,6 +111,8 @@ package
 
 			this.availableWeapon.push(new Handgun(parent));
 			this.availableWeapon.push(new Uzi(parent));
+			this.availableWeapon.push(new Railgun(parent));
+			this.availableWeapon.push(new Shotgun(parent));
 			this.currentWeapon = this.availableWeapon[this.availableWeapon.length - 1];
 		}
 
@@ -217,7 +221,6 @@ package
 					{
 						x = destX;
 						y = destY;
-						(parent as Level).heatmap.bitmapData.setPixel32(x / Heatmap.RESOLUTION, y / Heatmap.RESOLUTION, Heatmap.BASE_ALPHA + Heatmap.MAX_INFLUENCE);
 						hasMoved = true;
 					}
 				}

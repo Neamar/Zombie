@@ -59,7 +59,7 @@ package
 			addChild(player);
 			
 			//Generate Zombies
-			for (var i:int = 0; i < 200; i++)
+			for (var i:int = 0; i < 400; i++)
 			{
 				var x:int = Main.LEVEL_WIDTH * Math.random();
 				var y:int = Main.LEVEL_HEIGHT * Math.random();

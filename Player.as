@@ -11,6 +11,7 @@ package
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	import weapon.Handgun;
+	import weapon.Uzi;
 	import weapon.Weapon;
 
 	/**
@@ -65,6 +66,8 @@ package
 		 * Which keys are currently pressed ?
 		 */
 		public var downKeys:Vector.<int> = new Vector.<int>();
+		
+		public var isClicked:Boolean = false;
 
 		/**
 		 * Shape to use to draw influence.
@@ -76,8 +79,8 @@ package
 		 */
 		public var lightMask:Shape = new Shape();
 
-
 		public var currentWeapon:Weapon;
+		public var frameNumber:int = 0;
 
 		public var hasShot:int = 10;
 
@@ -97,11 +100,12 @@ package
 
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
-			Main.stage.addEventListener(MouseEvent.CLICK, onClick);
+			Main.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			Main.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 
-			this.currentWeapon = new Handgun(parent);
+			this.currentWeapon = new Uzi(parent);
 		}
 
 		protected function onKeyDown(e:KeyboardEvent):void
@@ -117,16 +121,27 @@ package
 			downKeys.splice(downKeys.indexOf(e.keyCode), 1);
 		}
 
-		protected function onClick(e:MouseEvent):void
+		protected function onMouseDown(e:MouseEvent):void
 		{
+			isClicked = true;
+			//Shoot if possible
 			if (currentWeapon.isAbleToFire())
 			{
 				hasShot = currentWeapon.fire();
 			}
 		}
+		protected function onMouseUp(e:MouseEvent):void { isClicked = false; }
 
 		protected function onFrame(e:Event):void
 		{
+			frameNumber++;
+			
+			//Shoot if possible
+			if (isClicked && currentWeapon.isAbleToFire())
+			{
+				hasShot = currentWeapon.fire();
+			}
+			
 			//When true, recompute.
 			var hasMoved:Boolean = false;
 

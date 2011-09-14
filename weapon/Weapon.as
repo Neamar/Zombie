@@ -10,7 +10,7 @@ package weapon
 		public var parent:Level;
 		
 		protected var cooldown:int;
-		protected var lastShot:Date;
+		protected var lastShot:Number = 0;
 		
 		public function Weapon(level:Level) 
 		{
@@ -19,12 +19,14 @@ package weapon
 		
 		public function isAbleToFire():Boolean
 		{
-			return true;
+			return (parent.player.frameNumber - lastShot > cooldown);
 		}
 		
 		public function fire():int
 		{
-			throw new Error("Méthode abstraite : fire().");
+			lastShot = parent.player.frameNumber;
+			
+			return 0;
 		}
 		
 		public function raycast(deltaAngle:Number, limit:int = Main.WIDTH):int
@@ -54,7 +56,7 @@ package weapon
 					}
 				}
 				
-				radius++;
+				radius += Zombie.RADIUS;
 				if (radius >= limit)
 				{
 					break;

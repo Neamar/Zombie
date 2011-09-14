@@ -4,11 +4,11 @@ package weapon
 	 * ...
 	 * @author Neamar
 	 */
-	public class Handgun extends Weapon
+	public class Uzi extends Weapon
 	{
-		public function Handgun(level:Level) 
+		public function Uzi(level:Level) 
 		{
-			cooldown = Main.stage.frameRate;
+			cooldown = Main.stage.frameRate / 15;
 			super(level);
 		}
 		
@@ -16,7 +16,7 @@ package weapon
 			super.fire();
 			raycast(0);
 			
-			return 5;
+			return 7;
 		}
 	}
 

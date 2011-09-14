@@ -28,12 +28,14 @@
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// entry point and static initialisation
+			// static initialisation
 			Main.stage = this.stage;
 			Zombie.init();
 			
+			// entry point
 			addChild(new Level());
 			
+			//For debug :
 			var movieMonitor:MovieMonitor = new MovieMonitor();
 			addChild(movieMonitor);
 			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );

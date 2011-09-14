@@ -6,10 +6,11 @@ package weapon
 	 */
 	public class Uzi extends Weapon
 	{
-		public function Uzi(level:Level) 
+		public function Uzi(level:Level, player:Player) 
 		{
+			//Low cooldown, but enough to avoid one shoot per frame.
 			cooldown = Main.stage.frameRate / 15;
-			super(level);
+			super(level, player);
 		}
 		
 		public override function fire():int		{

@@ -6,10 +6,10 @@ package weapon
 	 */
 	public class Handgun extends Weapon
 	{
-		public function Handgun(level:Level) 
+		public function Handgun(level:Level, player:Player) 
 		{
 			cooldown = Main.stage.frameRate;
-			super(level);
+			super(level, player);
 		}
 		
 		public override function fire():int		{

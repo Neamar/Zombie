@@ -44,13 +44,14 @@ package
 		
 		public function Level()
 		{
+			//For debug, stroe current instance
 			Level.current = this;
 			
 			hitmap = new Hitmap();
 			player = new Player(this);
 			heatmap = new Heatmap(this);
 			bitmapLevel = new BitmapLevel();
-			//Small optimisation, available since we never update the hitmap
+			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
 			
 			
@@ -108,7 +109,7 @@ package
 					mask = player.lightMask;
 				}
 				
-				//Player ought to be visible at any time
+				//Player and zombies ought to be visible at any time
 				setChildIndex(player, numChildren - 1);
 				for each(var zombie:Zombie in zombies)
 				{

@@ -80,11 +80,33 @@ package
 		 * Mask for the level, depending on the direction player is facing.
 		 */
 		public var lightMask:Shape = new Shape();
-
+		
+		/**
+		 * Matrix to use to draw lamp torch.
+		 */
+		public var transformationMatrix:Matrix = new Matrix();
+		
+		/**
+		 * Weapon currently in use, picked from availableWeapon
+		 */
 		public var currentWeapon:Weapon;
+		
+		/**
+		 * All weapons the player may use
+		 */
 		public var availableWeapon:Vector.<Weapon> = new Vector.<Weapon>();
+		
+		/**
+		 * Count the number of frames since the player begins it play.
+		 * USeful for weapon cooldown.
+		 */
 		public var frameNumber:int = 0;
 
+		/**
+		 * Enlight stage when a weapon shot, to show deflagration.
+		 * When 0, no deflagration.
+		 * 20 : max deflagration.
+		 */
 		public var hasShot:int = 10;
 
 		public function Player(parent:Level)
@@ -100,6 +122,7 @@ package
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineTo(0, 0);
 			lightMask.filters = [new BlurFilter()];
+			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
 
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
@@ -109,10 +132,11 @@ package
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 
-			this.availableWeapon.push(new Handgun(parent));
-			this.availableWeapon.push(new Uzi(parent));
-			this.availableWeapon.push(new Railgun(parent));
-			this.availableWeapon.push(new Shotgun(parent));
+			//Populate weapons
+			this.availableWeapon.push(new Handgun(parent, this));
+			this.availableWeapon.push(new Uzi(parent, this));
+			this.availableWeapon.push(new Railgun(parent, this));
+			this.availableWeapon.push(new Shotgun(parent, this));
 			this.currentWeapon = this.availableWeapon[this.availableWeapon.length - 1];
 		}
 
@@ -132,7 +156,7 @@ package
 		protected function onMouseDown(e:MouseEvent):void
 		{
 			isClicked = true;
-			//Shoot if possible
+			//Shoot now if possible
 			if (currentWeapon.isAbleToFire())
 			{
 				hasShot = currentWeapon.fire();
@@ -142,6 +166,7 @@ package
 		
 		protected function onMouseWheel(e:MouseEvent):void
 		{
+			//Select next / prev weapon
 			var offset:int = (availableWeapon.indexOf(currentWeapon) + e.delta / Math.abs(e.delta)) % availableWeapon.length;
 			if (offset < 0)
 			{
@@ -161,7 +186,7 @@ package
 				hasShot = currentWeapon.fire();
 			}
 			
-			//When true, recompute.
+			//When this var is true, we need to recompute masks.
 			var hasMoved:Boolean = false;
 
 			//Shall we turn the player ?
@@ -187,7 +212,7 @@ package
 					var destY:int;
 					var move:Boolean = false;
 
-					//Is hitmap blocking move ?
+					//Does hitmap allows move ?
 					if (downKey == bindings.UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) == 0)
 					{
 						destX = x + SPEED * cos;
@@ -245,15 +270,16 @@ package
 				//Everything is gray-dark
 				maskGraphics.beginFill(0, .05 * (hasShot + 1));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.HEIGHT2, Main.WIDTH, Main.HEIGHT);
-				//Except for the player
+				//Except for the player, which is visible no matter what
 				maskGraphics.beginFill(0, 1);
 				maskGraphics.drawCircle(x, y, RADIUS);
 				maskGraphics.endFill();
 
 				//And his line of sight
 				maskGraphics.moveTo(x, y);
-				var transformationMatrix:Matrix = new Matrix();
-				transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0, -DEPTH_VISIBILITY + x, -DEPTH_VISIBILITY + y);
+				transformationMatrix.tx = x;
+				transformationMatrix.ty = y;
+				
 				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);
 				step = Math.abs(startAngle - endAngle) / RESOLUTION;
 				for (theta = startAngle; theta <= endAngle + .01; theta += step)
@@ -275,6 +301,7 @@ package
 
 				if (hasShot > 0)
 				{
+					//Bit operation <=> /2
 					hasShot = hasShot >> 1;
 				}
 			}

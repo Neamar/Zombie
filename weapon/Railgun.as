@@ -6,10 +6,10 @@ package weapon
 	 */
 	public class Railgun extends Weapon
 	{
-		public function Railgun(level:Level) 
+		public function Railgun(level:Level, player:Player) 
 		{
 			cooldown = Main.stage.frameRate;
-			super(level);
+			super(level, player);
 		}
 		
 		public override function fire():int		{
@@ -23,6 +23,7 @@ package weapon
 		{
 			super.shoot(zombie);
 			
+			//Return true so as not to stop raycasting. See raycast() function.
 			return true;
 		}
 	}

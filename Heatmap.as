@@ -1,5 +1,6 @@
 package 
 {
+	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;

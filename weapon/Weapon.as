@@ -1,5 +1,7 @@
 package weapon 
 {
+	import entity.Player;
+	import entity.Zombie;
 	import flash.filters.BlurFilter;
 	/**
 	 * ...
@@ -79,7 +81,7 @@ package weapon
 						if (shoot(zombie) == false)
 						{
 							//We shot him, but the bullet should stop on this corpse (shoot() returns false) :
-							break;
+							return radius;
 						}
 					}
 				}

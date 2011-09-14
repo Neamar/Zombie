@@ -1,4 +1,5 @@
 ﻿package {
+	import entity.Zombie;
 	import flash.display.Sprite;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.DisplayObject;

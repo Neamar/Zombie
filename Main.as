@@ -1,5 +1,6 @@
 ﻿package 
 {
+	import entity.Zombie;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;

@@ -1,4 +1,4 @@
-package
+package entity
 {
 	import flash.display.BitmapData;
 	import flash.display.GradientType;

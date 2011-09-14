@@ -1,4 +1,4 @@
-package 
+package entity
 {
 	import flash.events.Event;
 	import flash.filters.BlurFilter;

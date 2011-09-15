@@ -4,6 +4,7 @@ package
 	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.KeyboardEvent;
 	import flash.filters.GlowFilter;
@@ -83,6 +84,8 @@ package
 			
 			player.lightMask.cacheAsBitmap = true;//If not cached, mask won't apply alpha.
 			this.cacheAsBitmap = true;//Same.
+			//blendMode = BlendMode.LAYER;
+			//player.lightMask.blendMode = BlendMode.ALPHA;
 			mask = player.lightMask;
 			
 			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, toggleDebugMode);

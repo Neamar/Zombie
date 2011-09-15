@@ -45,7 +45,7 @@ package entity
 		/**
 		 * Number of rays to throw.
 		 */
-		public const RESOLUTION:int = 25;
+		public const RESOLUTION:int = 12;
 
 		/**
 		 * Mathematic constant = Math.PI / 180
@@ -121,7 +121,8 @@ package entity
 			this.graphics.beginFill(0xAAAAAA, 1);
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineTo(0, 0);
-			lightMask.filters = [new BlurFilter()];
+			//Great effect, but causes flickering
+			//lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
 
 			//Various initialisations

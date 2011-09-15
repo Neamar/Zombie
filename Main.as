@@ -3,7 +3,9 @@
 	import entity.Zombie;
 	import flash.display.Sprite;
 	import flash.display.Stage;
+	import flash.display.StageQuality;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	
 	/**
@@ -32,6 +34,7 @@
 			// static initialisation
 			Main.stage = this.stage;
 			Zombie.init();
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, toggleQuality);
 			
 			// entry point
 			addChild(new Level());
@@ -40,6 +43,14 @@
 			var movieMonitor:MovieMonitor = new MovieMonitor();
 			addChild(movieMonitor);
 			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );
+		}
+		
+		private function toggleQuality(e:KeyboardEvent):void
+		{
+			if (e.keyCode == 81)
+			{
+				stage.quality = StageQuality.LOW;
+			}
 		}
 		
 	}

@@ -3,7 +3,9 @@
 	import entity.Zombie;
 	import flash.display.Sprite;
 	import flash.display.Stage;
+	import flash.display.StageAlign;
 	import flash.display.StageQuality;
+	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -36,6 +38,12 @@
 			Zombie.init();
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, toggleQuality);
 			
+			//Resizing stage
+			stage.align = StageAlign.TOP_LEFT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.addEventListener(Event.RESIZE, onResize);
+			stage.dispatchEvent(new Event(Event.RESIZE));
+			
 			// entry point
 			addChild(new Level());
 			
@@ -51,6 +59,12 @@
 			{
 				stage.quality = StageQuality.LOW;
 			}
+		}
+		
+		private function onResize(e:Event):void
+		{
+			this.x = stage.stageWidth / 2 - Main.WIDTH2;
+			this.y = stage.stageHeight / 2 - Main.HEIGHT2;
 		}
 		
 	}

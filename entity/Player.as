@@ -122,7 +122,7 @@ package entity
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineTo(0, 0);
 			//Great effect, but causes flickering
-			//lightMask.filters = [new BlurFilter()];
+			lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
 
 			//Various initialisations

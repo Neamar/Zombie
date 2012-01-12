@@ -82,9 +82,8 @@ package
 
 			addChild(player.lightMask);//Mask ought to be added, else it ain't taken into account
 			
-			//TODO : correct flickering
-			player.lightMask.cacheAsBitmap = true;//If not cached, mask won't apply alpha.
-			this.cacheAsBitmap = true;//Same.
+			//player.lightMask.cacheAsBitmap = true;//
+			this.cacheAsBitmap = true;//If not cached, mask won't apply alpha.
 			//blendMode = BlendMode.LAYER;
 			//player.lightMask.blendMode = BlendMode.ALPHA;
 			this.mask = player.lightMask;

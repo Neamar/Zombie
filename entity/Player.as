@@ -255,7 +255,10 @@ package entity
 				}
 			}
 
-			if (hasMoved || hasShot > 0)
+			//TODO : Mask should be recomputed *every* frame. Else, when the player is not moving, the stage flickers sometimes.
+			//Seems to be a flash related issue.
+			//hasMoved || hasShot > 0
+			if (1)
 			{
 				parent.x = Main.WIDTH2 - x;
 				parent.y = Main.HEIGHT2 - y;

@@ -82,11 +82,13 @@ package
 
 			addChild(player.lightMask);//Mask ought to be added, else it ain't taken into account
 			
-			//player.lightMask.cacheAsBitmap = true;//
-			this.cacheAsBitmap = true;//If not cached, mask won't apply alpha.
-			//blendMode = BlendMode.LAYER;
-			//player.lightMask.blendMode = BlendMode.ALPHA;
-			this.mask = player.lightMask;
+			//Use blendMode to achieve required effects.
+			//Layer simply means an object "in front of" can affect the pixels.
+			blendMode = BlendMode.LAYER;
+			//Alpha applies an alpha mask to the object behind, in this case the level.
+			//Since the lightMask is added after everything, it applies everywhere.
+			//Is is incredibly faster than using a real as3-mask, since we don't have to cacheAsBitmap the level.
+			player.lightMask.blendMode = BlendMode.ALPHA;
 		}
 		
 		/**

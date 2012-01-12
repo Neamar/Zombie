@@ -255,10 +255,8 @@ package entity
 				}
 			}
 
-			//TODO : Mask should be recomputed *every* frame. Else, when the player is not moving, the stage flickers sometimes.
-			//Seems to be a flash related issue.
-			//hasMoved || hasShot > 0
-			if (1)
+			//Recompute mask only if needed.
+			if (hasMoved || hasShot > 0)
 			{
 				parent.x = Main.WIDTH2 - x;
 				parent.y = Main.HEIGHT2 - y;
@@ -287,6 +285,7 @@ package entity
 				transformationMatrix.tx = x;
 				transformationMatrix.ty = y;
 				
+				//Color doesn't matter, beacause the mask is used with a blendMode.ALPHA, meaning all color information will be discarded.
 				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);
 				step = Math.abs(startAngle - endAngle) / RESOLUTION;
 				for (theta = startAngle; theta <= endAngle + .01; theta += step)

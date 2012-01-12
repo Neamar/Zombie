@@ -75,7 +75,6 @@ package weapon
 				
 				for each(var zombie:Zombie in parent.zombies)
 				{
-					
 					if (zombie.x - Zombie.RADIUS < curX && zombie.x + Zombie.RADIUS > curX && zombie.y - Zombie.RADIUS < curY && zombie.y + Zombie.RADIUS > curY)
 					{
 						if (shoot(zombie) == false)
@@ -97,6 +96,11 @@ package weapon
 			return radius;
 		}
 		
+		/**
+		 * Base function for shooting a zombie : you kill him, the bullet stops.
+		 * @param	zombie to shoot
+		 * @return whether the bullet was stopped by the impact
+		 */
 		public function shoot(zombie:Zombie):Boolean
 		{
 			zombie.kill();

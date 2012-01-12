@@ -23,7 +23,7 @@ package entity
 	public class Player extends Entity
 	{
 		/**
-		 * Player radius
+		 * Player radius (he's a fatty!)
 		 */
 		public const RADIUS:int = 10;
 
@@ -33,7 +33,7 @@ package entity
 		public const SPEED:int = 4;
 
 		/**
-		 * Half-angular visiblity. Should be 180° in realistic game, however 100 gives more fun.
+		 * Half-angular visiblity. Full value should be 180° in realistic game, however 100 gives more fun.
 		 */
 		public const ANGULAR_VISIBILITY2:int = 50;
 
@@ -97,15 +97,17 @@ package entity
 		public var availableWeapon:Vector.<Weapon> = new Vector.<Weapon>();
 		
 		/**
-		 * Count the number of frames since the player begins it play.
-		 * USeful for weapon cooldown.
+		 * Count the number of frames since the player begins playing.
+		 * Useful for weapon cooldown.
 		 */
 		public var frameNumber:int = 0;
 
 		/**
-		 * Enlight stage when a weapon shot, to show deflagration.
+		 * Enlight stage when a weapon is shot, to show deflagration.
 		 * When 0, no deflagration.
 		 * 20 : max deflagration.
+		 * 
+		 * Initial value is 10, for fun ;)
 		 */
 		public var hasShot:int = 10;
 
@@ -121,7 +123,7 @@ package entity
 			this.graphics.beginFill(0xAAAAAA, 1);
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineTo(0, 0);
-			//Great effect, but causes flickering
+			//Great effect, but may causes flickering
 			lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
 
@@ -160,6 +162,7 @@ package entity
 			//Shoot now if possible
 			if (currentWeapon.isAbleToFire())
 			{
+				//Enlight stage, intensity depends on the weapon's deflagration power.
 				hasShot = currentWeapon.fire();
 			}
 		}
@@ -268,7 +271,7 @@ package entity
 
 				maskGraphics.clear();
 
-				//Everything is gray-dark
+				//Everything is gray-dark, except when a weapon was just fired
 				maskGraphics.beginFill(0, .05 * (hasShot + 1));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.HEIGHT2, Main.WIDTH, Main.HEIGHT);
 				//Except for the player, which is visible no matter what

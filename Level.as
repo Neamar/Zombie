@@ -47,7 +47,7 @@ package
 		
 		public function Level()
 		{
-			//For debug, stroe current instance
+			//For debug, store current instance
 			Level.current = this;
 			
 			hitmap = new Hitmap();
@@ -63,7 +63,7 @@ package
 			addChild(player);
 			
 			//Generate Zombies
-			for (var i:int = 0; i < 200; i++)
+			for (var i:int = 0; i < Main.ZOMBIES_NUMBER; i++)
 			{
 				var x:int = Main.LEVEL_WIDTH * Math.random();
 				var y:int = Main.LEVEL_HEIGHT * Math.random();
@@ -82,44 +82,40 @@ package
 
 			addChild(player.lightMask);//Mask ought to be added, else it ain't taken into account
 			
+			//TODO : correct flickering
 			player.lightMask.cacheAsBitmap = true;//If not cached, mask won't apply alpha.
 			this.cacheAsBitmap = true;//Same.
 			//blendMode = BlendMode.LAYER;
 			//player.lightMask.blendMode = BlendMode.ALPHA;
-			mask = player.lightMask;
-			
-			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, toggleDebugMode);
+			this.mask = player.lightMask;
 		}
 		
 		/**
-		 * Press T to toggle debug mode and view the influence map.
+		 * Toggle debug mode and view the influence map.
 		 * @param	e
 		 */
-		public function toggleDebugMode(e:KeyboardEvent = null):void
+		public function toggleDebugMode():void
 		{
-			if(e == null || e.keyCode == 84)
+			if (bitmapLevel.parent == this)
 			{
-				if (bitmapLevel.parent == this)
-				{
-					removeChild(bitmapLevel);
-					removeChild(player.lightMask);
-					addChild(heatmap);
-					mask = null;
-				}
-				else
-				{
-					removeChild(heatmap);
-					addChild(bitmapLevel);
-					addChild(player.lightMask);
-					mask = player.lightMask;
-				}
-				
-				//Player and zombies ought to be visible at any time
-				setChildIndex(player, numChildren - 1);
-				for each(var zombie:Zombie in zombies)
-				{
-					setChildIndex(zombie, numChildren - 2);
-				}
+				removeChild(bitmapLevel);
+				removeChild(player.lightMask);
+				addChild(heatmap);
+				mask = null;
+			}
+			else
+			{
+				removeChild(heatmap);
+				addChild(bitmapLevel);
+				addChild(player.lightMask);
+				mask = player.lightMask;
+			}
+			
+			//Player and zombies ought to be visible at any time
+			setChildIndex(player, numChildren - 1);
+			for each(var zombie:Zombie in zombies)
+			{
+				setChildIndex(zombie, numChildren - 2);
 			}
 		}
 	}

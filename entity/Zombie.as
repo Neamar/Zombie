@@ -34,7 +34,7 @@ package entity
 		public static const REPULSION:int = 15;
 		
 		/**
-		 * Number of frames to precompute.
+		 * Number of frames to precompute (for vector length).
 		 * Should be greater than SLEEP_DURATION + 10.
 		 */
 		public static const MAX_DURATION:int = 100;
@@ -152,10 +152,11 @@ package entity
 			{
 				if (!(parent as Level).heatmap.hasJustRedrawn)
 				{
-					//Do not undo-repulsion if a redraw just occurs, else we get flickering behavior.
+					//Do not undo-repulsion if a redraw has just occured, else we get flickering behavior.
 					heatmap.bitmapData.setPixel(xScaled, yScaled, heatmap.bitmapData.getPixel(xScaled , yScaled) + REPULSION);
 				}
 				
+				//Move toward higher potential
 				x += SPEED * maxI;
 				y += SPEED * maxJ;
 				

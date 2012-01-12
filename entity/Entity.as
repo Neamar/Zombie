@@ -9,7 +9,7 @@ package entity
 	public class Entity extends Sprite 
 	{	
 		/**
-		 * Function to use to know if we may go through a given pixel.
+		 * Can we go through a given pixel?
 		 */
 		public var hitmapTest:Function;
 		

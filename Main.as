@@ -23,6 +23,9 @@
 		public static const HEIGHT2:int = HEIGHT / 2;
 		public static const LEVEL_WIDTH:int = 1934;
 		public static const LEVEL_HEIGHT:int = 1094;
+		public static const ZOMBIES_NUMBER:int = 200;
+		
+		public var level:Level;
 		
 		public function Main():void 
 		{
@@ -38,14 +41,15 @@
 			Zombie.init();
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, toggleQuality);
 			
-			//Resizing stage
+			//Forbid stage resizing
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.addEventListener(Event.RESIZE, onResize);
 			stage.dispatchEvent(new Event(Event.RESIZE));
 			
 			// entry point
-			addChild(new Level());
+			level = new Level();
+			addChild(level);
 			
 			//For debug :
 			var movieMonitor:MovieMonitor = new MovieMonitor();
@@ -58,6 +62,10 @@
 			if (e.keyCode == 81)
 			{
 				stage.quality = StageQuality.LOW;
+			}
+			else if (e.keyCode == 84)
+			{
+				level.toggleDebugMode();
 			}
 		}
 		

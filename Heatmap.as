@@ -29,7 +29,7 @@ package
 		public const PER_FRAME:int = 200;
 		
 		/**
-		 * Decay factor for each iteration.
+		 * Decay value for each iteration.
 		 */
 		public const DECAY:int = 7;
 		
@@ -93,10 +93,13 @@ package
 		protected var offsetToCompute:Vector.<int>;
 		
 		/**
-		 * Associated value.
+		 * Associated values.
 		 */
 		protected var valueToCompute:Vector.<int>;
 		
+		/**
+		 * Parent level
+		 */
 		protected var level:Level;
 		
 		public function Heatmap(level:Level)
@@ -135,7 +138,7 @@ package
 			baseInfluence.unlock();
 			//Don't forget to clone ! Elsewise, we'll be drawing over and over.
 			super(baseInfluence.clone());
-			//For debug purpose. If we display the bitmap, it'll print nicely.
+			//For debug purpose. If we display the bitmap, it'll fit nicely with the landscape.
 			this.scaleX = this.scaleY = RESOLUTION;
 			
 			recomputeInfluence();
@@ -182,7 +185,7 @@ package
 		}
 		
 		/**
-		 * Call on each frame, add more computational power.
+		 * Called on each frame, add more computational power.
 		 * @param	e
 		 */
 		public function updateInfluence(e:Event = null):void

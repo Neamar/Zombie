@@ -81,7 +81,6 @@ package
 			}
 
 			addChild(player.lightMask);//Mask ought to be added, else it ain't taken into account
-			
 			//Use blendMode to achieve required effects.
 			//Layer simply means an object "in front of" can affect the pixels.
 			blendMode = BlendMode.LAYER;

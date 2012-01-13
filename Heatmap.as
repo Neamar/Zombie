@@ -36,7 +36,7 @@ package
 		/**
 		 * Influence under the player
 		 */
-		public static const MAX_INFLUENCE:int = Main.WIDTH;
+		public static const MAX_INFLUENCE:int = Main.WIDTH + 30;
 		
 		/**
 		 * Some constants to deal with pseudo-non-transparent bitmaps.
@@ -192,16 +192,20 @@ package
 					
 				var currentValue:uint = valueToCompute.shift() - DECAY;
 				
+				var absI:int, absJ:int;
 				for (var i:int = -1; i <= 1; i++)
 				{
 					for (var j:int = -1; j <= 1; j++)
 					{
-						if (i == 0 && j == 0)
+						//Faster than using Math.abs
+						absI = i < 0 ? -i:i;
+						absJ = j < 0 ? -j:j;
+						if (i == 0 && j == 0 || (absI == absJ && absI == 1))
 							continue;
 						
 						var newOffset:int = fromXY(currentX + i, currentY + j);
 
-						var v:uint = currentValue - Math.abs(i) - Math.abs(j);
+						var v:uint = currentValue - absI - absJ;
 						
 						//Do we have a better path than the previous one ?
 						if (nextInfluence[newOffset] != BASE_ALPHA && nextInfluence[newOffset] < v)

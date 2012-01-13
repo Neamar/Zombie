@@ -78,11 +78,6 @@ package
 		public var startY:int = -1;
 		
 		/**
-		 * When player is not moving, he is attracting zombies to himself.
-		 */
-		public var isAttracting:Boolean = true;
-		
-		/**
 		 * Flag used to avoid zombie buggering map.
 		 */
 		public var hasJustRedrawn:Boolean = false;
@@ -167,17 +162,7 @@ package
 			var startOffset:int = fromXY(startNewY, startNewX)
 			offsetToCompute.push(startOffset);
 			
-			//If player is not moving to zombies, then zombies will be moving to player !
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
-			if (startNewX == startX && startNewY == startY)
-			{
-				startInfluence = BASE_ALPHA + 1.5 * MAX_INFLUENCE;
-				isAttracting = true;
-			}
-			else
-			{
-				isAttracting = false;
-			}
 			valueToCompute.push(startInfluence);
 			nextInfluence[startOffset] = startInfluence + 2 * Zombie.REPULSION + 1; // Avoid blinking when zombie reach destination and is alone.
 			startX = startNewX;
@@ -192,20 +177,14 @@ package
 		{
 			hasJustRedrawn = false;
 			
-			if (isAttracting && (Math.floor(level.player.x / RESOLUTION) != startX || Math.floor(level.player.y / RESOLUTION)  != startY))
-			{
-				//We were calling zombie cause the player was still. However, he moved, so now we revert to standard computing
-				//Else, the game lags and zombie keeps swarming around the previous computed spot.
-				recomputeInfluence();
-				return;
-			}
-			
 			var nbIterations:int = 0;
 			while (offsetToCompute.length > 0)
 			{
 				//Time out.
 				if (nbIterations++ > PER_FRAME)
+				{
 					return;
+				}
 				
 				var currentOffset:int = offsetToCompute.shift();
 				var currentX:int = xFromOffset(currentOffset);

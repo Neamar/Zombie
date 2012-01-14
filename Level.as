@@ -100,19 +100,20 @@ package
 		 */
 		public function toggleDebugMode():void
 		{
-			if (bitmapLevel.parent == this)
+			if (player.lightMask.parent == this)
 			{
 				removeChild(bitmapLevel);
 				removeChild(player.lightMask);
 				addChild(heatmap);
-				mask = null;
 			}
-			else
+			else if(heatmap.parent == this)
 			{
 				removeChild(heatmap);
 				addChild(bitmapLevel);
+			}
+			else
+			{
 				addChild(player.lightMask);
-				mask = player.lightMask;
 			}
 			
 			//Player and zombies ought to be visible at any time

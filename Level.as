@@ -80,7 +80,11 @@ package
 				}
 			}
 
-			addChild(player.lightMask);//Mask ought to be added, else it ain't taken into account
+			/**
+			 * Blending and masking
+			 * @see http://active.tutsplus.com/tutorials/games/introducing-blend-modes-in-flash/
+			 */
+			addChild(player.lightMask);
 			//Use blendMode to achieve required effects.
 			//Layer simply means an object "in front of" can affect the pixels.
 			blendMode = BlendMode.LAYER;

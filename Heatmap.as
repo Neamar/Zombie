@@ -7,7 +7,9 @@ package
 	import flash.geom.Rectangle;
 	
 	/**
-	 * ...
+	 * Heatmap (other names : influence map, potential fields)
+	 * 
+	 * @see http://aigamedev.com/open/tutorials/potential-fields/
 	 * @author Neamar
 	 */
 	public class Heatmap extends Bitmap

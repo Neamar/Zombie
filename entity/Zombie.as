@@ -40,6 +40,20 @@ package entity
 		public static const MAX_DURATION:int = 100;
 		
 		/**
+		 * Angles depending on deltaX.
+		 * Given deltaX and deltaY, compute (deltaX + 1) * 4 + (delatY + 1) to get the index.
+		 * At this index, you'll find the angle.
+		 * 
+		 * @note The 4 was chosen to improve compution since it is a power of 2, however it forces the vector to integrate "jump values", never used.
+		 * @note deltaX = 0 && deltaY == 0 does not exists (can't compute an angle if no moves are made)
+		 */
+		public static const ANGLES:Vector.<int> = Vector.<int>([
+			/*dX = -1*/ -45 * 3, 180, 45 * 3, /*jump*/-1,
+			/*dX =  0*/ -90, -1, 90, /*jump*/-1,
+			/*dX =  1*/ -45, 0, 45
+		]);
+		
+		/**
 		 * Which zombie should awake in which frame ?
 		 */
 		public static var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(MAX_DURATION);
@@ -95,7 +109,8 @@ package entity
 			this.graphics.lineStyle(1, 0xFF0000);
 			this.graphics.beginFill(0xF00000);
 			this.graphics.drawCircle(0, 0, RADIUS);
-			this.graphics.moveTo(0, 0);
+			this.graphics.lineStyle(1, 0);
+			this.graphics.lineTo(0, 0);
 			
 			//Random starting-wake.
 			nextWakeIn(30 + SLEEP_DURATION * Math.random());
@@ -159,6 +174,7 @@ package entity
 				//Move toward higher potential
 				x += SPEED * maxI;
 				y += SPEED * maxJ;
+				rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 				
 				//Store repulsion
 				xScaled = x / Heatmap.RESOLUTION;

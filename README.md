@@ -1,6 +1,8 @@
 Zombie
 ======
 
+![Zombies](https://github.com/Neamar/Zombie/raw/master/assets/zombies.png)
+	
 Old school Zombie game, just shoot them all.
 
 Trying to use some interesting features, mainly keeping hundreds of zombies on the move while maintaining decent 30FPS (AS3 does not make it easy).

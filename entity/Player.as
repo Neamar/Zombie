@@ -302,9 +302,8 @@ package entity
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
 
-				/*maskGraphics.lineTo(x, y);
+				maskGraphics.lineTo(x, y);
 				maskGraphics.endFill();
-				(parent as Level).heatmap.bitmapData.draw(maskGraphics,*/
 
 				if (hasShot > 0)
 				{

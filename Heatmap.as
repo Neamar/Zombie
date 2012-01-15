@@ -1,9 +1,12 @@
 package 
 {
+	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
 	/**
@@ -151,6 +154,11 @@ package
 			{
 				//Draw last pass result.
 				bitmapData.setVector(bitmapData.rect, nextInfluence);
+				
+				//Add lamplight repulsion
+				var player:Player = level.player;
+				var lightMask:Shape = player.lightMask;
+				bitmapData.draw(lightMask, new Matrix(1 / 5, 0, 0, 1 / 5, -player.x / RESOLUTION, -player.y / RESOLUTION), null, null );
 				bitmapData.unlock();
 				hasJustRedrawn = true;
 			}

@@ -134,7 +134,7 @@ package entity
 		{
 			super(parent);
 
-			x = Main.WIDTH2;
+			x = 1934 - 205;
 			y = Main.HEIGHT2;
 
 			//Player graphics
@@ -172,7 +172,10 @@ package entity
 		{
 			damagesTaken += power;
 			if (damagesTaken > MAX_HEALTHPOINTS)
+			{
 				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);
+				damagesTaken = MAX_HEALTHPOINTS;
+			}
 		}
 
 		protected function onKeyDown(e:KeyboardEvent):void

@@ -19,8 +19,6 @@ package
 		 * The higher the better and the slower.
 		 */
 		public static const RESOLUTION:int = 10;
-		public static const RESOLUTION_WIDTH:int = Main.WIDTH / RESOLUTION;
-		public static const RESOLUTION_HEIGHT:int = Main.HEIGHT / RESOLUTION;
 		
 		/**
 		 * If THRESHOLD pixels are blocking, consider this Heatmap pixel as blocked.
@@ -38,9 +36,20 @@ package
 		public const DECAY:int = 7;
 		
 		/**
-		 * Influence under the player
+		 * Influence under the player.
+		 * @note Should be a multiple of RESOLUTION.
 		 */
-		public static const MAX_INFLUENCE:int = Main.WIDTH;
+		public static const MAX_INFLUENCE:int = Main.WIDTH + 20;
+		
+		/**
+		 * Width and height of the influence bitmap, storing the influence for each pixels around the player up to MAX_INFLUENCE width.
+		 */
+		public static const MAX_INFLUENCE_WIDTH:int = (MAX_INFLUENCE / RESOLUTION) + 4;
+		
+		/**
+		 * Halved width.
+		 */
+		public static const MAX_INFLUENCE_WIDTH2:int = MAX_INFLUENCE_WIDTH / 2;
 		
 		/**
 		 * Some constants to deal with pseudo-non-transparent bitmaps.
@@ -93,8 +102,9 @@ package
 		
 		/**
 		 * Rectangle currently computed
+		 * @see http://webr3.org/blog/haxe/bitmapdata-vectors-bytearrays-and-optimization/
 		 */
-		public var currentRect:Rectangle = new Rectangle(0, 0, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
+		public var currentRect:Rectangle = new Rectangle(0, 0, MAX_INFLUENCE_WIDTH, MAX_INFLUENCE_WIDTH);
 		
 		public function Heatmap(level:Level)
 		{
@@ -152,8 +162,8 @@ package
 			}
 
 			//Update currentRect for new computation
-			currentRect.x = Math.round(Math.max(0, level.player.x - Main.WIDTH2) / RESOLUTION);
-			currentRect.y = Math.round(Math.max(0, level.player.y - Main.HEIGHT2) / RESOLUTION);
+			currentRect.x = Math.round(Math.max(0, level.player.x / RESOLUTION - MAX_INFLUENCE_WIDTH2));
+			currentRect.y = Math.round(Math.max(0, level.player.y / RESOLUTION - MAX_INFLUENCE_WIDTH2));
 			nextInfluence = baseInfluence.getVector(currentRect);
 
 			offsetToCompute = new Vector.<int>();
@@ -230,7 +240,7 @@ package
 		 */
 		public function fromXY(x:int, y:int):int
 		{
-			return RESOLUTION_WIDTH * x + y;
+			return MAX_INFLUENCE_WIDTH * x + y;
 		}
 		
 		/**
@@ -240,7 +250,7 @@ package
 		 */
 		public function xFromOffset(offset:int):int
 		{
-			return offset / RESOLUTION_WIDTH;
+			return offset / MAX_INFLUENCE_WIDTH;
 		}
 		
 		/**
@@ -251,7 +261,7 @@ package
 		 */
 		public function yFromOffset(offset:int):int
 		{
-			return offset % RESOLUTION_WIDTH;
+			return offset % MAX_INFLUENCE_WIDTH;
 		}
 	}
 }

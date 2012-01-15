@@ -19,6 +19,8 @@ package
 		 * The higher the better and the slower.
 		 */
 		public static const RESOLUTION:int = 10;
+		public static const RESOLUTION_WIDTH:int = Main.WIDTH / RESOLUTION;
+		public static const RESOLUTION_HEIGHT:int = Main.HEIGHT / RESOLUTION;
 		
 		/**
 		 * If THRESHOLD pixels are blocking, consider this Heatmap pixel as blocked.
@@ -38,7 +40,7 @@ package
 		/**
 		 * Influence under the player
 		 */
-		public static const MAX_INFLUENCE:int = Main.WIDTH + 30;
+		public static const MAX_INFLUENCE:int = Main.WIDTH;
 		
 		/**
 		 * Some constants to deal with pseudo-non-transparent bitmaps.
@@ -70,16 +72,6 @@ package
 		public var influenceHeight:int;
 		
 		/**
-		 * x-position of the player when we launched current computation
-		 */
-		public var startX:int = -1;
-		
-		/**
-		 * y-position of the player.
-		 */
-		public var startY:int = -1;
-		
-		/**
 		 * Flag used to avoid zombie buggering map.
 		 */
 		public var hasJustRedrawn:Boolean = false;
@@ -98,6 +90,11 @@ package
 		 * Parent level
 		 */
 		protected var level:Level;
+		
+		/**
+		 * Rectangle currently computed
+		 */
+		public var currentRect:Rectangle = new Rectangle(0, 0, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
 		
 		public function Heatmap(level:Level)
 		{
@@ -149,26 +146,28 @@ package
 		{
 			if (nextInfluence)
 			{
-				//Draw last pass result.
-				bitmapData.setVector(bitmapData.rect, nextInfluence);
+				bitmapData.setVector(currentRect, nextInfluence);
 				bitmapData.unlock();
 				hasJustRedrawn = true;
 			}
 
-			nextInfluence = baseInfluence.getVector(baseInfluence.rect);
+			//Update currentRect for new computation
+			currentRect.x = Math.round(Math.max(0, level.player.x - Main.WIDTH2) / RESOLUTION);
+			currentRect.y = Math.round(Math.max(0, level.player.y - Main.HEIGHT2) / RESOLUTION);
+			nextInfluence = baseInfluence.getVector(currentRect);
+
 			offsetToCompute = new Vector.<int>();
 			valueToCompute = new Vector.<int>();
 			
-			var startNewX:int = level.player.x / RESOLUTION;
-			var startNewY:int = level.player.y / RESOLUTION;
-			var startOffset:int = fromXY(startNewY, startNewX)
+			var startNewX:int = level.player.x / RESOLUTION - currentRect.x;
+			var startNewY:int = level.player.y / RESOLUTION - currentRect.y;
+			var startOffset:int = fromXY(startNewY, startNewX);
 			offsetToCompute.push(startOffset);
+			//trace(currentRect.x, currentRect.y, startNewX, startNewY, startOffset, nextInfluence.length);
 			
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
 			valueToCompute.push(startInfluence);
 			nextInfluence[startOffset] = startInfluence + 2 * Zombie.REPULSION + 1; // Avoid blinking when zombie reach destination and is alone.
-			startX = startNewX;
-			startY = startNewY;
 		}
 		
 		/**
@@ -231,7 +230,7 @@ package
 		 */
 		public function fromXY(x:int, y:int):int
 		{
-			return influenceWidth * x + y;
+			return RESOLUTION_WIDTH * x + y;
 		}
 		
 		/**
@@ -241,7 +240,7 @@ package
 		 */
 		public function xFromOffset(offset:int):int
 		{
-			return offset / influenceWidth;
+			return offset / RESOLUTION_WIDTH;
 		}
 		
 		/**
@@ -252,7 +251,7 @@ package
 		 */
 		public function yFromOffset(offset:int):int
 		{
-			return offset % influenceWidth;
+			return offset % RESOLUTION_WIDTH;
 		}
 	}
 }

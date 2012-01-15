@@ -82,6 +82,12 @@ package entity
 		public var lightMask:Shape = new Shape();
 		
 		/**
+		 * Shape for the weapon deflagration when shooting
+		 */
+		public var weaponDeflagration:Shape = new Shape();
+		
+		
+		/**
 		 * Matrix to use to draw lamp torch.
 		 */
 		public var transformationMatrix:Matrix = new Matrix();
@@ -126,7 +132,8 @@ package entity
 			//Great effect, but may causes flickering
 			lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
-
+			addChild(weaponDeflagration);
+			
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
 			Main.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
@@ -308,8 +315,19 @@ package entity
 
 				if (hasShot > 0)
 				{
+					weaponDeflagration.graphics.clear();
 					//Bit operation <=> /2
 					hasShot = hasShot >> 1;
+					
+					if (hasShot > 0)
+					{
+						weaponDeflagration.graphics.beginFill(0xFFFF00, .5);
+						weaponDeflagration.graphics.drawCircle(RADIUS + hasShot, 0, hasShot << 1);
+						weaponDeflagration.graphics.endFill();
+						weaponDeflagration.graphics.beginFill(0xFFFF00, .3);
+						weaponDeflagration.graphics.drawEllipse(RADIUS + hasShot, - hasShot >> 1, hasShot*4, hasShot);
+					}
+
 				}
 			}
 		}

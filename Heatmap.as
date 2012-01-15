@@ -165,6 +165,7 @@ package
 			currentRect.x = Math.round(Math.max(0, level.player.x / RESOLUTION - MAX_INFLUENCE_WIDTH2));
 			currentRect.y = Math.round(Math.max(0, level.player.y / RESOLUTION - MAX_INFLUENCE_WIDTH2));
 			nextInfluence = baseInfluence.getVector(currentRect);
+			nextInfluence.fixed = true;
 
 			offsetToCompute = new Vector.<int>();
 			valueToCompute = new Vector.<int>();

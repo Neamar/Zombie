@@ -21,12 +21,12 @@ package entity
 		/**
 		 * When a zombie is asked to sleep, how long it should be. (in frames)
 		 */
-		public const SLEEP_DURATION:int = 30;
+		public static const SLEEP_DURATION:int = 30;
 		
 		/**
 		 * Moving speed (in manhattan-px)
 		 */
-		public const SPEED:int = 3;
+		public static const SPEED:int = 3;
 		
 		/**
 		 * To get swarming behavior, zombies should push themselves.
@@ -98,7 +98,12 @@ package entity
 		 * Therefore, we don't need to remove him from the frame , when he'll awake, he'll see he's dead.
 		 */
 		public var move:Function = onMove;
-		
+
+		/**
+		 * Is the zombie going to hit the player nextFrame ?
+		 */
+		public var willHit:Boolean = false;
+
 		public function Zombie(parent:Level, x:int, y:int)
 		{
 			this.x = x;
@@ -185,8 +190,25 @@ package entity
 			}
 			else
 			{
-				//No move. We may as well go to sleep to save some CPU.
-				nextWakeIn(10 + SLEEP_DURATION * Math.random());
+				if (maxValue >= Heatmap.MAX_INFLUENCE)
+				{
+					if (willHit)
+					{
+						//Hit the player !
+						(parent as Level).player.hit(this);
+						willHit = false;
+					}
+					else
+					{
+						willHit = true;
+					}
+					nextWakeIn(10);
+				}
+				else
+				{
+					//No move. We may as well go to sleep to save some CPU.
+					nextWakeIn(10 + SLEEP_DURATION * Math.random());
+				}
 			}
 		}
 		

@@ -1,5 +1,6 @@
 package entity
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.GradientType;
 	import flash.display.Graphics;
@@ -31,6 +32,11 @@ package entity
 		 * Player speed when moving
 		 */
 		public const SPEED:int = 4;
+		
+		/**
+		 * Max player life
+		 */
+		public const MAX_HEALTHPOINTS:int = 50;
 
 		/**
 		 * Half-angular visiblity. Full value should be 180° in realistic game, however 100 gives more fun.
@@ -116,6 +122,13 @@ package entity
 		 * Initial value is 10, for fun ;)
 		 */
 		public var hasShot:int = 10;
+		
+		/**
+		 * Current health of the player.
+		 * You can't move when you're hurt.
+		 * If damagesTaken > MAX_HEALTHPOINTS, you die.
+		 */
+		public var damagesTaken:int = 0;
 
 		public function Player(parent:Level)
 		{
@@ -148,6 +161,18 @@ package entity
 			this.availableWeapon.push(new Railgun(parent, this));
 			this.availableWeapon.push(new Shotgun(parent, this));
 			this.currentWeapon = this.availableWeapon[this.availableWeapon.length - 1];
+		}
+		
+		/**
+		 * Hit the player
+		 * @param	foe the foe who hit him
+		 * @param	power the power of the blow.
+		 */
+		public function hit(foe:Entity, power:int = 30):void
+		{
+			damagesTaken += power;
+			if (damagesTaken > MAX_HEALTHPOINTS)
+				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);
 		}
 
 		protected function onKeyDown(e:KeyboardEvent):void
@@ -215,6 +240,7 @@ package entity
 				//Precomputing
 				var cos:Number = Math.cos(rotation * TO_RADIANS);
 				var sin:Number = Math.sin(rotation * TO_RADIANS);
+				var realSpeed:int = SPEED;// damagesTaken > 5 ? Zombie.SPEED:SPEED;
 
 				//Application
 				for each(var downKey:int in downKeys)
@@ -226,14 +252,14 @@ package entity
 					//Does hitmap allows move ?
 					if (downKey == bindings.UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) == 0)
 					{
-						destX = x + SPEED * cos;
-						destY = y + SPEED * sin;
+						destX = x + realSpeed * cos;
+						destY = y + realSpeed * sin;
 						move = true;
 					}
 					else if (downKey == bindings.DOWN && hitmapTest(x - RADIUS * cos, y - RADIUS * sin) == 0)
 					{
-						destX = x - SPEED * cos;
-						destY = y - SPEED * sin;
+						destX = x - realSpeed * cos;
+						destY = y - realSpeed * sin;
 						move = true;
 					}
 				}
@@ -279,7 +305,7 @@ package entity
 
 				maskGraphics.clear();
 
-				//Everything is gray-dark, except when a weapon was just fired
+				//Everything is gray-dark, except when a weapon was just fired or when you're hurt
 				maskGraphics.beginFill(0, .05 * (hasShot + 1));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.HEIGHT2, Main.WIDTH, Main.HEIGHT);
 				//Except for the player, which is visible no matter what
@@ -309,10 +335,6 @@ package entity
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
 
-				/*maskGraphics.lineTo(x, y);
-				maskGraphics.endFill();
-				(parent as Level).heatmap.bitmapData.draw(maskGraphics,*/
-
 				if (hasShot > 0)
 				{
 					weaponDeflagration.graphics.clear();
@@ -327,7 +349,24 @@ package entity
 						weaponDeflagration.graphics.beginFill(0xFFFF00, .3);
 						weaponDeflagration.graphics.drawEllipse(RADIUS + hasShot, - hasShot >> 1, hasShot*4, hasShot);
 					}
-
+				}
+			}
+			
+			if (damagesTaken > 0)
+			{
+				//Display bloodrush
+				var bloodRush:Bitmap = (parent as Level).bloodRush;
+				bloodRush.visible = true;
+				bloodRush.alpha = damagesTaken / MAX_HEALTHPOINTS;
+				bloodRush.x = x - Main.WIDTH2;
+				bloodRush.y = y - Main.HEIGHT2;
+				
+				//Heal one-by-frame
+				damagesTaken--;
+				
+				if (damagesTaken == 0)
+				{
+					bloodRush.visible = false;
 				}
 			}
 		}

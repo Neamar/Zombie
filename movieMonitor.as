@@ -47,6 +47,8 @@
 			<nActiveZombie>-</nActiveZombie>
 			<sectionLabel>Weapon:</sectionLabel>
 			<currentWeapon>-</currentWeapon>
+			<sectionLabel>Damages:</sectionLabel>
+			<currentDamages>-</currentDamages>
 			</xml>;
 			var style:StyleSheet = new StyleSheet();
 			style.setStyle("xml",{fontSize:"9px",fontFamily:"arial"});
@@ -63,6 +65,7 @@
 			style.setStyle("nZombie",{color:"#FFFFFF"});
 			style.setStyle("nActiveZombie",{color:"#FFFFFF"});
 			style.setStyle("currentWeapon",{color:"#FFFFFF"});
+			style.setStyle("currentDamages",{color:"#FFFFFF"});
 			theText = new TextField();
 			theText.alpha=0.8;
 			theText.autoSize=TextFieldAutoSize.LEFT;
@@ -103,6 +106,7 @@
 				xml.nActiveZombie = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].length.toString();
 				xml.currentWeapon = Level.current.player.currentWeapon;
 				xml.currentWeapon = xml.currentWeapon.toString().replace('object ', '');
+				xml.currentDamages = Level.current.player.damagesTaken;
 			}
 			fps++;
 			xml.msFrame=(timer-ms);

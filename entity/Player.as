@@ -66,9 +66,23 @@ package entity
 		public static const TO_DEGREE:Number = 57.2957795;
 
 		/**
+		 * Movement related constants
+		 */
+		public static const UP:int = 1;
+		public static const DOWN:int = 2;
+		
+		/**
 		 * Key-binding for moving.
 		 */
-		public var bindings:Object = { UP:38, DOWN:40 };
+		public var bindings:Object = {
+			/*up	key */38:UP,
+			/*down	key */40:DOWN,
+			/*z		key */90:UP,
+			/*q		key */81:DOWN,
+			/*s		key */83:DOWN,
+			/*j		key */74:DOWN,
+			/*k		key */75:UP
+		};
 
 		/**
 		 * Which keys are currently pressed ?
@@ -180,15 +194,26 @@ package entity
 
 		protected function onKeyDown(e:KeyboardEvent):void
 		{
-			if (downKeys.indexOf(e.keyCode) == -1)
+			if (e.keyCode in bindings)
 			{
-				downKeys.push(e.keyCode);
+				var action:int = bindings[e.keyCode];
+				if (downKeys.indexOf(action) == -1)
+				{
+					downKeys.push(action);
+				}
+			}
+			else
+			{
+				trace('Unknown key : ', e.keyCode);
 			}
 		}
 
 		protected function onKeyUp(e:KeyboardEvent):void
 		{
-			downKeys.splice(downKeys.indexOf(e.keyCode), 1);
+			if (e.keyCode in bindings)
+			{
+				downKeys.splice(downKeys.indexOf(bindings[e.keyCode]), 1);
+			}
 		}
 
 		protected function onMouseDown(e:MouseEvent):void
@@ -246,20 +271,20 @@ package entity
 				var realSpeed:int = SPEED;// damagesTaken > 5 ? Zombie.SPEED:SPEED;
 
 				//Application
-				for each(var downKey:int in downKeys)
+				for each(var action:int in downKeys)
 				{
 					var destX:int;
 					var destY:int;
 					var move:Boolean = false;
 
 					//Does hitmap allows move ?
-					if (downKey == bindings.UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) == 0)
+					if (action == UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) == 0)
 					{
 						destX = x + realSpeed * cos;
 						destY = y + realSpeed * sin;
 						move = true;
 					}
-					else if (downKey == bindings.DOWN && hitmapTest(x - RADIUS * cos, y - RADIUS * sin) == 0)
+					else if (action == DOWN && hitmapTest(x - RADIUS * cos, y - RADIUS * sin) == 0)
 					{
 						destX = x - realSpeed * cos;
 						destY = y - realSpeed * sin;

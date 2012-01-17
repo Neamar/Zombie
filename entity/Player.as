@@ -270,7 +270,7 @@ package entity
 				//Is a zombie blocking move ?
 				if (move)
 				{
-					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION];
+					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
 					var cancelMove:Boolean = false;
 					for each(var zombie:Zombie in potentialZombies)
 					{

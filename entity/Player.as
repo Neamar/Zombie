@@ -184,7 +184,7 @@ package entity
 		 */
 		public function hit(foe:Entity, power:int = 30):void
 		{
-			damagesTaken += power;
+			//damagesTaken += power;
 			if (damagesTaken > MAX_HEALTHPOINTS)
 			{
 				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);

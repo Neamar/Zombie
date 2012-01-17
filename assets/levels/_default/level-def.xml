@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<level>
+	<!-- Interface and graphical settings -->
+	<interface>
+		<bitmap>level.png</bitmap>
+		<lights>
+			<bulb x="50" y="30" intensity="15" flicker="0.5" />
+			<tube x="80" y="200" width="120" height="500" number="30" flicker="0.5" />
+		</lights>
+	</interface>
+	
+	<!-- Technical details -->
+	<technical>
+		<hitmap>hitmap.png</hitmap>
+		<player x="30" y="15" />
+		<zombies>
+			<zombie x="40" y="50" />
+			<spawn-zone x="80" y="200" width="120" height="500" number="30" />
+		</zombies>
+		<sounds>
+			<ambient>ambient.mp3</ambient>
+		</sounds>
+	</technical>
+</level>

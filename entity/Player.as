@@ -1,5 +1,6 @@
 package entity
 {
+	import components.lights.Light;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.GradientType;
@@ -139,7 +140,6 @@ package entity
 		
 		/**
 		 * Current health of the player.
-		 * You can't move when you're hurt.
 		 * If damagesTaken > MAX_HEALTHPOINTS, you die.
 		 */
 		public var damagesTaken:int = 0;
@@ -156,7 +156,7 @@ package entity
 			this.graphics.beginFill(0xAAAAAA, 1);
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineTo(0, 0);
-			//Great effect, but may causes flickering
+
 			lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
 			addChild(weaponDeflagration);
@@ -326,6 +326,9 @@ package entity
 				var startAngle:Number = ((rotation - ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
 				var endAngle:Number = ((rotation + ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
 
+				var xTop:int = x - Main.WIDTH2;
+				var yTop:int = y - Main.HEIGHT2;
+				
 				var maskGraphics:Graphics = lightMask.graphics;
 				var theta:Number;
 				var radius:int;
@@ -336,6 +339,7 @@ package entity
 				//Everything is gray-dark, except when a weapon was just fired or when you're hurt
 				maskGraphics.beginFill(0, .05 * (hasShot + 1));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.HEIGHT2, Main.WIDTH, Main.HEIGHT);
+				
 				//Except for the player, which is visible no matter what
 				maskGraphics.beginFill(0, 1);
 				maskGraphics.drawCircle(x, y, RADIUS);
@@ -363,6 +367,14 @@ package entity
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
 
+				for each(var light:Light in Level.current.lights)
+				{
+					transformationMatrix.tx = light.x;
+					transformationMatrix.ty = light.y;
+					maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);
+					maskGraphics.drawCircle(light.x, light.y, light.intensity);
+				}
+				
 				if (hasShot > 0)
 				{
 					weaponDeflagration.graphics.clear();

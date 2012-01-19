@@ -71,7 +71,7 @@ package
 			var light:Bulb = new Bulb();
 			light.x = 1729;
 			light.y = 100;
-			light.intensity = 15;
+			light.intensity = 150;
 			light.flicker = .5;
 			lights.push(light);
 		}

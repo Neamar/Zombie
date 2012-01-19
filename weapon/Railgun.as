@@ -2,6 +2,7 @@ package weapon
 {
 	import entity.Player;
 	import entity.Zombie;
+	import levels.Level;
 	/**
 	 * ...
 	 * @author Neamar

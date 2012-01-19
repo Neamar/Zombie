@@ -11,6 +11,7 @@ package entity
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import levels.Level;
 	import weapon.Handgun;
 	import weapon.Railgun;
 	import weapon.Shotgun;

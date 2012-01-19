@@ -12,6 +12,8 @@
 	import flash.events.MouseEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import levels.Level;
+	import levels.LevelLoader;
 	
 	/**
 	 * ...

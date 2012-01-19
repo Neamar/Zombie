@@ -9,6 +9,7 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.getTimer;
+	import levels.Level;
 	public class MovieMonitor extends Sprite {
 		private var xml:XML;
 		private var theText:TextField;

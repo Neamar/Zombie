@@ -3,6 +3,7 @@ package weapon
 	import entity.Player;
 	import entity.Zombie;
 	import flash.filters.BlurFilter;
+	import levels.Level;
 	/**
 	 * ...
 	 * @author Neamar

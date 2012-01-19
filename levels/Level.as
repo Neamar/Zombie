@@ -1,4 +1,4 @@
-package 
+package levels
 {
 	import entity.Player;
 	import entity.Zombie;

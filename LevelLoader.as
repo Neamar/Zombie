@@ -1,11 +1,14 @@
 package  
 {
+	import components.lights.Bulb;
+	import components.lights.Light;
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
+	import flash.xml.XMLNode;
 	/**
 	 * Load a level.
 	 * Dispatch Event.COMPLETE when every assets has been loaded
@@ -14,13 +17,22 @@ package
 	public final class LevelLoader extends EventDispatcher
 	{
 		public static const BASE_URL:String = '../src/assets/levels';
-				
-		// When this var hits 0, every external assets had been loaded. Start the level.
+		
+		/**
+		 * XML datas of the level
+		 */
+		private var xml:XML;
+		
+		/**
+		 * Number of resources still loading
+		 * 
+		 * When this var hits 0, every external assets had been loaded. Start the level.
+		 */
 		private var remainingResourcesToLoad:int = 0;
 	
 		private var bitmap:Bitmap;
 		private var hitmap:Bitmap;
-
+		private var lights:Vector.<Light>;
 		private var level:Level = null;
 		
 		public function LevelLoader(levelName:String)
@@ -46,13 +58,22 @@ package
 		 */
 		private function loadLevelData(e:Event):void
 		{
-			var xml:XML = new XML(e.target.data);
+			xml = new XML(e.target.data);
 			
+			// Start loading external assets
 			var bitmapUrl:String = buildUrl(xml.technical.name) + '/' + xml.visible.bitmap;
 			var hitmapUrl:String = buildUrl(xml.technical.name) + '/' + xml.technical.hitmap;
-			
 			loadAssets(bitmapUrl, function(e:Event):void { bitmap = e.target.content } );
 			loadAssets(hitmapUrl, function(e:Event):void { hitmap = e.target.content } );
+			
+			//Setting up the light
+			lights = new Vector.<Light>();
+			var light:Bulb = new Bulb();
+			light.x = 1729;
+			light.y = 100;
+			light.intensity = 15;
+			light.flicker = .5;
+			lights.push(light);
 		}
 		
 		private function loadAssets(url:String, callback:Function):void
@@ -79,7 +100,7 @@ package
 		
 		private function buildLevel():void
 		{
-			level = new Level(bitmap, hitmap);
+			level = new Level(bitmap, hitmap, lights);
 			
 			dispatchEvent(new Event(Event.COMPLETE));
 		}

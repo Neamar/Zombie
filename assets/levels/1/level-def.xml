@@ -4,6 +4,7 @@
 	<visible>
 		<bitmap>bitmap.png</bitmap>
 		<lights>
+			<light type="bulb" x="1729" y="100" intensity="15" flicker="0.5" />
 		</lights>
 	</visible>
 	

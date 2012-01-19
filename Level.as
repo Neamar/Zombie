@@ -1,5 +1,6 @@
 package 
 {
+	import components.lights.Light;
 	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Bitmap;
@@ -44,16 +45,22 @@ package
 		public var heatmap:Heatmap;
 		
 		/**
+		 * List of all the lights
+		 */
+		public var lights:Vector.<Light>;
+		
+		/**
 		 * Blood rush when player is shot.
 		 */
 		public var bloodRush:Bitmap;
 		
-		public function Level(bitmap:Bitmap, hitmap:Bitmap)
+		public function Level(bitmap:Bitmap, hitmap:Bitmap, lights:Vector.<Light>)
 		{
 			this.hitmap = hitmap;
 			this.bitmapLevel = bitmap;
+			this.lights = lights;
 			
-			//For debug, store current instance
+			//For debug purposes, store current instance
 			Level.current = this;
 			
 			

@@ -70,7 +70,7 @@
 			var loader:LevelLoader = e.target as LevelLoader;
 			
 			level = loader.getLevel()
-			level.addEventListener(Level.WIN, function(e:Event):void { trace("c'est gagné") } );
+			level.addEventListener(Level.WIN, function(e:Event):void { trace("win") } );
 			addChild(level);
 		}
 		

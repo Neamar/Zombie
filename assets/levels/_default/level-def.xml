@@ -11,6 +11,9 @@
 	
 	<!-- Technical details -->
 	<technical>
+		<success on="accessing_area">
+			<area x="0" y="994" width="200" height="100" />
+		</success>
 		<hitmap>hitmap.png</hitmap>
 		<player x="30" y="15" />
 		<zombies>

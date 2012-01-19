@@ -17,6 +17,9 @@ package levels
 	 */
 	public class Level extends Sprite
 	{
+		public static const WIN:String = 'win';
+		public static const LOST:String = 'lost';
+		
 		public static var current:Level = null;
 		
 		public var player:Player;
@@ -55,7 +58,6 @@ package levels
 			
 			//For debug, store current instance
 			Level.current = this;
-			
 			
 			player = new Player(this);
 			heatmap = new Heatmap(this);

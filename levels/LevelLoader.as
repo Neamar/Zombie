@@ -4,6 +4,7 @@ package levels
 	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.geom.Rectangle;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	/**
@@ -14,10 +15,21 @@ package levels
 	public final class LevelLoader extends EventDispatcher
 	{
 		public static const BASE_URL:String = '../src/assets/levels';
-				
+		
+		/**
+		 * XML datas
+		 */
+		public var xml:XML;
+		
 		// When this var hits 0, every external assets had been loaded. Start the level.
 		private var remainingResourcesToLoad:int = 0;
-	
+		
+		/**
+		 * Class to use to instantiate the Level.
+		 * Can be any subclass of Level.
+		 */
+		private var LevelClass:Class = Level;
+		
 		private var bitmap:Bitmap;
 		private var hitmap:Bitmap;
 
@@ -46,11 +58,10 @@ package levels
 		 */
 		private function loadLevelData(e:Event):void
 		{
-			var xml:XML = new XML(e.target.data);
+			xml = new XML(e.target.data);
 			
 			var bitmapUrl:String = buildUrl(xml.technical.name) + '/' + xml.visible.bitmap;
 			var hitmapUrl:String = buildUrl(xml.technical.name) + '/' + xml.technical.hitmap;
-			
 			loadAssets(bitmapUrl, function(e:Event):void { bitmap = e.target.content } );
 			loadAssets(hitmapUrl, function(e:Event):void { hitmap = e.target.content } );
 		}
@@ -79,7 +90,15 @@ package levels
 		
 		private function buildLevel():void
 		{
-			level = new Level(bitmap, hitmap);
+			//Load success type
+			var successXML:XML = xml.technical.success[0];
+			if (successXML.@on == 'accessing_area')
+			{
+				var successAreaXML:XML = successXML.area[0];
+				var successArea:Rectangle = new Rectangle(successAreaXML.@x, successAreaXML.@y, successAreaXML.@width, successAreaXML.@height);
+				level = new AccessingAreaLevel(bitmap, hitmap, successArea);
+			}
+			
 			
 			dispatchEvent(new Event(Event.COMPLETE));
 		}

@@ -1,6 +1,7 @@
 package 
 {
 	import entity.Player;
+	import entity.Survivor;
 	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -85,6 +86,11 @@ package
 					addChild(foe);
 				}
 			}
+			
+			//Add a survivor
+			var survivor:Survivor = new Survivor(this, 1800, 200);
+			addChild(survivor);
+			zombies.push(survivor);
 
 			/**
 			 * Blending and masking

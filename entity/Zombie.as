@@ -195,7 +195,7 @@ package entity
 					if (willHit)
 					{
 						//Hit the player !
-						(parent as Level).player.hit(this);
+						this.hit();
 						willHit = false;
 					}
 					else
@@ -210,6 +210,11 @@ package entity
 					nextWakeIn(10 + SLEEP_DURATION * Math.random());
 				}
 			}
+		}
+		
+		public function hit():void
+		{
+			(parent as Level).player.hit(this);
 		}
 		
 		/**

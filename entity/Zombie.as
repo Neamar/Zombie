@@ -102,7 +102,7 @@ package entity
 		/**
 		 * Is the zombie going to hit the player nextFrame ?
 		 */
-		public var willHit:Boolean = false;
+		public var willHit:Boolean = true;
 
 		public function Zombie(parent:Level, x:int, y:int)
 		{

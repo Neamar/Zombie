@@ -12,6 +12,7 @@ package entity
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import levels.Level;
 	import weapon.Handgun;
 	import weapon.Railgun;
 	import weapon.Shotgun;
@@ -198,7 +199,7 @@ package entity
 		 */
 		public function hit(foe:Entity, power:int = 30):void
 		{
-			damagesTaken += power;
+			//damagesTaken += power;
 			if (damagesTaken > MAX_HEALTHPOINTS)
 			{
 				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);

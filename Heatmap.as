@@ -5,6 +5,7 @@ package
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import levels.Level;
 	
 	/**
 	 * Heatmap (other names : influence map, potential fields)

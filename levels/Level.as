@@ -1,4 +1,4 @@
-package 
+package levels
 {
 	import entity.Player;
 	import entity.Zombie;
@@ -17,10 +17,10 @@ package
 	 */
 	public class Level extends Sprite
 	{
-		public static var current:Level;
+		public static const WIN:String = 'win';
+		public static const LOST:String = 'lost';
 		
-		[Embed(source = "assets/testlevelHitmap.png")] private static var Hitmap:Class;
-		[Embed(source = "assets/testlevelBitmap.png")] private static var BitmapLevel:Class;
+		public static var current:Level = null;
 		
 		public var player:Player;
 		
@@ -46,15 +46,16 @@ package
 		 */
 		public var heatmap:Heatmap;
 		
-		public function Level()
+		public function Level(bitmap:Bitmap, hitmap:Bitmap)
 		{
+			this.hitmap = hitmap;
+			this.bitmapLevel = bitmap;
+			
 			//For debug, store current instance
 			Level.current = this;
 			
-			hitmap = new Hitmap();
 			player = new Player(this);
 			heatmap = new Heatmap(this);
-			bitmapLevel = new BitmapLevel();
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
 			

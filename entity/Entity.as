@@ -1,6 +1,7 @@
 package entity
 {
 	import flash.display.Sprite;
+	import levels.Level;
 	
 	/**
 	 * ...

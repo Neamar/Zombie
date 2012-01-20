@@ -27,8 +27,6 @@
 		public static const WIDTH2:int = WIDTH / 2;
 		public static const HEIGHT:int = 400;
 		public static const HEIGHT2:int = HEIGHT / 2;
-		public static const LEVEL_WIDTH:int = 1934;
-		public static const LEVEL_HEIGHT:int = 1094;
 		public static const ZOMBIES_NUMBER:int = 200;
 		
 		public static const FIRST_LEVEL:String = "2";

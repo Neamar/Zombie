@@ -67,8 +67,8 @@ package levels
 			//Generate Zombies
 			for (var i:int = 0; i < Main.ZOMBIES_NUMBER; i++)
 			{
-				var x:int = Main.LEVEL_WIDTH * Math.random();
-				var y:int = Main.LEVEL_HEIGHT * Math.random();
+				var x:int = bitmap.width * Math.random();
+				var y:int = bitmap.height * Math.random();
 				
 				if (hitmap.bitmapData.getPixel32(x, y) != 0)
 				{

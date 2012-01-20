@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<level>
+	<!-- Interface and graphical settings -->
+	<visible>
+		<bitmap>bitmap.png</bitmap>
+		<lights>
+		</lights>
+	</visible>
+	
+	<!-- Technical details -->
+	<technical>
+		<name>2</name>
+		<followed-by>3</followed-by>
+		<success on="accessing_area">
+			<area x="420" y="760" width="30" height="60" />
+		</success>
+		
+		<hitmap>hitmap.png</hitmap>
+		<player x="195" y="915" orientation="0" />
+		<zombies>
+			<spawn-zone x="0" y="200" width="1000" height="1000" number="150" />
+		</zombies>
+		<sounds>
+			<ambient>ambient.mp3</ambient>
+		</sounds>
+	</technical>
+</level>

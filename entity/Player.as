@@ -157,8 +157,8 @@ package entity
 		{
 			super(parent);
 
-			x = 1934 - 205;
-			y = Main.HEIGHT2;
+			x = 195;
+			y = 915;
 
 			//Player graphics
 			this.graphics.lineStyle(2);

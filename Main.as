@@ -31,7 +31,7 @@
 		public static const LEVEL_HEIGHT:int = 1094;
 		public static const ZOMBIES_NUMBER:int = 200;
 		
-		public static const FIRST_LEVEL:String = "1";
+		public static const FIRST_LEVEL:String = "2";
 		
 		public var level:Level;
 		

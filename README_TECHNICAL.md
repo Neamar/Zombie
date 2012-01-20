@@ -9,6 +9,7 @@ Standard Layout for a level, from bottom to top
 # Level Background
 # Player and zombie sprite
 # Light mask of the player (and deflagration)
+# Blood rush
 # Moviemonitor
 
 Debug layout for a level, from bottom to top :

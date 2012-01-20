@@ -2,6 +2,7 @@ package entity
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
@@ -98,8 +99,15 @@ package entity
 
 		/**
 		 * Mask for the level, depending on the direction player is facing.
+		 * Although this Shape belongs to the player, it is displayed on the Level.
 		 */
 		public var lightMask:Shape = new Shape();
+		
+		/**
+		 * Blood rush of the player, when he is hit.
+		 * Although this Shape belongs to the player, it is displayed on the Level.
+		 */
+		public var bloodRush:Bitmap = new Bitmap();
 		
 		/**
 		 * Shape for the weapon deflagration when shooting
@@ -160,6 +168,12 @@ package entity
 			lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
 			addChild(weaponDeflagration);
+			
+			//Blood rush
+			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.HEIGHT);
+			bloodRush = new Bitmap(bd)
+			bloodRush.visible = false;
+			bd.perlinNoise(Main.WIDTH, Main.HEIGHT, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
 			
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
@@ -240,6 +254,12 @@ package entity
 			currentWeapon = availableWeapon[offset];
 		}
 
+		/**
+		 * Move & turn the player
+		 * Compute the lightmask
+		 * Shoot if need be
+		 * @param	e
+		 */
 		protected function onFrame(e:Event):void
 		{
 			frameNumber++;
@@ -383,7 +403,6 @@ package entity
 			if (damagesTaken > 0)
 			{
 				//Display bloodrush
-				var bloodRush:Bitmap = (parent as Level).bloodRush;
 				bloodRush.visible = true;
 				bloodRush.alpha = damagesTaken / MAX_HEALTHPOINTS;
 				bloodRush.x = x - Main.WIDTH2;

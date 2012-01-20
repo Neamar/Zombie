@@ -46,11 +46,6 @@ package
 		 */
 		public var heatmap:Heatmap;
 		
-		/**
-		 * Blood rush when player is shot.
-		 */
-		public var bloodRush:Bitmap;
-		
 		public function Level()
 		{
 			//For debug, store current instance
@@ -99,11 +94,7 @@ package
 			//Is is incredibly faster than using a real as3-mask, since we don't have to cacheAsBitmap the level.
 			player.lightMask.blendMode = BlendMode.ALPHA;
 			
-			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.HEIGHT);
-			bloodRush = new Bitmap(bd)
-			bloodRush.visible = false;
-			addChild(bloodRush);
-			bd.perlinNoise(Main.WIDTH, Main.HEIGHT, 3, 1268496, false, false, BitmapDataChannel.RED);
+			addChild(player.bloodRush);
 		}
 		
 		/**

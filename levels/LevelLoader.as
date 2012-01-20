@@ -75,6 +75,19 @@ package levels
 				params.LevelClass = AccessingAreaLevel;
 				params.successArea = new Rectangle(successAreaXML.@x, successAreaXML.@y, successAreaXML.@width, successAreaXML.@height);
 			}
+			
+			//Load player info
+			var playerXML:XML = xml.technical.player[0];
+			params.playerStartX = playerXML.@x;
+			params.playerStartY = playerXML.@y;
+			params.playerStartRotation = playerXML.@orientation;
+			
+			//Number of zombies per area
+			for each(var spawnAreaXML:XML in xml.technical.zombies[0].elements('spawn-zone'))
+			{
+				params.zombiesDensity.push(spawnAreaXML.@number);
+				params.zombiesLocation.push(new Rectangle(spawnAreaXML.@x, spawnAreaXML.@y, spawnAreaXML.@width, spawnAreaXML.@height));
+			}
 		}
 		
 		private function loadAssets(url:String, callback:Function):void

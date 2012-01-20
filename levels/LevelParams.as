@@ -4,6 +4,8 @@ package levels
 	import flash.geom.Rectangle;
 	/**
 	 * Parameters for a level
+	 * 
+	 * No class taking a LevelParams as a parameter should store it for further use. It is a temporary holder for the XML information.
 	 * @author Neamar
 	 */
 	public class LevelParams 
@@ -20,6 +22,18 @@ package levels
 		public var bitmap:Bitmap;
 		
 		/**
+		 * Spawn area for the zombies
+		 * @see zombieDensity
+		 */
+		public var zombiesLocation:Vector.<Rectangle> = new Vector.<Rectangle>();
+		
+		/**
+		 * Density of zombies for each area.
+		 * @see zombiesLocation
+		 */
+		public var zombiesDensity:Vector.<int> = new Vector.<int>();
+		
+		/**
 		 * Hitmap for the level
 		 */
 		public var hitmap:Bitmap;
@@ -33,6 +47,11 @@ package levels
 		 * Player start position on the x-axis
 		 */
 		public var playerStartY:int;
+		
+		/**
+		 * Player start position on the x-axis
+		 */
+		public var playerStartRotation:int;
 		
 		/////////////////////////////////////
 		// SPECIAL PARAMETERS : AccessingAreaLevel

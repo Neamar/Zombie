@@ -29,6 +29,7 @@ package levels
 		{
 			if (successArea.contains(player.x, player.y))
 			{
+				checker.stop();
 				dispatchEvent(new Event(Level.WIN));
 			}
 		}

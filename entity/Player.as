@@ -13,6 +13,7 @@ package entity
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	import levels.Level;
+	import levels.LevelParams;
 	import weapon.Handgun;
 	import weapon.Railgun;
 	import weapon.Shotgun;
@@ -153,12 +154,13 @@ package entity
 		 */
 		public var damagesTaken:int = 0;
 
-		public function Player(parent:Level)
+		public function Player(parent:Level, params:LevelParams)
 		{
 			super(parent);
 
-			x = 195;
-			y = 915;
+			x = params.playerStartX;
+			y = params.playerStartY;
+			rotation = params.playerStartRotation;
 
 			//Player graphics
 			this.graphics.lineStyle(2);
@@ -199,7 +201,7 @@ package entity
 		 */
 		public function hit(foe:Entity, power:int = 30):void
 		{
-			//damagesTaken += power;
+			damagesTaken += power;
 			if (damagesTaken > MAX_HEALTHPOINTS)
 			{
 				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);

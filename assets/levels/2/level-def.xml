@@ -12,13 +12,14 @@
 		<name>2</name>
 		<followed-by>3</followed-by>
 		<success on="accessing_area">
-			<area x="420" y="760" width="30" height="60" />
+			<area x="420" y="180" width="30" height="60" />
 		</success>
 		
 		<hitmap>hitmap.png</hitmap>
 		<player x="195" y="915" orientation="0" />
 		<zombies>
-			<spawn-zone x="0" y="200" width="1000" height="1000" number="150" />
+			<spawn-zone x="0" y="0" width="1000" height="1000" number="150" />
+			<spawn-zone x="480" y="300" width="150" height="30" number="50" />
 		</zombies>
 		<sounds>
 			<ambient>ambient.mp3</ambient>

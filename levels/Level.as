@@ -10,6 +10,7 @@ package levels
 	import flash.events.KeyboardEvent;
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	/**
 	 * 
@@ -55,7 +56,7 @@ package levels
 			//For debug, store current instance
 			Level.current = this;
 			
-			player = new Player(this);
+			player = new Player(this, params);
 			heatmap = new Heatmap(this);
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
@@ -66,20 +67,26 @@ package levels
 			addChild(player);
 			
 			//Generate Zombies
-			for (var i:int = 0; i < Main.ZOMBIES_NUMBER; i++)
+			while (params.zombiesLocation.length > 0)
 			{
-				var x:int = bitmapLevel.width * Math.random();
-				var y:int = bitmapLevel.height * Math.random();
+				var spawnArea:Rectangle = params.zombiesLocation.pop();
+				var spawnQuantity:int = params.zombiesDensity.pop();
 				
-				if (hitmap.bitmapData.getPixel32(x, y) != 0)
+				for (var i:int = 0; i < spawnQuantity; i++)
 				{
-					i--;
-				}
-				else
-				{
-					var foe:Zombie = new Zombie(this, x, y);
-					zombies.push(foe);
-					addChild(foe);
+					var x:int = spawnArea.x + spawnArea.width * Math.random();
+					var y:int = spawnArea.y + spawnArea.height * Math.random();
+					
+					if (hitmap.bitmapData.getPixel32(x, y) != 0)
+					{
+						i--;
+					}
+					else
+					{
+						var foe:Zombie = new Zombie(this, x, y);
+						zombies.push(foe);
+						addChild(foe);
+					}
 				}
 			}
 

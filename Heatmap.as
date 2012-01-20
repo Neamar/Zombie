@@ -180,19 +180,7 @@ package
 			valueToCompute.push(startInfluence);
 			nextInfluence[startOffset] = startInfluence + 2 * Zombie.REPULSION + 1; // Avoid blinking when zombie reach destination and is alone.
 
-			
-			for each(var survivor:Survivor in level.survivors)
-			{
-				if (currentRect.contains(survivor.x / RESOLUTION, survivor.y / RESOLUTION))
-				{
-					startNewX = survivor.x / RESOLUTION - currentRect.x
-					startNewY = survivor.y / RESOLUTION - currentRect.y
-					offsetToCompute.push(fromXY(startNewY, startNewX));
-					
-					startInfluence = BASE_ALPHA + MAX_INFLUENCE - 10 * DECAY;
-					valueToCompute.push(startInfluence);
-				}
-			}
+
 		}
 		
 		/**

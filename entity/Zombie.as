@@ -116,6 +116,7 @@ package entity
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
+			this.cacheAsBitmap = true;
 			
 			//Random starting-wake.
 			nextWakeIn(30 + SLEEP_DURATION * Math.random());
@@ -148,6 +149,22 @@ package entity
 			var maxI:int = 0;
 			var maxJ:int = 0;
 			var maxValue:int = heatmap.bitmapData.getPixel(xScaled , yScaled);
+			
+			if (maxValue >= Heatmap.MAX_INFLUENCE)
+			{
+				if (willHit)
+				{
+					//Hit the player !
+					this.hit();
+					willHit = false;
+				}
+				else
+				{
+					willHit = true;
+				}
+				nextWakeIn(10);
+				return;
+			}
 			
 			//Find the highest potential around the zombie
 			for (var i:int = -1; i <= 1; i++)
@@ -189,25 +206,8 @@ package entity
 			}
 			else
 			{
-				if (maxValue >= Heatmap.MAX_INFLUENCE)
-				{
-					if (willHit)
-					{
-						//Hit the player !
-						this.hit();
-						willHit = false;
-					}
-					else
-					{
-						willHit = true;
-					}
-					nextWakeIn(10);
-				}
-				else
-				{
-					//No move. We may as well go to sleep to save some CPU.
-					nextWakeIn(10 + SLEEP_DURATION * Math.random());
-				}
+				//No move. We may as well go to sleep to save some CPU.
+				nextWakeIn(10 + SLEEP_DURATION * Math.random());
 			}
 		}
 		

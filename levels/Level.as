@@ -31,6 +31,7 @@ package levels
 		
 		/**
 		 * Texture for the game
+		 * @todo Rename to bitmap ? I used to had problems with that, can't remember why.
 		 */
 		public var bitmapLevel:Bitmap;
 		
@@ -46,10 +47,10 @@ package levels
 		 */
 		public var heatmap:Heatmap;
 		
-		public function Level(bitmap:Bitmap, hitmap:Bitmap)
+		public function Level(params:LevelParams)
 		{
-			this.hitmap = hitmap;
-			this.bitmapLevel = bitmap;
+			this.hitmap = params.hitmap;
+			this.bitmapLevel = params.bitmap;
 			
 			//For debug, store current instance
 			Level.current = this;
@@ -67,8 +68,8 @@ package levels
 			//Generate Zombies
 			for (var i:int = 0; i < Main.ZOMBIES_NUMBER; i++)
 			{
-				var x:int = bitmap.width * Math.random();
-				var y:int = bitmap.height * Math.random();
+				var x:int = bitmapLevel.width * Math.random();
+				var y:int = bitmapLevel.height * Math.random();
 				
 				if (hitmap.bitmapData.getPixel32(x, y) != 0)
 				{

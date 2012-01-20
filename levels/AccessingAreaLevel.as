@@ -15,10 +15,10 @@ package levels
 		protected var checker:Timer;
 		
 		public var successArea:Rectangle;
-		public function AccessingAreaLevel(bitmap:Bitmap, hitmap:Bitmap, successArea:Rectangle) 
+		public function AccessingAreaLevel(params:LevelParams) 
 		{
-			super(bitmap, hitmap);
-			this.successArea = successArea;
+			super(params);
+			this.successArea = params.successArea;
 			
 			checker = new Timer(2000);
             checker.addEventListener(TimerEvent.TIMER, checkArea);

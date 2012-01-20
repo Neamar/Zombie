@@ -23,16 +23,16 @@ package levels
 		
 		// When this var hits 0, every external assets had been loaded. Start the level.
 		private var remainingResourcesToLoad:int = 0;
+
+		/**
+		 * Parameters to use for the level
+		 */
+		private var params:LevelParams = new LevelParams();
 		
 		/**
-		 * Class to use to instantiate the Level.
-		 * Can be any subclass of Level.
+		 * The level, once built.
+		 * If called before the COMPLETE event, will be null.
 		 */
-		private var LevelClass:Class = Level;
-		
-		private var bitmap:Bitmap;
-		private var hitmap:Bitmap;
-
 		private var level:Level = null;
 		
 		public function LevelLoader(levelName:String)
@@ -60,10 +60,21 @@ package levels
 		{
 			xml = new XML(e.target.data);
 			
+			// Load external assets asap
 			var bitmapUrl:String = buildUrl(xml.technical.name) + '/' + xml.visible.bitmap;
 			var hitmapUrl:String = buildUrl(xml.technical.name) + '/' + xml.technical.hitmap;
-			loadAssets(bitmapUrl, function(e:Event):void { bitmap = e.target.content } );
-			loadAssets(hitmapUrl, function(e:Event):void { hitmap = e.target.content } );
+			loadAssets(bitmapUrl, function(e:Event):void { params.bitmap = e.target.content } );
+			loadAssets(hitmapUrl, function(e:Event):void { params.hitmap = e.target.content } );
+			
+			// Read other parameters and parse them into LevelParams
+			//Load success type
+			var successXML:XML = xml.technical.success[0];
+			if (successXML.@on == 'accessing_area')
+			{
+				var successAreaXML:XML = successXML.area[0];
+				params.LevelClass = AccessingAreaLevel;
+				params.successArea = new Rectangle(successAreaXML.@x, successAreaXML.@y, successAreaXML.@width, successAreaXML.@height);
+			}
 		}
 		
 		private function loadAssets(url:String, callback:Function):void
@@ -90,15 +101,7 @@ package levels
 		
 		private function buildLevel():void
 		{
-			//Load success type
-			var successXML:XML = xml.technical.success[0];
-			if (successXML.@on == 'accessing_area')
-			{
-				var successAreaXML:XML = successXML.area[0];
-				var successArea:Rectangle = new Rectangle(successAreaXML.@x, successAreaXML.@y, successAreaXML.@width, successAreaXML.@height);
-				level = new AccessingAreaLevel(bitmap, hitmap, successArea);
-			}
-			
+			level = new params.LevelClass(params);
 			
 			dispatchEvent(new Event(Event.COMPLETE));
 		}

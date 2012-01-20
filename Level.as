@@ -41,6 +41,11 @@ package
 		public var zombies:Vector.<Zombie> = new Vector.<Zombie>();
 		
 		/**
+		 * Survivors (if any)
+		 */
+		public var survivors:Vector.<Survivor> = new Vector.<Survivor>();
+		
+		/**
 		 * Influence map, to compute easily multiples pathfindings without burying CPU
 		 * 
 		 * @see http://aigamedev.com/open/tutorials/potential-fields/
@@ -91,6 +96,7 @@ package
 			var survivor:Survivor = new Survivor(this, 1800, 200);
 			addChild(survivor);
 			zombies.push(survivor);
+			survivors.push(survivor);
 
 			/**
 			 * Blending and masking

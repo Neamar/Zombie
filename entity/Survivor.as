@@ -18,15 +18,21 @@ package entity
 			this.graphics.lineTo(0, 0);
 		}
 		
+		/**
+		 * Survivor are not allowed to hit the player ;)
+		 */
 		public override function hit():void
 		{
 			
 		}
-
 		
 		public override function kill():void
 		{
 			trace('You killed a civilian!');
+			
+			//Remove current survivor from global survivor list
+			(parent as Level).survivors.splice((parent as Level).survivors.indexOf(this), 1);
+			
 			super.kill();
 		}
 	}

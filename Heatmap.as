@@ -1,5 +1,6 @@
 package 
 {
+	import entity.Survivor;
 	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -174,11 +175,24 @@ package
 			var startNewY:int = level.player.y / RESOLUTION - currentRect.y;
 			var startOffset:int = fromXY(startNewY, startNewX);
 			offsetToCompute.push(startOffset);
-			//trace(currentRect.x, currentRect.y, startNewX, startNewY, startOffset, nextInfluence.length);
 			
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
 			valueToCompute.push(startInfluence);
 			nextInfluence[startOffset] = startInfluence + 2 * Zombie.REPULSION + 1; // Avoid blinking when zombie reach destination and is alone.
+
+			
+			for each(var survivor:Survivor in level.survivors)
+			{
+				if (currentRect.contains(survivor.x / RESOLUTION, survivor.y / RESOLUTION))
+				{
+					startNewX = survivor.x / RESOLUTION - currentRect.x
+					startNewY = survivor.y / RESOLUTION - currentRect.y
+					offsetToCompute.push(fromXY(startNewY, startNewX));
+					
+					startInfluence = BASE_ALPHA + MAX_INFLUENCE - 10 * DECAY;
+					valueToCompute.push(startInfluence);
+				}
+			}
 		}
 		
 		/**

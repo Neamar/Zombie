@@ -138,7 +138,6 @@ package entity
 			//Avoid null pointer exception, should the zombie awake in some future frame.
 			move = function():void { };
 			parent.removeChild(this);
-
 		}
 		
 		public function onMove():void

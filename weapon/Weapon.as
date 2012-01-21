@@ -20,6 +20,11 @@ package weapon
 		public var cooldown:int;
 		
 		/**
+		 * Number of frames before the player can fire again after hitting "reload"
+		 */
+		public var reloadTime:int;
+		
+		/**
 		 * Id of last frame this weapon was used
 		 */
 		protected var lastShot:Number = 0;
@@ -44,6 +49,7 @@ package weapon
 			this.parent = level;
 			this.player = player;
 			
+			reloadTime = 2 * cooldown;
 			reload();
 		}
 		
@@ -91,6 +97,10 @@ package weapon
 			{
 				ammoInCurrentMagazine = magazineCapacity;
 				magazineNumber--;
+				
+				//Forbid firing before reload "finish".
+				//To do this, emulate a shoot.
+				lastShot = player.frameNumber + reloadTime - cooldown;
 			}
 		}
 		

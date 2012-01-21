@@ -151,6 +151,15 @@ package entity
 			var maxJ:int = 0;
 			var maxValue:int = heatmap.bitmapData.getPixel(xScaled , yScaled);
 			
+			//Are we on the heatmap ? If not, just sleep.
+			if (maxValue == Heatmap.DEFAULT_COLOR)
+			{
+				//Player ain't near. We may as well go to sleep to save some CPU.
+				nextWakeIn(25);
+					
+				return;
+			}
+			
 			//Find the highest potential around the zombie
 			for (var i:int = -1; i <= 1; i++)
 			{
@@ -193,6 +202,8 @@ package entity
 			{
 				if (maxValue >= Heatmap.MAX_INFLUENCE)
 				{
+					//We are "on" the player : let's fight !
+					
 					if (willHit)
 					{
 						//Hit the player !
@@ -207,7 +218,8 @@ package entity
 				}
 				else
 				{
-					//No move. We may as well go to sleep to save some CPU.
+					//No move : some zombies are probably blocking us.
+					//Wait a little to let everything boil down.
 					nextWakeIn(10 + SLEEP_DURATION * Math.random());
 				}
 			}

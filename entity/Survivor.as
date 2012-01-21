@@ -7,9 +7,12 @@ package entity
 	 */
 	public class Survivor extends Zombie 
 	{
+		
 		public function Survivor(parent:Level, x:int, y:int) 
 		{
 			super(parent, x, y);
+			maxInfluence = Heatmap.MAX_INFLUENCE - 5 * Heatmap.DECAY
+			speed = 4;
 			
 			this.graphics.clear();
 			this.graphics.lineStyle(1, 0x0000FF);
@@ -24,7 +27,6 @@ package entity
 		 */
 		public override function hit():void
 		{
-			
 		}
 		
 		public override function kill():void

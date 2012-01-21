@@ -27,7 +27,7 @@ package entity
 		/**
 		 * Moving speed (in manhattan-px)
 		 */
-		public static const SPEED:int = 3;
+		public var speed:int = 3;
 		
 		/**
 		 * To get swarming behavior, zombies should push themselves.
@@ -99,6 +99,11 @@ package entity
 		 * Therefore, we don't need to remove him from the frame , when he'll awake, he'll see he's dead.
 		 */
 		public var move:Function = onMove;
+		
+		/**
+		 * Influence the zombie try to reach
+		 */
+		public var maxInfluence:int;
 
 		/**
 		 * Is the zombie going to hit the player nextFrame ?
@@ -109,6 +114,7 @@ package entity
 		{
 			this.x = x;
 			this.y = y;
+			maxInfluence = Heatmap.MAX_INFLUENCE
 			super(parent);
 			
 			//Zombie graphics
@@ -161,7 +167,7 @@ package entity
 			}
 			
 			//Are we on the player ? If so, hit him.
-			if (maxValue >= Heatmap.MAX_INFLUENCE)
+			if (maxValue >= maxInfluence)
 			{
 				if (willHit)
 				{
@@ -205,8 +211,8 @@ package entity
 				}
 				
 				//Move toward higher potential
-				x += SPEED * maxI;
-				y += SPEED * maxJ;
+				x += speed * maxI;
+				y += speed * maxJ;
 				rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 				
 				//Store repulsion

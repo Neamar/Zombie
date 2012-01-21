@@ -97,7 +97,7 @@ package levels
 			}
 			
 			//Add a survivor
-			var survivor:Survivor = new Survivor(this, 1800, 200);
+			var survivor:Survivor = new Survivor(this, 200, 200);
 			addChild(survivor);
 			zombies.push(survivor);
 			survivors.push(survivor);

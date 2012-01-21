@@ -35,7 +35,7 @@ package
 		/**
 		 * Decay value for each iteration.
 		 */
-		public const DECAY:int = 7;
+		public static const DECAY:int = 7;
 		
 		/**
 		 * Influence under the player.

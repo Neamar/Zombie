@@ -24,10 +24,18 @@ package weapon
 		 */
 		protected var lastShot:Number = 0;
 		
+		protected var magazineCapacity:int;
+		
+		protected var magazineNumber:int;
+		
+		protected var ammoInCurrentMagazine:int;
+		
 		public function Weapon(level:Level, player:Player) 
 		{
 			this.parent = level;
 			this.player = player;
+			
+			reload();
 		}
 		
 		/**
@@ -47,9 +55,38 @@ package weapon
 		 */
 		public function fire():int
 		{
-			lastShot = player.frameNumber;
-			
 			return 0;
+		}
+		
+		/**
+		 * Remove one bullet from current magazine.
+		 * 
+		 * @return false if the magazine is empty.
+		 */
+		protected function beforeFiring():Boolean
+		{
+			if (ammoInCurrentMagazine > 0)
+			{
+				lastShot = player.frameNumber;
+				ammoInCurrentMagazine--;
+				
+				trace('Shoot !', ammoInCurrentMagazine);
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public function reload():void
+		{
+			if (magazineNumber > 0)
+			{
+				ammoInCurrentMagazine = magazineCapacity;
+				magazineNumber--;
+			}
+			
+			trace('Reload !', magazineNumber);
 		}
 		
 		/**

@@ -327,17 +327,6 @@ package entity
 				//Is a zombie blocking move ?
 				if (move)
 				{
-					//We can use built-in methods for faster search.
-					var under:Array = parent.getObjectsUnderPoint(parent.localToGlobal(new Point(x, y)));
-					//under[0] is the level, under[1] is the player. If there is a zombie, it will be on under[2].
-					if (!(under[2] is Zombie))
-					{
-						x = destX;
-						y = destY;
-						hasMoved = true;
-					}
-					
-					/*
 					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
 					for each(var zombie:Zombie in potentialZombies)
 					{
@@ -355,7 +344,6 @@ package entity
 						y = destY;
 						hasMoved = true;
 					}
-					*/
 				}
 			}
 

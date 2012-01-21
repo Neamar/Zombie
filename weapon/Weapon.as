@@ -17,18 +17,27 @@ package weapon
 		/**
 		 * Number of frames between two shoots
 		 */
-		protected var cooldown:int;
+		public var cooldown:int;
 		
 		/**
 		 * Id of last frame this weapon was used
 		 */
 		protected var lastShot:Number = 0;
 		
-		protected var magazineCapacity:int;
+		/**
+		 * Capacity for a magazine
+		 */
+		public var magazineCapacity:int;
 		
-		protected var magazineNumber:int;
+		/**
+		 * Number of magazine availables
+		 */
+		public var magazineNumber:int;
 		
-		protected var ammoInCurrentMagazine:int;
+		/**
+		 * Ammunition in the currently loade magazine
+		 */
+		public var ammoInCurrentMagazine:int;
 		
 		public function Weapon(level:Level, player:Player) 
 		{
@@ -70,8 +79,6 @@ package weapon
 				lastShot = player.frameNumber;
 				ammoInCurrentMagazine--;
 				
-				trace('Shoot !', ammoInCurrentMagazine);
-				
 				return true;
 			}
 			
@@ -85,8 +92,6 @@ package weapon
 				ammoInCurrentMagazine = magazineCapacity;
 				magazineNumber--;
 			}
-			
-			trace('Reload !', magazineNumber);
 		}
 		
 		/**

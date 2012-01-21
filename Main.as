@@ -57,7 +57,7 @@
 			loader.addEventListener(Event.COMPLETE, addLevel);
 			
 			//For debug :
-			var movieMonitor:MovieMonitor = new MovieMonitor();
+			var movieMonitor:Monitor = new Monitor();
 			addChild(movieMonitor);
 			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );
 		}

@@ -1,6 +1,7 @@
 ﻿package 
 {
 	import entity.Zombie;
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.StageAlign;
@@ -9,6 +10,10 @@
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import levels.Level;
+	import levels.LevelLoader;
 	
 	/**
 	 * ...
@@ -22,9 +27,8 @@
 		public static const WIDTH2:int = WIDTH / 2;
 		public static const HEIGHT:int = 400;
 		public static const HEIGHT2:int = HEIGHT / 2;
-		public static const LEVEL_WIDTH:int = 1934;
-		public static const LEVEL_HEIGHT:int = 1094;
-		public static const ZOMBIES_NUMBER:int = 2000;
+		
+		public static const FIRST_LEVEL:String = "1";
 		
 		public var level:Level;
 		
@@ -48,9 +52,9 @@
 			stage.addEventListener(Event.RESIZE, onResize);
 			stage.dispatchEvent(new Event(Event.RESIZE));
 			
-			// entry point
-			level = new Level();
-			addChild(level);
+			//Load xml for current level
+			var loader:LevelLoader = new LevelLoader(FIRST_LEVEL);
+			loader.addEventListener(Event.COMPLETE, addLevel);
 			
 			//For debug :
 			var movieMonitor:MovieMonitor = new MovieMonitor();
@@ -58,11 +62,27 @@
 			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );
 		}
 		
+		public function addLevel(e:Event):void
+		{
+			var loader:LevelLoader = e.target as LevelLoader;
+			
+			level = loader.getLevel()
+			level.addEventListener(Level.WIN, function(e:Event):void { trace("win") } );
+			addChild(level);
+		}
+		
 		private function toggleQuality(e:KeyboardEvent):void
 		{
 			if (e.keyCode == 81)
 			{
-				stage.quality = StageQuality.LOW;
+				if (stage.quality == StageQuality.HIGH)
+				{
+					stage.quality = StageQuality.LOW;
+				}
+				else
+				{
+					stage.quality = StageQuality.HIGH;
+				}
 			}
 			else if (e.keyCode == 84)
 			{
@@ -75,7 +95,6 @@
 			this.x = stage.stageWidth / 2 - Main.WIDTH2;
 			this.y = stage.stageHeight / 2 - Main.HEIGHT2;
 		}
-		
 	}
 	
 }

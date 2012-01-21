@@ -1,5 +1,6 @@
 package entity 
 {
+	import levels.Level;
 	/**
 	 * ...
 	 * @author Neamar

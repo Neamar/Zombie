@@ -2,6 +2,7 @@ package entity
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
@@ -11,6 +12,9 @@ package entity
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import levels.Level;
+	import levels.LevelParams;
 	import weapon.Handgun;
 	import weapon.Railgun;
 	import weapon.Shotgun;
@@ -23,6 +27,11 @@ package entity
 	 */
 	public class Player extends Entity
 	{
+		/**
+		 * For debug : the player is never hurt.
+		 */
+		public static const INVINCIBLE:Boolean = true;
+		
 		/**
 		 * Player radius (he's a fatty!)
 		 */
@@ -47,11 +56,6 @@ package entity
 		 * Max width one may see if no obstacles in front.
 		 */
 		public const DEPTH_VISIBILITY:int = Main.WIDTH2;
-
-		/**
-		 * Number of rays to throw.
-		 */
-		public const RESOLUTION:int = 12;
 
 		/**
 		 * Mathematic constant = Math.PI / 180
@@ -90,6 +94,11 @@ package entity
 		public var downKeys:Vector.<int> = new Vector.<int>();
 		
 		public var isClicked:Boolean = false;
+		
+		/**
+		 * Number of rays to throw for raycasting
+		 */
+		public var resolution:int;
 
 		/**
 		 * Shape to use to draw influence.
@@ -98,8 +107,15 @@ package entity
 
 		/**
 		 * Mask for the level, depending on the direction player is facing.
+		 * Although this Shape belongs to the player, it is displayed on the Level.
 		 */
 		public var lightMask:Shape = new Shape();
+		
+		/**
+		 * Blood rush of the player, when he is hit.
+		 * Although this Shape belongs to the player, it is displayed on the Level.
+		 */
+		public var bloodRush:Bitmap = new Bitmap();
 		
 		/**
 		 * Shape for the weapon deflagration when shooting
@@ -144,12 +160,13 @@ package entity
 		 */
 		public var damagesTaken:int = 0;
 
-		public function Player(parent:Level)
+		public function Player(parent:Level, params:LevelParams)
 		{
 			super(parent);
 
-			x = 1934 - 205;
-			y = Main.HEIGHT2;
+			x = params.playerStartX;
+			y = params.playerStartY;
+			resolution = params.playerStartResolution;
 
 			//Player graphics
 			this.graphics.lineStyle(2);
@@ -160,6 +177,12 @@ package entity
 			lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
 			addChild(weaponDeflagration);
+			
+			//Blood rush
+			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.HEIGHT);
+			bloodRush = new Bitmap(bd)
+			bloodRush.visible = false;
+			bd.perlinNoise(Main.WIDTH, Main.HEIGHT, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
 			
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
@@ -184,7 +207,10 @@ package entity
 		 */
 		public function hit(foe:Entity, power:int = 30):void
 		{
-			damagesTaken += power;
+			if (!INVINCIBLE)
+			{
+				damagesTaken += power;
+			}
 			if (damagesTaken > MAX_HEALTHPOINTS)
 			{
 				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);
@@ -240,6 +266,12 @@ package entity
 			currentWeapon = availableWeapon[offset];
 		}
 
+		/**
+		 * Move & turn the player
+		 * Compute the lightmask
+		 * Shoot if need be
+		 * @param	e
+		 */
 		protected function onFrame(e:Event):void
 		{
 			frameNumber++;
@@ -296,7 +328,6 @@ package entity
 				if (move)
 				{
 					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
-					var cancelMove:Boolean = false;
 					for each(var zombie:Zombie in potentialZombies)
 					{
 						if (zombie.x - Zombie.RADIUS < destX && zombie.x + Zombie.RADIUS > destX && zombie.y - Zombie.RADIUS < destY && zombie.y + Zombie.RADIUS > destY)
@@ -348,7 +379,7 @@ package entity
 				
 				//Color doesn't matter, beacause the mask is used with a blendMode.ALPHA, meaning all color information will be discarded.
 				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);
-				step = Math.abs(startAngle - endAngle) / RESOLUTION;
+				step = Math.abs(startAngle - endAngle) / resolution;
 				for (theta = startAngle; theta <= endAngle + .01; theta += step)
 				{
 					radius = 0;
@@ -383,7 +414,6 @@ package entity
 			if (damagesTaken > 0)
 			{
 				//Display bloodrush
-				var bloodRush:Bitmap = (parent as Level).bloodRush;
 				bloodRush.visible = true;
 				bloodRush.alpha = damagesTaken / MAX_HEALTHPOINTS;
 				bloodRush.x = x - Main.WIDTH2;

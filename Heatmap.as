@@ -6,6 +6,7 @@ package
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import levels.Level;
 	
 	/**
 	 * Heatmap (other names : influence map, potential fields)
@@ -56,6 +57,11 @@ package
 		 * Some constants to deal with pseudo-non-transparent bitmaps.
 		 */
 		public static const BASE_ALPHA:uint = 0xff000000;
+		
+		/**
+		 * Default color (when no heatmap)
+		 */
+		public static const DEFAULT_COLOR:int = 255;
 		
 		/**
 		 * Base heatmap drawn according to the hitmap.
@@ -113,7 +119,7 @@ package
 			
 			influenceWidth = level.hitmap.width / RESOLUTION;
 			influenceHeight = level.hitmap.height / RESOLUTION;
-			baseInfluence = new BitmapData(influenceWidth, influenceHeight, false, 255);
+			baseInfluence = new BitmapData(influenceWidth, influenceHeight, false, DEFAULT_COLOR);
 			baseInfluence.lock();
 			var rect:Rectangle = new Rectangle();
 			rect.width = RESOLUTION;

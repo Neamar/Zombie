@@ -9,6 +9,7 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.getTimer;
+	import levels.Level;
 	public class MovieMonitor extends Sprite {
 		private var xml:XML;
 		private var theText:TextField;
@@ -102,11 +103,14 @@
 				fps=0;
 				lastTimeCheck = timer;
 				
-				xml.nZombie = Level.current.zombies.length.toString();
-				xml.nActiveZombie = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].length.toString();
-				xml.currentWeapon = Level.current.player.currentWeapon;
-				xml.currentWeapon = xml.currentWeapon.toString().replace('object ', '');
-				xml.currentDamages = Level.current.player.damagesTaken;
+				if (Level.current != null)
+				{
+					xml.nZombie = Level.current.zombies.length.toString();
+					xml.nActiveZombie = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].length.toString();
+					xml.currentWeapon = Level.current.player.currentWeapon;
+					xml.currentWeapon = xml.currentWeapon.toString().replace('object ', '');
+					xml.currentDamages = Level.current.player.damagesTaken;
+				}
 			}
 			fps++;
 			xml.msFrame=(timer-ms);

@@ -1,4 +1,4 @@
-package 
+package levels
 {
 	import entity.Player;
 	import entity.Survivor;
@@ -11,6 +11,7 @@ package
 	import flash.events.KeyboardEvent;
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	/**
 	 * 
@@ -18,10 +19,10 @@ package
 	 */
 	public class Level extends Sprite
 	{
-		public static var current:Level;
+		public static const WIN:String = 'win';
+		public static const LOST:String = 'lost';
 		
-		[Embed(source = "assets/testlevelHitmap.png")] private static var Hitmap:Class;
-		[Embed(source = "assets/testlevelBitmap.png")] private static var BitmapLevel:Class;
+		public static var current:Level = null;
 		
 		public var player:Player;
 		
@@ -32,6 +33,7 @@ package
 		
 		/**
 		 * Texture for the game
+		 * @todo Rename to bitmap ? I used to had problems with that, can't remember why.
 		 */
 		public var bitmapLevel:Bitmap;
 		
@@ -52,20 +54,16 @@ package
 		 */
 		public var heatmap:Heatmap;
 		
-		/**
-		 * Blood rush when player is shot.
-		 */
-		public var bloodRush:Bitmap;
-		
-		public function Level()
+		public function Level(params:LevelParams)
 		{
+			this.hitmap = params.hitmap;
+			this.bitmapLevel = params.bitmap;
+			
 			//For debug, store current instance
 			Level.current = this;
 			
-			hitmap = new Hitmap();
-			player = new Player(this);
+			player = new Player(this, params);
 			heatmap = new Heatmap(this);
-			bitmapLevel = new BitmapLevel();
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
 			
@@ -75,20 +73,26 @@ package
 			addChild(player);
 			
 			//Generate Zombies
-			for (var i:int = 0; i < Main.ZOMBIES_NUMBER; i++)
+			while (params.zombiesLocation.length > 0)
 			{
-				var x:int = Main.LEVEL_WIDTH * Math.random();
-				var y:int = Main.LEVEL_HEIGHT * Math.random();
+				var spawnArea:Rectangle = params.zombiesLocation.pop();
+				var spawnQuantity:int = params.zombiesDensity.pop();
 				
-				if (hitmap.bitmapData.getPixel32(x, y) != 0)
+				for (var i:int = 0; i < spawnQuantity; i++)
 				{
-					i--;
-				}
-				else
-				{
-					var foe:Zombie = new Zombie(this, x, y);
-					zombies.push(foe);
-					addChild(foe);
+					var x:int = spawnArea.x + spawnArea.width * Math.random();
+					var y:int = spawnArea.y + spawnArea.height * Math.random();
+					
+					if (hitmap.bitmapData.getPixel32(x, y) != 0)
+					{
+						i--;
+					}
+					else
+					{
+						var foe:Zombie = new Zombie(this, x, y);
+						zombies.push(foe);
+						addChild(foe);
+					}
 				}
 			}
 			
@@ -111,11 +115,7 @@ package
 			//Is is incredibly faster than using a real as3-mask, since we don't have to cacheAsBitmap the level.
 			player.lightMask.blendMode = BlendMode.ALPHA;
 			
-			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.HEIGHT);
-			bloodRush = new Bitmap(bd)
-			bloodRush.visible = false;
-			addChild(bloodRush);
-			bd.perlinNoise(Main.WIDTH, Main.HEIGHT, 3, 1268496, false, false, BitmapDataChannel.RED);
+			addChild(player.bloodRush);
 		}
 		
 		/**

@@ -1,6 +1,7 @@
 package weapon 
 {
 	import entity.Player;
+	import levels.Level;
 	/**
 	 * ...
 	 * @author Neamar

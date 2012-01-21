@@ -4,6 +4,7 @@ package entity
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import levels.Level;
 	import Utilitaires.geom.Vector;
 	
 	/**
@@ -102,7 +103,7 @@ package entity
 		/**
 		 * Is the zombie going to hit the player nextFrame ?
 		 */
-		public var willHit:Boolean = false;
+		public var willHit:Boolean = true;
 
 		public function Zombie(parent:Level, x:int, y:int)
 		{
@@ -150,6 +151,16 @@ package entity
 			var maxJ:int = 0;
 			var maxValue:int = heatmap.bitmapData.getPixel(xScaled , yScaled);
 			
+			//Are we on the heatmap ? If not, just sleep again (more common case).
+			if (maxValue == Heatmap.DEFAULT_COLOR)
+			{
+				//Player ain't near. We may as well go to sleep to save some CPU.
+				nextWakeIn(25);
+					
+				return;
+			}
+			
+			//Are we on the player ? If so, hit him.
 			if (maxValue >= Heatmap.MAX_INFLUENCE)
 			{
 				if (willHit)
@@ -163,6 +174,7 @@ package entity
 					willHit = true;
 				}
 				nextWakeIn(10);
+				
 				return;
 			}
 			
@@ -206,7 +218,8 @@ package entity
 			}
 			else
 			{
-				//No move. We may as well go to sleep to save some CPU.
+				//No move : some other zombies are probably blocking us.
+				//Wait a little to let everything boil down.
 				nextWakeIn(10 + SLEEP_DURATION * Math.random());
 			}
 		}

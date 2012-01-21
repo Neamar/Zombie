@@ -10,7 +10,8 @@
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.getTimer;
 	import levels.Level;
-	public class MovieMonitor extends Sprite {
+	
+	public class Monitor extends Sprite {
 		private var xml:XML;
 		private var theText:TextField;
 		private var fps:int=0;
@@ -19,7 +20,8 @@
 		private var maxMemory:Number=0;
 		private var fpsVector:Vector.<Number>=new Vector.<Number>();
 		private var childrenCount:int;
-		public function MovieMonitor():void {
+		
+		public function Monitor():void {
 			xml =
 			<xml>
 			<sectionTitle>FPS MONITOR</sectionTitle>

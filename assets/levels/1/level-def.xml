@@ -16,7 +16,7 @@
 		</success>
 		
 		<hitmap>hitmap.png</hitmap>
-		<player x="30" y="15" orientation="0" />
+		<player x="30" y="15" />
 		<zombies>
 			<spawn-zone x="0" y="200" width="1934" height="1094" number="400" />
 		</zombies>

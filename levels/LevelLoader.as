@@ -80,8 +80,8 @@ package levels
 			var playerXML:XML = xml.technical.player[0];
 			params.playerStartX = playerXML.@x;
 			params.playerStartY = playerXML.@y;
-			params.playerStartRotation = playerXML.@orientation;
-			
+			if(playerXML.@resolution.toXMLString() != "")
+				params.playerStartResolution = playerXML.@resolution;
 			//Number of zombies per area
 			for each(var spawnAreaXML:XML in xml.technical.zombies[0].elements('spawn-zone'))
 			{

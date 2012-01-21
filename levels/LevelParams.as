@@ -49,9 +49,10 @@ package levels
 		public var playerStartY:int;
 		
 		/**
-		 * Player start position on the x-axis
+		 * Player resolution (precision for the lamplight raycasting).
+		 * Redefined for tight levels.
 		 */
-		public var playerStartRotation:int;
+		public var playerStartResolution:int = 12;
 		
 		/////////////////////////////////////
 		// SPECIAL PARAMETERS : AccessingAreaLevel

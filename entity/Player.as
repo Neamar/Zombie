@@ -58,11 +58,6 @@ package entity
 		public const DEPTH_VISIBILITY:int = Main.WIDTH2;
 
 		/**
-		 * Number of rays to throw.
-		 */
-		public const RESOLUTION:int = 12;
-
-		/**
 		 * Mathematic constant = Math.PI / 180
 		 * rad = deg * TO_RADIANS
 		 */
@@ -99,6 +94,11 @@ package entity
 		public var downKeys:Vector.<int> = new Vector.<int>();
 		
 		public var isClicked:Boolean = false;
+		
+		/**
+		 * Number of rays to throw for raycasting
+		 */
+		public var resolution:int;
 
 		/**
 		 * Shape to use to draw influence.
@@ -166,7 +166,7 @@ package entity
 
 			x = params.playerStartX;
 			y = params.playerStartY;
-			rotation = params.playerStartRotation;
+			resolution = params.playerStartResolution;
 
 			//Player graphics
 			this.graphics.lineStyle(2);
@@ -379,7 +379,7 @@ package entity
 				
 				//Color doesn't matter, beacause the mask is used with a blendMode.ALPHA, meaning all color information will be discarded.
 				maskGraphics.beginGradientFill(GradientType.RADIAL, [0, 0], [1, 0], [0, 255], transformationMatrix);
-				step = Math.abs(startAngle - endAngle) / RESOLUTION;
+				step = Math.abs(startAngle - endAngle) / resolution;
 				for (theta = startAngle; theta <= endAngle + .01; theta += step)
 				{
 					radius = 0;

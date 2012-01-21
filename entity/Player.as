@@ -12,6 +12,7 @@ package entity
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import levels.Level;
 	import levels.LevelParams;
 	import weapon.Handgun;
@@ -26,6 +27,11 @@ package entity
 	 */
 	public class Player extends Entity
 	{
+		/**
+		 * For debug : the player is never hurt.
+		 */
+		public static const INVINCIBLE:Boolean = true;
+		
 		/**
 		 * Player radius (he's a fatty!)
 		 */
@@ -201,7 +207,10 @@ package entity
 		 */
 		public function hit(foe:Entity, power:int = 30):void
 		{
-			damagesTaken += power;
+			if (!INVINCIBLE)
+			{
+				damagesTaken += power;
+			}
 			if (damagesTaken > MAX_HEALTHPOINTS)
 			{
 				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);

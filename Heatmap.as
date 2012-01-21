@@ -180,7 +180,6 @@ package
 			var startNewY:int = level.player.y / RESOLUTION - currentRect.y;
 			var startOffset:int = fromXY(startNewY, startNewX);
 			offsetToCompute.push(startOffset);
-			//trace(currentRect.x, currentRect.y, startNewX, startNewY, startOffset, nextInfluence.length);
 			
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
 			valueToCompute.push(startInfluence);

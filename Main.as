@@ -28,7 +28,7 @@
 		public static const HEIGHT:int = 400;
 		public static const HEIGHT2:int = HEIGHT / 2;
 		
-		public static const FIRST_LEVEL:String = "1";
+		public static const FIRST_LEVEL:String = "3";
 		
 		public var level:Level;
 		

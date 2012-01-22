@@ -1,11 +1,9 @@
 package entity
 {
-	import flash.display.BlendMode;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	import levels.Level;
-	import Utilitaires.geom.Vector;
 	
 	/**
 	 * ...

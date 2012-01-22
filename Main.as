@@ -1,17 +1,12 @@
 ﻿package 
 {
 	import entity.Zombie;
-	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.StageAlign;
-	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
 	import levels.Level;
 	import levels.LevelLoader;
 	
@@ -42,7 +37,6 @@
 			// static initialisation
 			Main.stage = this.stage;
 			Zombie.init();
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, toggleQuality);
 			
 			//Forbid stage resizing
 			stage.align = StageAlign.TOP_LEFT;
@@ -94,29 +88,6 @@
 			level = loader.getLevel()
 			level.addEventListener(Level.WIN, gotoNextLevel );
 			addChild(level);
-		}
-		
-		/**
-		 * TODO : remove.
-		 * @param	e
-		 */
-		private function toggleQuality(e:KeyboardEvent):void
-		{
-			if (e.keyCode == 81)
-			{
-				if (stage.quality == StageQuality.HIGH)
-				{
-					stage.quality = StageQuality.LOW;
-				}
-				else
-				{
-					stage.quality = StageQuality.HIGH;
-				}
-			}
-			else if (e.keyCode == 84)
-			{
-				level.toggleDebugMode();
-			}
 		}
 		
 		private function onResize(e:Event):void

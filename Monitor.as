@@ -1,8 +1,7 @@
 ﻿package {
 	import entity.Zombie;
-	import flash.display.Sprite;
 	import flash.display.DisplayObjectContainer;
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.system.System;
 	import flash.text.StyleSheet;

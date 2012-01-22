@@ -1,7 +1,5 @@
 package levels 
 {
-	import flash.display.Bitmap;
-	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	

@@ -3,14 +3,8 @@ package levels
 	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.BitmapDataChannel;
 	import flash.display.BlendMode;
-	import flash.display.Loader;
 	import flash.display.Sprite;
-	import flash.events.KeyboardEvent;
-	import flash.filters.GlowFilter;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	/**

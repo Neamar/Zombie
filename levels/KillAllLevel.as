@@ -1,6 +1,5 @@
 package levels 
 {
-	import flash.display.Bitmap;
 	import flash.events.TimerEvent;
 	
 	/**

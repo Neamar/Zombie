@@ -6,13 +6,11 @@ package entity
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
 	import levels.Level;
 	import levels.LevelParams;
 	import weapon.Handgun;
@@ -75,6 +73,7 @@ package entity
 		public static const UP:int = 1;
 		public static const DOWN:int = 2;
 		public static const RELOAD:int = 3;
+		public static const DEBUG:int = 10;
 		
 		/**
 		 * Key-binding for moving.
@@ -87,6 +86,7 @@ package entity
 			/*s		key */83:DOWN,
 			/*j		key */74:DOWN,
 			/*k		key */75:UP,
+			/*t		key */84:DEBUG,
 			/*r		key */82:RELOAD,
 			/*space	key */32:RELOAD
 		};
@@ -102,12 +102,6 @@ package entity
 		 * Number of rays to throw for raycasting
 		 */
 		public var resolution:int;
-
-		/**
-		 * Shape to use to draw influence.
-		 * @todo REMOVE?
-		 */
-		public var influence:Shape = new Shape();
 
 		/**
 		 * Mask for the level, depending on the direction player is facing.
@@ -251,6 +245,10 @@ package entity
 					if (action == RELOAD)
 					{
 						currentWeapon.reload();
+					}
+					else if (action == DEBUG)
+					{
+						(parent as Level).toggleDebugMode();
 					}
 					else
 					{

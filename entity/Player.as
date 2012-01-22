@@ -179,10 +179,10 @@ package entity
 			addChild(weaponDeflagration);
 			
 			//Blood rush
-			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.HEIGHT);
+			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.WIDTH);
 			bloodRush = new Bitmap(bd)
 			bloodRush.visible = false;
-			bd.perlinNoise(Main.WIDTH, Main.HEIGHT, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
+			bd.perlinNoise(Main.WIDTH, Main.WIDTH, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
 			
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
@@ -351,7 +351,7 @@ package entity
 			if (hasMoved || hasShot > 0)
 			{
 				parent.x = Main.WIDTH2 - x;
-				parent.y = Main.HEIGHT2 - y;
+				parent.y = Main.WIDTH2 - y;
 
 				//Torch & masking
 				var startAngle:Number = ((rotation - ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
@@ -366,7 +366,7 @@ package entity
 
 				//Everything is gray-dark, except when a weapon was just fired or when you're hurt
 				maskGraphics.beginFill(0, .05 * (hasShot + 1));
-				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.HEIGHT2, Main.WIDTH, Main.HEIGHT);
+				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.WIDTH2, Main.WIDTH, Main.WIDTH);
 				//Except for the player, which is visible no matter what
 				maskGraphics.beginFill(0, 1);
 				maskGraphics.drawCircle(x, y, RADIUS);
@@ -417,7 +417,7 @@ package entity
 				bloodRush.visible = true;
 				bloodRush.alpha = damagesTaken / MAX_HEALTHPOINTS;
 				bloodRush.x = x - Main.WIDTH2;
-				bloodRush.y = y - Main.HEIGHT2;
+				bloodRush.y = y - Main.WIDTH2;
 				
 				//Heal one-by-frame
 				damagesTaken--;

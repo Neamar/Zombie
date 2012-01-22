@@ -75,6 +75,14 @@ package levels
 				params.LevelClass = AccessingAreaLevel;
 				params.successArea = new Rectangle(successAreaXML.@x, successAreaXML.@y, successAreaXML.@width, successAreaXML.@height);
 			}
+			else if (successXML.@on == 'killing_all')
+			{
+				params.LevelClass = KillAllLevel;
+			}
+			else
+			{
+				throw new Error("Success type for the level is unknown.");
+			}
 			
 			//Load player info
 			var playerXML:XML = xml.technical.player[0];

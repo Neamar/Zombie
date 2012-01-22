@@ -13,6 +13,8 @@ package levels
 	import flash.geom.Rectangle;
 	
 	/**
+	 * [abstract]
+	 * Basis for a level.
 	 * 
 	 * @author Neamar
 	 */

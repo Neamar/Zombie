@@ -20,7 +20,7 @@
 	 * @author Neamar
 	 */
 	[SWF(width="400", height="400", backgroundColor="#000000",frameRate="30")]
-	public class Main extends Sprite 
+	public final class Main extends Sprite 
 	{
 		public static var stage:Stage;
 		public static const WIDTH:int = 400;

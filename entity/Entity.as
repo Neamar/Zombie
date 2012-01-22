@@ -4,7 +4,7 @@ package entity
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * An entity represents anythin moving on the map : a zombie, the player, a survivor...
 	 * @author Neamar
 	 */
 	public class Entity extends Sprite 

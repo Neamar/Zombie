@@ -6,7 +6,7 @@ package weapon
 	 * ...
 	 * @author Neamar
 	 */
-	public class Shotgun extends Weapon
+	public final class Shotgun extends Weapon
 	{
 		public function Shotgun(level:Level, player:Player) 
 		{

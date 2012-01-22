@@ -11,7 +11,7 @@
 	import flash.utils.getTimer;
 	import levels.Level;
 	
-	public class Monitor extends Sprite {
+	public final class Monitor extends Sprite {
 		private var xml:XML;
 		private var theText:TextField;
 		private var fps:int=0;

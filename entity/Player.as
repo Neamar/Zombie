@@ -22,10 +22,10 @@ package entity
 	import weapon.Weapon;
 
 	/**
-	 * ...
+	 * The current player.
 	 * @author Neamar
 	 */
-	public class Player extends Entity
+	public final class Player extends Entity
 	{
 		/**
 		 * For debug : the player is never hurt.

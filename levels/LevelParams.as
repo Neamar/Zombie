@@ -8,7 +8,7 @@ package levels
 	 * No class taking a LevelParams as a parameter should store it for further use. It is a temporary holder for the XML information.
 	 * @author Neamar
 	 */
-	public class LevelParams 
+	public final class LevelParams 
 	{
 		/**
 		 * Class to use to instantiate the Level.

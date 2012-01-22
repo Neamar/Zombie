@@ -7,7 +7,7 @@ package weapon
 	 * ...
 	 * @author Neamar
 	 */
-	public class Railgun extends Weapon
+	public final class Railgun extends Weapon
 	{
 		public function Railgun(level:Level, player:Player) 
 		{

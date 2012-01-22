@@ -13,7 +13,7 @@ package
 	 * @see http://aigamedev.com/open/tutorials/potential-fields/
 	 * @author Neamar
 	 */
-	public class Heatmap extends Bitmap
+	public final class Heatmap extends Bitmap
 	{
 		/**
 		 * To which scale shall we compute the Heatmap ?

@@ -5,6 +5,7 @@ package levels
 	import flash.display.Bitmap;
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	
 	/**
@@ -124,6 +125,15 @@ package levels
 			hitmap.loaderInfo.loader.unloadAndStop();
 			bitmapLevel.loaderInfo.loader.unloadAndStop();
 		}
+		
+		/**
+		 * This function dispatch the WIN event.
+		 */
+		public function dispatchWin():void
+		{
+			dispatchEvent(new Event(Level.WIN));
+		}
+		
 	
 		/**
 		 * Toggle debug mode and view the influence map.

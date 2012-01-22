@@ -73,7 +73,12 @@ package entity
 		public static const UP:int = 1;
 		public static const DOWN:int = 2;
 		public static const RELOAD:int = 3;
+		
+		/**
+		 * Special constants
+		 */
 		public static const DEBUG:int = 10;
+		public static const FORCE_WIN:int = 11;
 		
 		/**
 		 * Key-binding for moving.
@@ -87,6 +92,7 @@ package entity
 			/*j		key */74:DOWN,
 			/*k		key */75:UP,
 			/*t		key */84:DEBUG,
+			/*w		key */87:FORCE_WIN,
 			/*r		key */82:RELOAD,
 			/*space	key */32:RELOAD
 		};
@@ -249,6 +255,10 @@ package entity
 					else if (action == DEBUG)
 					{
 						(parent as Level).toggleDebugMode();
+					}
+					else if (action == FORCE_WIN)
+					{
+						(parent as Level).dispatchWin();
 					}
 					else
 					{

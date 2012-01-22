@@ -24,18 +24,18 @@ package levels
             checker.start();
 		}
 		
-		protected function onTimer(e:TimerEvent):void
-		{
-			throw new Error("Call to abstract method onTimer()");
-		}
-		
 		/**
 		 * This function dispatch the WIN event and stop the timer.
 		 */
-		protected function dispatchWin():void
+		public override function dispatchWin():void
 		{
 			checker.stop();
-			dispatchEvent(new Event(Level.WIN));
+			super.dispatchWin();
+		}
+		
+		protected function onTimer(e:TimerEvent):void
+		{
+			throw new Error("Call to abstract method onTimer()");
 		}
 	}
 

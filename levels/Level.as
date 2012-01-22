@@ -6,6 +6,7 @@ package levels
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
 	import flash.display.BlendMode;
+	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.KeyboardEvent;
 	import flash.filters.GlowFilter;
@@ -114,6 +115,19 @@ package levels
 			addChild(player.bloodRush);
 		}
 		
+		public function destroy():void
+		{
+			while (numChildren > 0)
+				removeChildAt(0);
+				
+			Zombie.emptyFrames();
+			//zombies.length = 0;
+			player.destroy();
+			
+			hitmap.loaderInfo.loader.unloadAndStop();
+			bitmapLevel.loaderInfo.loader.unloadAndStop();
+		}
+	
 		/**
 		 * Toggle debug mode and view the influence map.
 		 * @param	e

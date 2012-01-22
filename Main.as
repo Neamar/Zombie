@@ -65,6 +65,7 @@
 		public function gotoNextLevel(e:Event):void
 		{
 			removeChild(level);
+			level.destroy();
 			level.removeEventListener(Level.WIN, gotoNextLevel);
 			
 			prepareLevel(level.nextLevelName);

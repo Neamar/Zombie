@@ -78,6 +78,14 @@ package entity
 			frameNumber = 0;
 		}
 		
+		public static function emptyFrames():void
+		{
+			for (frameNumber = 0; frameNumber < MAX_DURATION; frameNumber++)
+			{
+				frameWaker[frameNumber].length = 0;
+			}
+		}
+		
 		/**
 		 * This static function awake any zombies that registered for a watch on this frame.
 		 * @param	e

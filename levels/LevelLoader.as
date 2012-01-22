@@ -46,11 +46,15 @@ package levels
 		 * This function should be called after the Event.COMPLET has been dispatched.
 		 * Else, it returns null.
 		 * 
+		 * After it is called, the level is nulled.
+		 * 
 		 * @return the level
 		 */
 		public function getLevel():Level 
 		{
-			return level;
+			var l:Level = level;
+			level = null;
+			return l;
 		}
 		/**
 		 * Load a level from XML file

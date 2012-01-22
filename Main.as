@@ -15,7 +15,7 @@
 	 * ...
 	 * @author Neamar
 	 */
-	[SWF(width="400", height="400", backgroundColor="#000000",frameRate="60")]
+	[SWF(width="400", height="400", backgroundColor="#000000",frameRate="30")]
 	public final class Main extends Sprite 
 	{
 		public static var stage:Stage;

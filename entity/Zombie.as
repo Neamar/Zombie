@@ -1,5 +1,6 @@
 package entity
 {
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
@@ -52,6 +53,16 @@ package entity
 			/*dX =  1*/ -45, 0, 45
 		]);
 		
+		/**
+		 * To speed everything, we should not access static vars from another class.
+		 * Hence, we just duplicate them.
+		 * 
+		 * @see http://blog.controul.com/2009/04/how-slow-is-static-access-in-as3avm2-exactly/
+		 * @see Heatmap
+		 */
+		public static const RESOLUTION:int = Heatmap.RESOLUTION;
+		public static const DEFAULT_COLOR:int = Heatmap.DEFAULT_COLOR;
+		public static const MAX_INFLUENCE:int = Heatmap.MAX_INFLUENCE;
 		/**
 		 * Which zombie should awake in which frame ?
 		 */
@@ -110,12 +121,18 @@ package entity
 		 * Is the zombie going to hit the player nextFrame ?
 		 */
 		public var willHit:Boolean = true;
+		
+		/**
+		 * Shortcut to heatmap.bitmapData
+		 */
+		public var influenceMap:BitmapData;
 
 		public function Zombie(parent:Level, x:int, y:int)
 		{
 			this.x = x;
 			this.y = y;
 			super(parent);
+			influenceMap = heatmap.bitmapData;
 			
 			//Zombie graphics
 			this.graphics.lineStyle(1, 0xFF0000);
@@ -150,15 +167,15 @@ package entity
 		
 		public function onMove():void
 		{
-			var xScaled:int = x / Heatmap.RESOLUTION;
-			var yScaled:int = y / Heatmap.RESOLUTION;
+			var xScaled:int = x / RESOLUTION;
+			var yScaled:int = y / RESOLUTION;
 			
 			var maxI:int = 0;
 			var maxJ:int = 0;
-			var maxValue:int = heatmap.bitmapData.getPixel(xScaled , yScaled);
+			var maxValue:int = influenceMap.getPixel(xScaled , yScaled);
 			
 			//Are we on the heatmap ? If not, just sleep.
-			if (maxValue == Heatmap.DEFAULT_COLOR)
+			if (maxValue == DEFAULT_COLOR)
 			{
 				//Player ain't near. We may as well go to sleep to save some CPU.
 				nextWakeIn(25);
@@ -175,9 +192,9 @@ package entity
 					if ( i == 0 && j == 0)
 						continue;
 					
-					if (heatmap.bitmapData.getPixel(xScaled + i, yScaled + j) > maxValue)
+					if (influenceMap.getPixel(xScaled + i, yScaled + j) > maxValue)
 					{
-						maxValue = heatmap.bitmapData.getPixel(xScaled + i, yScaled + j);
+						maxValue = influenceMap.getPixel(xScaled + i, yScaled + j);
 						maxI = i;
 						maxJ = j;
 					}
@@ -186,10 +203,10 @@ package entity
 			
 			if (maxI != 0 || maxJ != 0)
 			{
-				if (!(parent as Level).heatmap.hasJustRedrawn)
+				if (!heatmap.hasJustRedrawn)
 				{
 					//Do not undo-repulsion if a redraw has just occured, else we get flickering behavior.
-					heatmap.bitmapData.setPixel(xScaled, yScaled, heatmap.bitmapData.getPixel(xScaled , yScaled) + REPULSION);
+					influenceMap.setPixel(xScaled, yScaled, influenceMap.getPixel(xScaled , yScaled) + REPULSION);
 				}
 				
 				//Move toward higher potential
@@ -198,15 +215,15 @@ package entity
 				rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 				
 				//Store repulsion
-				xScaled = x / Heatmap.RESOLUTION;
-				yScaled = y / Heatmap.RESOLUTION;
-				heatmap.bitmapData.setPixel(xScaled, yScaled, Math.max(0, heatmap.bitmapData.getPixel(xScaled, yScaled) - REPULSION));
+				xScaled = x / RESOLUTION;
+				yScaled = y / RESOLUTION;
+				influenceMap.setPixel(xScaled, yScaled, Math.max(0, influenceMap.getPixel(xScaled, yScaled) - REPULSION));
 				
 				nextWakeIn(1);
 			}
 			else
 			{
-				if (maxValue >= Heatmap.MAX_INFLUENCE)
+				if (maxValue >= MAX_INFLUENCE)
 				{
 					//We are "on" the player : let's fight !
 					

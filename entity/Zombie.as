@@ -34,12 +34,6 @@ package entity
 		public static const REPULSION:int = 15;
 		
 		/**
-		 * Number of frames to precompute (for vector length).
-		 * Should be greater than SLEEP_DURATION + 10.
-		 */
-		public static const MAX_DURATION:int = 100;
-		
-		/**
 		 * Angles depending on deltaX.
 		 * Given deltaX and deltaY, compute (deltaX + 1) * 4 + (delatY + 1) to get the index.
 		 * At this index, you'll find the angle.
@@ -63,52 +57,6 @@ package entity
 		public static const RESOLUTION:int = Heatmap.RESOLUTION;
 		public static const DEFAULT_COLOR:int = Heatmap.DEFAULT_COLOR;
 		public static const MAX_INFLUENCE:int = Heatmap.MAX_INFLUENCE;
-		/**
-		 * Which zombie should awake in which frame ?
-		 */
-		public static var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(MAX_DURATION);
-		
-		/**
-		 * Current frame number % MAX_DURATION
-		 */
-		public static var frameNumber:int = 0;
-		
-		/**
-		 * Don't forget to call this method before instantiating any zombie !
-		 * Populate frameWaker.
-		 */
-		public static function init():void
-		{
-			Main.stage.addEventListener(Event.ENTER_FRAME, onFrame);
-			for (frameNumber = 0; frameNumber < MAX_DURATION; frameNumber++)
-			{
-				frameWaker[frameNumber] = new Vector.<Zombie>();
-			}
-			frameNumber = 0;
-		}
-		
-		public static function emptyFrames():void
-		{
-			for (frameNumber = 0; frameNumber < MAX_DURATION; frameNumber++)
-			{
-				frameWaker[frameNumber].length = 0;
-			}
-		}
-		
-		/**
-		 * This static function awake any zombies that registered for a watch on this frame.
-		 * @param	e
-		 */
-		public static function onFrame(e:Event = null):void
-		{
-			frameNumber = (frameNumber + 1) % MAX_DURATION;
-			
-			var currentFrame:Vector.<Zombie> = frameWaker[frameNumber];
-			while(currentFrame.length > 0)
-			{
-				currentFrame.pop().move();
-			}
-		}
 		
 		/**
 		 * Function the zombie uses to move.
@@ -140,10 +88,7 @@ package entity
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
-			
-			//Random starting-wake.
-			nextWakeIn(30 + SLEEP_DURATION * Math.random());
-			
+			this.cacheAsBitmap = true;
 		}
 		
 		/**
@@ -165,7 +110,7 @@ package entity
 
 		}
 		
-		public function onMove():void
+		public function onMove():int
 		{
 			var xScaled:int = x / RESOLUTION;
 			var yScaled:int = y / RESOLUTION;
@@ -178,9 +123,7 @@ package entity
 			if (maxValue == DEFAULT_COLOR)
 			{
 				//Player ain't near. We may as well go to sleep to save some CPU.
-				nextWakeIn(25);
-					
-				return;
+				return 25;
 			}
 			
 			//Find the highest potential around the zombie
@@ -219,7 +162,7 @@ package entity
 				yScaled = y / RESOLUTION;
 				influenceMap.setPixel(xScaled, yScaled, Math.max(0, influenceMap.getPixel(xScaled, yScaled) - REPULSION));
 				
-				nextWakeIn(1);
+				return 1;
 			}
 			else
 			{
@@ -237,24 +180,13 @@ package entity
 					{
 						willHit = true;
 					}
-					nextWakeIn(10);
-				}
-				else
-				{
-					//No move : some zombies are probably blocking us.
-					//Wait a little to let everything boil down.
-					nextWakeIn(10 + SLEEP_DURATION * Math.random());
+					return 10;
 				}
 			}
-		}
-		
-		/**
-		 * Register current zombie for future awakening.
-		 * @param	duration (frame)
-		 */
-		public function nextWakeIn(duration:int):void
-		{
-			frameWaker[(frameNumber + duration) % MAX_DURATION].push(this);
+			
+			//No move available : some zombies are probably blocking us.
+			//Wait a little to let everything boil down.
+			return 10 + SLEEP_DURATION * Math.random();
 		}
 	}
 	

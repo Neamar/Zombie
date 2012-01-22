@@ -36,8 +36,25 @@ package levels
 		
 		/**
 		 * Zombies
+		 * TODO : is it really useful ?
 		 */
 		public var zombies:Vector.<Zombie> = new Vector.<Zombie>();
+		
+		/**
+		 * Length should be greater than Zombie.SLEEP_DURATION.
+		 */
+		public const FRAME_WAKER_LENGTH:int = 100;
+		
+		/**
+		 * Which zombie should awake in which frame ?
+		 * 
+		 */
+		public var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(FRAME_WAKER_LENGTH, true);
+		
+		/**
+		 * Current frame number % MAX_DURATION
+		 */
+		public var frameNumber:int = 0;
 		
 		/**
 		 * Influence map, to compute easily multiples pathfindings without burying CPU
@@ -53,22 +70,32 @@ package levels
 		
 		public function Level(params:LevelParams)
 		{
+			//Optimise display
 			mouseChildren = false;
 			mouseEnabled = false;
 			
+			//Prepare to receive and animate zombies
+			addEventListener(Event.ENTER_FRAME, onFrame);
+			//TODO : remove ? Since vector is fixed, i believe it is auto-filled.
+			for (frameNumber = 0; frameNumber < FRAME_WAKER_LENGTH; frameNumber++)
+			{
+				frameWaker[frameNumber] = new Vector.<Zombie>();
+			}
+			frameNumber = 0;
+			
+			//Register parameters
 			this.hitmap = params.hitmap;
 			this.bitmapLevel = params.bitmap;
 			this.nextLevelName = params.nextLevelName
+			//Small optimisation, possible since we never update the hitmap
+			hitmap.bitmapData.lock();
 			
-			//For debug, store current instance
+			//For debug, store current instance (used by monitor)
 			Level.current = this;
 			
 			player = new Player(this, params);
 			heatmap = new Heatmap(this);
-			//Small optimisation, possible since we never update the hitmap
-			hitmap.bitmapData.lock();
-			
-			
+
 			//Layouting everything on the display list
 			addChild(bitmapLevel);
 			addChild(player);
@@ -92,6 +119,9 @@ package levels
 					{
 						var foe:Zombie = new Zombie(this, x, y);
 						zombies.push(foe);
+						//Set time for first awakening :
+						var firstWake:int = 30 + 30 * Math.random()
+						frameWaker[firstWake].push(foe);
 						addChild(foe);
 					}
 				}
@@ -115,16 +145,48 @@ package levels
 		
 		public function destroy():void
 		{
+			//Remove all children for faster GC
 			while (numChildren > 0)
 				removeChildAt(0);
-				
-			Zombie.emptyFrames();
-			//zombies.length = 0;
+			
+			//Empty frames
+			for (frameNumber = 0; frameNumber < FRAME_WAKER_LENGTH; frameNumber++)
+			{
+				frameWaker[frameNumber].length = 0;
+			}
+			
+			//Clean up proprieties :
+			zombies.length = 0;
 			player.destroy();
 			
 			hitmap.loaderInfo.loader.unloadAndStop();
 			bitmapLevel.loaderInfo.loader.unloadAndStop();
+			
+			//Remove listener
+			this.removeEventListener(Event.ENTER_FRAME, onFrame);
 		}
+		
+		/**
+		 * This function awake any zombies that registered for a watch on this frame.
+		 * @param	e
+		 */
+		public function onFrame(e:Event = null):void
+		{
+			frameNumber = (frameNumber + 1) % FRAME_WAKER_LENGTH;
+			
+			var currentFrame:Vector.<Zombie> = frameWaker[frameNumber];
+			while(currentFrame.length > 0)
+			{
+				//Move the zombies.
+				var zombie:Zombie = currentFrame.pop();
+				//The function returns the number of frames before moving the same zombie again
+				var duration:int = zombie.move();
+				
+				if(duration != 0)
+					frameWaker[(frameNumber + duration) % FRAME_WAKER_LENGTH].push(zombie);
+			}
+		}
+		
 		
 		/**
 		 * This function dispatch the WIN event.

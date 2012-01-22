@@ -35,9 +35,9 @@
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// static initialisation
+			// Remember the stage and give static access ; some objects needs it to register events.
+			//TODO : do they ?
 			Main.stage = this.stage;
-			Zombie.init();
 			
 			//Forbid stage resizing
 			stage.align = StageAlign.TOP_LEFT;

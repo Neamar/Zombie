@@ -1,4 +1,5 @@
 ﻿package {
+	import entity.Player;
 	import entity.Zombie;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -115,12 +116,15 @@
 				
 				if (Level.current != null)
 				{
-					xml.nZombie = Level.current.zombies.length.toString();
-					xml.nActiveZombie = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].length.toString();
-					xml.currentWeapon = Level.current.player.currentWeapon;
+					var level:Level = Level.current;
+					var player:Player = level.player;
+					
+					xml.nZombie = level.zombies.length.toString();
+					xml.nActiveZombie = level.frameWaker[(level.frameNumber + 1) % level.FRAME_WAKER_LENGTH].length.toString();
+					xml.currentWeapon = player.currentWeapon;
 					xml.currentWeapon = xml.currentWeapon.toString().replace('object ', '');
-					xml.weaponProp = 'b' + Level.current.player.currentWeapon.ammoInCurrentMagazine + " / m" + Level.current.player.currentWeapon.magazineNumber;
-					xml.currentDamages = Level.current.player.damagesTaken;
+					xml.weaponProp = 'b' + player.currentWeapon.ammoInCurrentMagazine + " / m" + player.currentWeapon.magazineNumber;
+					xml.currentDamages = player.damagesTaken;
 				}
 			}
 			fps++;

@@ -365,7 +365,7 @@ package entity
 
 				//Is a zombie blocking move ?
 				if (move)
-				{
+				{/*
 					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
 					for each(var zombie:Zombie in potentialZombies)
 					{
@@ -374,7 +374,7 @@ package entity
 							move = false;
 							break;
 						}
-					}
+					}*/
 					
 					// No zombie + no wall : ok.
 					if (move)

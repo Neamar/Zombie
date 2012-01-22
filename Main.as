@@ -77,7 +77,7 @@
 		 */
 		public function prepareLevel(levelName:String):void
 		{
-			//Load xml for current level
+			//Load current level
 			var loader:LevelLoader = new LevelLoader(levelName);
 			loader.addEventListener(Event.COMPLETE, addLevel);
 		}
@@ -90,7 +90,7 @@
 		{
 			var loader:LevelLoader = e.target as LevelLoader;
 			loader.removeEventListener(Event.COMPLETE, addLevel);
-			
+
 			level = loader.getLevel()
 			level.addEventListener(Level.WIN, gotoNextLevel );
 			addChild(level);

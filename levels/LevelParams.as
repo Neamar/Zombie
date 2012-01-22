@@ -54,6 +54,11 @@ package levels
 		 */
 		public var playerStartResolution:int = 12;
 		
+		/**
+		 * Name of the level following this one (to be loaded once this one is completed)
+		 */
+		public var nextLevelName:String;
+		
 		/////////////////////////////////////
 		// SPECIAL PARAMETERS : AccessingAreaLevel
 		/////////////////////////////////////

@@ -6,6 +6,7 @@ package levels
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
 	import flash.display.BlendMode;
+	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.KeyboardEvent;
 	import flash.filters.GlowFilter;
@@ -50,6 +51,11 @@ package levels
 		 */
 		public var heatmap:Heatmap;
 		
+		/**
+		 * Name of the next level to load
+		 */
+		public var nextLevelName:String;
+		
 		public function Level(params:LevelParams)
 		{
 			mouseChildren = false;
@@ -57,6 +63,7 @@ package levels
 			
 			this.hitmap = params.hitmap;
 			this.bitmapLevel = params.bitmap;
+			this.nextLevelName = params.nextLevelName
 			
 			//For debug, store current instance
 			Level.current = this;
@@ -111,6 +118,19 @@ package levels
 			addChild(player.bloodRush);
 		}
 		
+		public function destroy():void
+		{
+			while (numChildren > 0)
+				removeChildAt(0);
+				
+			Zombie.emptyFrames();
+			//zombies.length = 0;
+			player.destroy();
+			
+			hitmap.loaderInfo.loader.unloadAndStop();
+			bitmapLevel.loaderInfo.loader.unloadAndStop();
+		}
+	
 		/**
 		 * Toggle debug mode and view the influence map.
 		 * @param	e

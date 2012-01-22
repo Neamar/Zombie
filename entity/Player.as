@@ -102,6 +102,7 @@ package entity
 
 		/**
 		 * Shape to use to draw influence.
+		 * @todo REMOVE?
 		 */
 		public var influence:Shape = new Shape();
 
@@ -202,6 +203,23 @@ package entity
 			this.currentWeapon = this.availableWeapon[this.availableWeapon.length - 1];
 		}
 		
+		public function destroy():void
+		{
+			removeChild(weaponDeflagration);
+			
+			lightMask.filters = [];
+			
+			bloodRush.bitmapData.dispose();
+			removeEventListener(Event.ENTER_FRAME, onFrame);
+			Main.stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			Main.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			Main.stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			Main.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			Main.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			
+			this.availableWeapon.length = 0;
+			this.currentWeapon = null;
+		}
 		/**
 		 * Hit the player
 		 * @param	foe the foe who hit him

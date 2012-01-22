@@ -76,7 +76,6 @@ package levels
 			
 			//Prepare to receive and animate zombies
 			addEventListener(Event.ENTER_FRAME, onFrame);
-			//TODO : remove ? Since vector is fixed, i believe it is auto-filled.
 			for (frameNumber = 0; frameNumber < FRAME_WAKER_LENGTH; frameNumber++)
 			{
 				frameWaker[frameNumber] = new Vector.<Zombie>();

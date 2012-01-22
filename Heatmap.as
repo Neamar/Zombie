@@ -94,12 +94,12 @@ package
 		/**
 		 * List of offsets to compute before drawing heatmap.
 		 */
-		protected var offsetToCompute:Vector.<int>;
+		protected var offsetToCompute:Vector.<int> = new Vector.<int>();;
 		
 		/**
 		 * Associated values.
 		 */
-		protected var valueToCompute:Vector.<int>;
+		protected var valueToCompute:Vector.<int> = new Vector.<int>();;
 		
 		/**
 		 * Parent level
@@ -173,8 +173,9 @@ package
 			nextInfluence = baseInfluence.getVector(currentRect);
 			nextInfluence.fixed = true;
 
-			offsetToCompute = new Vector.<int>();
-			valueToCompute = new Vector.<int>();
+			//Empty everything
+			offsetToCompute.length = 0;
+			valueToCompute.length = 0;
 			
 			var startNewX:int = level.player.x / RESOLUTION - currentRect.x;
 			var startNewY:int = level.player.y / RESOLUTION - currentRect.y;

@@ -9,7 +9,7 @@ package levels
 	 * Success on accessing some area (stored in successArea)
 	 * @author Neamar
 	 */
-	public class AccessingAreaLevel extends TimedLevel 
+	public final class AccessingAreaLevel extends TimedLevel 
 	{		
 		public var successArea:Rectangle;
 		

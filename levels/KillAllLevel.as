@@ -7,7 +7,7 @@ package levels
 	 * ...
 	 * @author Neamar
 	 */
-	public class KillAllLevel extends TimedLevel 
+	public final class KillAllLevel extends TimedLevel 
 	{
 		
 		public function KillAllLevel(params:LevelParams) 

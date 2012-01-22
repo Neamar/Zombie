@@ -50,10 +50,16 @@ package levels
 		 */
 		public var heatmap:Heatmap;
 		
+		/**
+		 * Name of the next level to load
+		 */
+		public var nextLevelName:String;
+		
 		public function Level(params:LevelParams)
 		{
 			this.hitmap = params.hitmap;
 			this.bitmapLevel = params.bitmap;
+			this.nextLevelName = params.nextLevelName
 			
 			//For debug, store current instance
 			Level.current = this;

@@ -26,7 +26,7 @@
 		public static const WIDTH:int = 400;
 		public static const WIDTH2:int = WIDTH / 2;
 		
-		public static const FIRST_LEVEL:String = "3";
+		public static const FIRST_LEVEL:String = "1";
 		
 		public var level:Level;
 		
@@ -50,9 +50,8 @@
 			stage.addEventListener(Event.RESIZE, onResize);
 			stage.dispatchEvent(new Event(Event.RESIZE));
 			
-			//Load xml for current level
-			var loader:LevelLoader = new LevelLoader(FIRST_LEVEL);
-			loader.addEventListener(Event.COMPLETE, addLevel);
+			//Load first level
+			prepareLevel(FIRST_LEVEL);
 			
 			//For debug :
 			var movieMonitor:Monitor = new Monitor();
@@ -60,15 +59,46 @@
 			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );
 		}
 		
+		/**
+		 * Call when the WIN event is dispatched
+		 */
+		public function gotoNextLevel(e:Event):void
+		{
+			removeChild(level);
+			level.removeEventListener(Level.WIN, gotoNextLevel);
+			
+			prepareLevel(level.nextLevelName);
+		}
+		
+		/**
+		 * Call when a new level should be loaded
+		 * @param	levelName
+		 */
+		public function prepareLevel(levelName:String):void
+		{
+			//Load xml for current level
+			var loader:LevelLoader = new LevelLoader(levelName);
+			loader.addEventListener(Event.COMPLETE, addLevel);
+		}
+		
+		/**
+		 * Call when a new level is ready for play
+		 * @param	e
+		 */
 		public function addLevel(e:Event):void
 		{
 			var loader:LevelLoader = e.target as LevelLoader;
+			loader.removeEventListener(Event.COMPLETE, addLevel);
 			
 			level = loader.getLevel()
-			level.addEventListener(Level.WIN, function(e:Event):void { trace("win") } );
+			level.addEventListener(Level.WIN, gotoNextLevel );
 			addChild(level);
 		}
 		
+		/**
+		 * TODO : remove.
+		 * @param	e
+		 */
 		private function toggleQuality(e:KeyboardEvent):void
 		{
 			if (e.keyCode == 81)

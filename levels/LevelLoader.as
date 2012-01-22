@@ -84,12 +84,15 @@ package levels
 				throw new Error("Success type for the level is unknown.");
 			}
 			
+			//Level specific info
+			params.nextLevelName = xml.technical["followed-by"][0];
 			//Load player info
 			var playerXML:XML = xml.technical.player[0];
 			params.playerStartX = playerXML.@x;
 			params.playerStartY = playerXML.@y;
 			if(playerXML.@resolution.toXMLString() != "")
 				params.playerStartResolution = playerXML.@resolution;
+				
 			//Number of zombies per area
 			for each(var spawnAreaXML:XML in xml.technical.zombies[0].elements('spawn-zone'))
 			{

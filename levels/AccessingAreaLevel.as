@@ -4,33 +4,26 @@ package levels
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
-	import flash.utils.Timer;
 	
 	/**
-	 * ...
+	 * Success on accessing some area (stored in successArea)
 	 * @author Neamar
 	 */
-	public class AccessingAreaLevel extends Level 
-	{
-		protected var checker:Timer;
-		
+	public class AccessingAreaLevel extends TimedLevel 
+	{		
 		public var successArea:Rectangle;
+		
 		public function AccessingAreaLevel(params:LevelParams) 
 		{
 			super(params);
 			this.successArea = params.successArea;
-			
-			checker = new Timer(2000);
-            checker.addEventListener(TimerEvent.TIMER, checkArea);
-            checker.start();
 		}
 		
-		protected function checkArea(e:Event):void
+		protected override function onTimer(e:TimerEvent):void
 		{
 			if (successArea.contains(player.x, player.y))
 			{
-				checker.stop();
-				dispatchEvent(new Event(Level.WIN));
+				dispatchWin();
 			}
 		}
 	}

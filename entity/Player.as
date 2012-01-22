@@ -70,10 +70,11 @@ package entity
 		public static const TO_DEGREE:Number = 57.2957795;
 
 		/**
-		 * Movement related constants
+		 * Action related constants
 		 */
 		public static const UP:int = 1;
 		public static const DOWN:int = 2;
+		public static const RELOAD:int = 3;
 		
 		/**
 		 * Key-binding for moving.
@@ -85,7 +86,9 @@ package entity
 			/*q		key */81:DOWN,
 			/*s		key */83:DOWN,
 			/*j		key */74:DOWN,
-			/*k		key */75:UP
+			/*k		key */75:UP,
+			/*r		key */82:RELOAD,
+			/*space	key */32:RELOAD
 		};
 
 		/**
@@ -245,7 +248,14 @@ package entity
 				var action:int = bindings[e.keyCode];
 				if (downKeys.indexOf(action) == -1)
 				{
-					downKeys.push(action);
+					if (action == RELOAD)
+					{
+						currentWeapon.reload();
+					}
+					else
+					{
+						downKeys.push(action);
+					}
 				}
 			}
 			else
@@ -256,9 +266,10 @@ package entity
 
 		protected function onKeyUp(e:KeyboardEvent):void
 		{
-			if (e.keyCode in bindings)
+			var indexOf:int = downKeys.indexOf(bindings[e.keyCode]);
+			if (indexOf != -1)
 			{
-				downKeys.splice(downKeys.indexOf(bindings[e.keyCode]), 1);
+				downKeys.splice(indexOf, 1);
 			}
 		}
 

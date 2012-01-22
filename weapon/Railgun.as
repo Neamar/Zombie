@@ -12,14 +12,20 @@ package weapon
 		public function Railgun(level:Level, player:Player) 
 		{
 			cooldown = Main.stage.frameRate;
+			magazineCapacity = Infinity;
+			ammoInCurrentMagazine = 10;
+			
 			super(level, player);
 		}
 		
 		public override function fire():int		{
-			super.fire();
-			raycast(0);
+			if (beforeFiring())
+			{
+				raycast(0);
 			
-			return 15;
+				return 15;
+			}
+			return 0;
 		}
 		
 		public override function shoot(zombie:Zombie):Boolean

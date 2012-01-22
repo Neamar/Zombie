@@ -17,17 +17,40 @@ package weapon
 		/**
 		 * Number of frames between two shoots
 		 */
-		protected var cooldown:int;
+		public var cooldown:int;
+		
+		/**
+		 * Number of frames before the player can fire again after hitting "reload"
+		 */
+		public var reloadTime:int;
 		
 		/**
 		 * Id of last frame this weapon was used
 		 */
 		protected var lastShot:Number = 0;
 		
+		/**
+		 * Capacity for a magazine
+		 */
+		public var magazineCapacity:int;
+		
+		/**
+		 * Number of magazine availables
+		 */
+		public var magazineNumber:int;
+		
+		/**
+		 * Ammunition in the currently loade magazine
+		 */
+		public var ammoInCurrentMagazine:int;
+		
 		public function Weapon(level:Level, player:Player) 
 		{
 			this.parent = level;
 			this.player = player;
+			
+			reloadTime = 2 * cooldown;
+			reload();
 		}
 		
 		/**
@@ -47,9 +70,38 @@ package weapon
 		 */
 		public function fire():int
 		{
-			lastShot = player.frameNumber;
-			
 			return 0;
+		}
+		
+		/**
+		 * Remove one bullet from current magazine.
+		 * 
+		 * @return false if the magazine is empty.
+		 */
+		protected function beforeFiring():Boolean
+		{
+			if (ammoInCurrentMagazine > 0)
+			{
+				lastShot = player.frameNumber;
+				ammoInCurrentMagazine--;
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public function reload():void
+		{
+			if (magazineNumber > 0)
+			{
+				ammoInCurrentMagazine = magazineCapacity;
+				magazineNumber--;
+				
+				//Forbid firing before reload "finish".
+				//To do this, emulate a shoot.
+				lastShot = player.frameNumber + reloadTime - cooldown;
+			}
 		}
 		
 		/**

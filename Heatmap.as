@@ -113,7 +113,7 @@ package
 		public var currentRect:Rectangle = new Rectangle(0, 0, MAX_INFLUENCE_WIDTH, MAX_INFLUENCE_WIDTH);
 		
 		public function Heatmap(level:Level)
-		{
+		{			
 			this.level = level;
 			
 			influenceWidth = level.hitmap.width / RESOLUTION;

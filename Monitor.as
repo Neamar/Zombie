@@ -11,6 +11,9 @@
 	import flash.utils.getTimer;
 	import levels.Level;
 	
+	/**
+	 * Monitor the movie, displaying framerate and other informations.
+	 */
 	public final class Monitor extends Sprite {
 		private var xml:XML;
 		private var theText:TextField;
@@ -21,7 +24,10 @@
 		private var fpsVector:Vector.<Number>=new Vector.<Number>();
 		private var childrenCount:int;
 		
-		public function Monitor():void {
+		public function Monitor()
+		{
+			mouseEnabled = false;
+			
 			xml =
 			<xml>
 			<sectionTitle>FPS MONITOR</sectionTitle>

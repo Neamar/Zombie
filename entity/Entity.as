@@ -21,6 +21,8 @@ package entity
 		
 		public function Entity(parent:Level)
 		{
+			mouseEnabled = false;
+				
 			hitmapTest = parent.hitmap.bitmapData.getPixel32;
 			heatmap = parent.heatmap;
 		}

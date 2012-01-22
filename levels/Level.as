@@ -52,6 +52,9 @@ package levels
 		
 		public function Level(params:LevelParams)
 		{
+			mouseChildren = false;
+			mouseEnabled = false;
+			
 			this.hitmap = params.hitmap;
 			this.bitmapLevel = params.bitmap;
 			

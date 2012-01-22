@@ -7,6 +7,7 @@
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import levels.Level;
 	import levels.LevelLoader;
 	
@@ -14,7 +15,7 @@
 	 * ...
 	 * @author Neamar
 	 */
-	[SWF(width="400", height="400", backgroundColor="#000000",frameRate="30")]
+	[SWF(width="400", height="400", backgroundColor="#000000",frameRate="60")]
 	public final class Main extends Sprite 
 	{
 		public static var stage:Stage;
@@ -51,6 +52,8 @@
 			var movieMonitor:Monitor = new Monitor();
 			addChild(movieMonitor);
 			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );
+			
+			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);
 		}
 		
 		/**

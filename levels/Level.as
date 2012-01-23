@@ -1,5 +1,6 @@
 package levels
 {
+	import entity.Behemoth;
 	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Bitmap;
@@ -93,6 +94,7 @@ package levels
 			Level.current = this;
 			
 			player = new Player(this, params);
+			
 			heatmap = new Heatmap(this);
 
 			//Layouting everything on the display list
@@ -125,6 +127,12 @@ package levels
 					}
 				}
 			}
+			
+			//Quick hack : add behemoth
+			var behemoth:Behemoth = new Behemoth(this, player.x + 50, player.y);
+			zombies.push(behemoth);
+			frameWaker[10].push(behemoth);
+			addChild(behemoth);
 
 			/**
 			 * Blending and masking

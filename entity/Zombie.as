@@ -26,7 +26,7 @@ package entity
 		/**
 		 * Moving speed (in manhattan-px)
 		 */
-		public static const SPEED:int = 3;
+		public var speed:int = 3;
 		
 		/**
 		 * To get swarming behavior, zombies should push themselves.
@@ -153,8 +153,8 @@ package entity
 				}
 				
 				//Move toward higher potential
-				x += SPEED * maxI;
-				y += SPEED * maxJ;
+				x += speed * maxI;
+				y += speed * maxJ;
 				rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 				
 				//Store repulsion

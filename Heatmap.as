@@ -1,5 +1,6 @@
 package 
 {
+	import entity.Survivor;
 	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -34,7 +35,7 @@ package
 		/**
 		 * Decay value for each iteration.
 		 */
-		public const DECAY:int = 7;
+		public static const DECAY:int = 7;
 		
 		/**
 		 * Influence under the player.
@@ -185,6 +186,8 @@ package
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
 			valueToCompute.push(startInfluence);
 			nextInfluence[startOffset] = startInfluence + 2 * Zombie.REPULSION + 1; // Avoid blinking when zombie reach destination and is alone.
+
+
 		}
 		
 		/**

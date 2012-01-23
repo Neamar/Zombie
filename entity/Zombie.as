@@ -29,6 +29,11 @@ package entity
 		public var speed:int = 3;
 		
 		/**
+		 * Strength of the blow a zombie gives when hitting the player
+		 */
+		public var strengthBlow:int = 30;
+		
+		/**
 		 * To get swarming behavior, zombies should push themselves.
 		 */
 		public static const REPULSION:int = 15;
@@ -64,6 +69,11 @@ package entity
 		 * Therefore, we don't need to remove him from the frame , when he'll awake, he'll see he's dead.
 		 */
 		public var move:Function = onMove;
+		
+		/**
+		 * Influence the zombie try to reach
+		 */
+		public var maxInfluence:int;
 
 		/**
 		 * Is the zombie going to hit the player nextFrame ?
@@ -79,6 +89,7 @@ package entity
 		{
 			this.x = x;
 			this.y = y;
+			maxInfluence = Heatmap.MAX_INFLUENCE
 			super(parent);
 			influenceMap = heatmap.bitmapData;
 			
@@ -107,7 +118,6 @@ package entity
 			//Avoid null pointer exception, should the zombie awake in some future frame.
 			move = function():void { };
 			parent.removeChild(this);
-
 		}
 		
 		public function onMove():int
@@ -126,6 +136,23 @@ package entity
 				return 25;
 			}
 			
+			//Are we on the player ? If so, hit him.
+			if (maxValue >= maxInfluence)
+			{
+				if (willHit)
+				{
+					//Hit the player !
+					this.hit();
+					willHit = false;
+				}
+				else
+				{
+					willHit = true;
+				}
+				return 10;
+			}
+			
+			//We're on the heatmap, and we can't hit the player ? Move toward him
 			//Find the highest potential around the zombie
 			for (var i:int = -1; i <= 1; i++)
 			{
@@ -164,30 +191,18 @@ package entity
 				
 				return 1;
 			}
-			else
-			{
-				if (maxValue >= MAX_INFLUENCE)
-				{
-					//We are "on" the player : let's fight !
-					
-					if (willHit)
-					{
-						//Hit the player !
-						(parent as Level).player.hit(this);
-						willHit = false;
-					}
-					else
-					{
-						willHit = true;
-					}
-					return 10;
-				}
-			}
 			
 			//No move available : some zombies are probably blocking us.
 			//Wait a little to let everything boil down.
 			return 10 + SLEEP_DURATION * Math.random();
 		}
+		
+		/**
+		 * Hit the player !
+		 */
+		public function hit():void
+		{
+			(parent as Level).player.hit(this, strengthBlow);
+		}
 	}
-	
 }

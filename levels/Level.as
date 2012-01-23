@@ -2,6 +2,7 @@ package levels
 {
 	import entity.Behemoth;
 	import entity.Player;
+	import entity.Survivor;
 	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BlendMode;
@@ -42,6 +43,7 @@ package levels
 		public var zombies:Vector.<Zombie> = new Vector.<Zombie>();
 		
 		/**
+<<<<<<< HEAD
 		 * Length should be greater than Zombie.SLEEP_DURATION.
 		 */
 		public const FRAME_WAKER_LENGTH:int = 100;
@@ -56,6 +58,11 @@ package levels
 		 * Current frame number % MAX_DURATION
 		 */
 		public var frameNumber:int = 0;
+
+		/*
+		 * Survivors (if any)
+		 */
+		public var survivors:Vector.<Survivor> = new Vector.<Survivor>();
 		
 		/**
 		 * Influence map, to compute easily multiples pathfindings without burying CPU
@@ -128,11 +135,17 @@ package levels
 				}
 			}
 			
-			//Quick hack : add behemoth
+			//Quick hack: add behemoth
 			var behemoth:Behemoth = new Behemoth(this, player.x + 50, player.y);
 			zombies.push(behemoth);
 			frameWaker[10].push(behemoth);
 			addChild(behemoth);
+			
+			//Quick hack: add a survivor
+			var survivor:Survivor = new Survivor(this, player.x + 200, player.y);
+			addChild(survivor);
+			zombies.push(survivor);
+			survivors.push(survivor);
 
 			/**
 			 * Blending and masking

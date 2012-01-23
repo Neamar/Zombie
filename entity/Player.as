@@ -43,7 +43,7 @@ package entity
 		/**
 		 * Max player life
 		 */
-		public const MAX_HEALTHPOINTS:int = 50;
+		public const MAX_HEALTHPOINTS:int = 100;
 
 		/**
 		 * Half-angular visiblity. Full value should be 180° in realistic game, however 100 gives more fun.

@@ -11,8 +11,8 @@ package weapon
 		public function Handgun(level:Level, player:Player) 
 		{
 			cooldown = Main.stage.frameRate;
-			magazineCapacity = 3;
-			magazineNumber = 3;
+			magazineCapacity = 6;
+			magazineNumber = 50;
 			super(level, player);
 		}
 		

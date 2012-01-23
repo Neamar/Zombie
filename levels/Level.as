@@ -43,7 +43,6 @@ package levels
 		public var zombies:Vector.<Zombie> = new Vector.<Zombie>();
 		
 		/**
-<<<<<<< HEAD
 		 * Length should be greater than Zombie.SLEEP_DURATION.
 		 */
 		public const FRAME_WAKER_LENGTH:int = 100;
@@ -136,13 +135,13 @@ package levels
 			}
 			
 			//Quick hack: add behemoth
-			var behemoth:Behemoth = new Behemoth(this, player.x + 50, player.y);
+			var behemoth:Behemoth = new Behemoth(this, player.x + 50, player.y + 1);
 			zombies.push(behemoth);
 			frameWaker[10].push(behemoth);
 			addChild(behemoth);
 			
 			//Quick hack: add a survivor
-			var survivor:Survivor = new Survivor(this, player.x + 200, player.y);
+			var survivor:Survivor = new Survivor(this, player.x + 200, player.y + 1);
 			addChild(survivor);
 			zombies.push(survivor);
 			survivors.push(survivor);

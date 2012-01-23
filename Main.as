@@ -12,7 +12,7 @@
 	import levels.LevelLoader;
 	
 	/**
-	 * ...
+	 * "When in doubt, call an airstrike."
 	 * @author Neamar
 	 */
 	[SWF(width="400", height="400", backgroundColor="#000000",frameRate="30")]

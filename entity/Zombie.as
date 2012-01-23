@@ -78,7 +78,7 @@ package entity
 		/**
 		 * Is the zombie going to hit the player nextFrame ?
 		 */
-		public var willHit:Boolean = true;
+		public var willHit:Boolean = false;
 		
 		/**
 		 * Shortcut to heatmap.bitmapData

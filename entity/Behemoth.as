@@ -3,13 +3,13 @@ package entity
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * A behemoth is a slow but very strong zombie
 	 * @author Neamar
 	 */
 	public final class Behemoth extends Zombie 
 	{
 		/**
-		 * Max player life
+		 * Max behemoth life
 		 */
 		public const MAX_HEALTHPOINTS:int = 8;
 		

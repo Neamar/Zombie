@@ -112,7 +112,7 @@ package levels
 			var playerXML:XML = xml.technical.player[0];
 			params.playerStartX = playerXML.@x;
 			params.playerStartY = playerXML.@y;
-			if(playerXML.@resolution.toXMLString() != "")
+			if (playerXML.@resolution.toXMLString() != "")
 				params.playerStartResolution = playerXML.@resolution;
 				
 			//Number of zombies per area
@@ -120,6 +120,11 @@ package levels
 			{
 				params.zombiesDensity.push(spawnAreaXML.@number);
 				params.zombiesLocation.push(new Rectangle(spawnAreaXML.@x, spawnAreaXML.@y, spawnAreaXML.@width, spawnAreaXML.@height));
+				
+				if (spawnAreaXML["@behemoth-probability"].toXMLString() != "")
+					params.behemothProbability.push(spawnAreaXML["@behemoth-probability"]);
+				else
+					params.behemothProbability.push(50);//Default : one in 50 zombie is a behemoth
 			}
 		}
 		

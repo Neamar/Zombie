@@ -24,14 +24,22 @@ package levels
 		/**
 		 * Spawn area for the zombies
 		 * @see zombieDensity
+		 * @see BehemothProbability
 		 */
 		public var zombiesLocation:Vector.<Rectangle> = new Vector.<Rectangle>();
 		
 		/**
 		 * Density of zombies for each area.
 		 * @see zombiesLocation
+		 * @see behemothProbability
 		 */
 		public var zombiesDensity:Vector.<int> = new Vector.<int>();
+		
+		/**
+		 * One zombie in behemothProbability[index] will be a behemoth.
+		 * This is a probability, and therefore you may have a few surprises
+		 */
+		public var behemothProbability:Vector.<int> = new Vector.<int>();
 		
 		/**
 		 * Hitmap for the level

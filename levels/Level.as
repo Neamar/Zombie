@@ -22,12 +22,6 @@ package levels
 		public static const LOST:String = 'lost';
 		
 		/**
-		 * One zombie in BEHEMOTH_PROBABILITY will be a behemoth.
-		 * This is a probability, and therefore you may have a few surprises
-		 */
-		public static const BEHEMOTH_PROBABILITY:int = 50;
-		
-		/**
 		 * For the monitor.
 		 */
 		public static var current:Level = null;
@@ -124,6 +118,7 @@ package levels
 			{
 				var spawnArea:Rectangle = params.zombiesLocation.pop();
 				var spawnQuantity:int = params.zombiesDensity.pop();
+				var behemothProbability:Number = 1 / params.behemothProbability.pop();
 				
 				for (var i:int = 0; i < spawnQuantity; i++)
 				{
@@ -137,7 +132,7 @@ package levels
 					else
 					{
 						var foe:Zombie;
-						if (Math.random() > 1 / BEHEMOTH_PROBABILITY)
+						if (Math.random() > behemothProbability)
 							foe = new Zombie(this, x, y);
 						else
 							foe = new Behemoth(this, x, y);

@@ -18,7 +18,7 @@
 		<hitmap>hitmap.png</hitmap>
 		<player x="30" y="30" />
 		<zombies>
-			<spawn-zone x="34" y="0" width="1900" height="1094" number="200" />
+			<spawn-zone x="34" y="0" width="1900" height="1094" number="200" behemoth-probability="2" />
 		</zombies>
 		<sounds>
 			<ambient>ambient.mp3</ambient>

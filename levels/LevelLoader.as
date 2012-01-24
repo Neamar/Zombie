@@ -19,7 +19,7 @@ package levels
 		/**
 		 * On which URL shall we load the resources ?
 		 */
-		public static const BASE_URL:String = '../src/assets/levels';
+		public static const BASE_URL:String = 'http://neamar.fr/Res/ZombieGame/assets/levels';
 		
 		/**
 		 * XML raw datas

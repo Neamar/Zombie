@@ -92,7 +92,8 @@ package weapon
 		
 		public function reload():void
 		{
-			if (magazineNumber > 0)
+			//Do not reload if the magazine is full or you don't have any more magazine
+			if (magazineNumber > 0 && ammoInCurrentMagazine != magazineCapacity)
 			{
 				ammoInCurrentMagazine = magazineCapacity;
 				magazineNumber--;

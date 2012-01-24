@@ -21,8 +21,20 @@ package levels
 		public static const WIN:String = 'win';
 		public static const LOST:String = 'lost';
 		
+		/**
+		 * One zombie in BEHEMOTH_PROBABILITY will be a behemoth.
+		 * This is a probability, and therefore you may have a few surprises
+		 */
+		public static const BEHEMOTH_PROBABILITY:int = 50;
+		
+		/**
+		 * For the monitor.
+		 */
 		public static var current:Level = null;
 		
+		/**
+		 * The player on the map
+		 */
 		public var player:Player;
 		
 		/**
@@ -124,7 +136,12 @@ package levels
 					}
 					else
 					{
-						var foe:Zombie = new Zombie(this, x, y);
+						var foe:Zombie;
+						if (Math.random() > 1 / BEHEMOTH_PROBABILITY)
+							foe = new Zombie(this, x, y);
+						else
+							foe = new Behemoth(this, x, y);
+							
 						zombies.push(foe);
 						//Set time for first awakening :
 						var firstWake:int = 30 + 30 * Math.random()
@@ -133,12 +150,6 @@ package levels
 					}
 				}
 			}
-			
-			//Quick hack: add behemoth
-			var behemoth:Behemoth = new Behemoth(this, player.x + 50, player.y + 1);
-			zombies.push(behemoth);
-			frameWaker[10].push(behemoth);
-			addChild(behemoth);
 			
 			//Quick hack: add a survivor
 			var survivor:Survivor = new Survivor(this, player.x + 200, player.y + 1);

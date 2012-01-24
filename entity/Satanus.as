@@ -4,6 +4,8 @@ package entity
 	
 	/**
 	 * A satanus is a very fast zombie.
+	 * 
+	 * "Kill him or get killed"
 	 * @author Neamar
 	 */
 	public final class Satanus extends Zombie 
@@ -13,7 +15,7 @@ package entity
 			super(parent, x, y);
 		
 			speed += 2;
-			strengthBlow = 15;
+			strengthBlow = 25;
 			
 			//Behemoth graphics
 			this.graphics.clear();
@@ -23,6 +25,14 @@ package entity
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
 			this.cacheAsBitmap = true;
+		}
+		
+		public override function onMove():int
+		{
+			//A satanus always hit : it does not need time to prepare the strike.
+			lastEncounter = level.frameNumber - 10;
+			
+			return super.onMove();
 		}
 	}
 

@@ -4,6 +4,8 @@ package entity
 	
 	/**
 	 * A behemoth is a slow but very strong zombie
+	 * 
+	 * "Take your time to aim"
 	 * @author Neamar
 	 */
 	public final class Behemoth extends Zombie 

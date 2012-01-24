@@ -7,7 +7,9 @@ package entity
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * A simple zombie
+	 * 
+	 * "One I can manage, a thousand..."
 	 * @author Neamar
 	 */
 	public class Zombie extends Entity 

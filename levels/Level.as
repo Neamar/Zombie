@@ -120,6 +120,7 @@ package levels
 				var spawnArea:Rectangle = params.zombiesLocation.pop();
 				var spawnQuantity:int = params.zombiesDensity.pop();
 				var behemothProbability:Number = 1 / params.behemothProbability.pop();
+				var satanusProbability:Number = 1 / params.satanusProbability.pop();
 				
 				for (var i:int = 0; i < spawnQuantity; i++)
 				{
@@ -134,7 +135,12 @@ package levels
 					{
 						var foe:Zombie;
 						if (Math.random() > behemothProbability)
-							foe = new Zombie(this, x, y);
+						{
+							if (Math.random() > satanusProbability)
+								foe = new Zombie(this, x, y);
+							else
+								foe = new Satanus(this, x, y);
+						}
 						else
 							foe = new Behemoth(this, x, y);
 							

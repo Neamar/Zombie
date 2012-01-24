@@ -125,6 +125,11 @@ package levels
 					params.behemothProbability.push(spawnAreaXML["@behemoth-probability"]);
 				else
 					params.behemothProbability.push(50);//Default : one in 50 zombie is a behemoth
+					
+				if (spawnAreaXML["@satanus-probability"].toXMLString() != "")
+					params.satanusProbability.push(spawnAreaXML["@satanus-probability"]);
+				else
+					params.satanusProbability.push(50);//Default : one in 50 zombie is a satanus
 			}
 		}
 		

@@ -1,6 +1,7 @@
 ﻿package {
 	import entity.Player;
 	import entity.Zombie;
+	import flash.display.BlendMode;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -130,7 +131,10 @@
 			fps++;
 			xml.msFrame=(timer-ms);
 			ms=timer;
-			theText.htmlText=xml;
+			theText.htmlText = xml;
+			
+			//Always on top
+			parent.setChildIndex(this, numChildren - 1);
 		}
 		public function countDisplayList(container:DisplayObjectContainer):void {
 			childrenCount+=container.numChildren;

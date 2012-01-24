@@ -25,6 +25,7 @@
 		public static const FIRST_LEVEL:String = "1";
 		
 		public var level:Level;
+		public var monitor:Monitor;
 		
 		public function Main()
 		{
@@ -49,9 +50,8 @@
 			prepareLevel(FIRST_LEVEL);
 			
 			//For debug :
-			var movieMonitor:Monitor = new Monitor();
-			addChild(movieMonitor);
-			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );
+			monitor = new Monitor();
+			stage.addChild(monitor);
 			
 			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);
 		}
@@ -94,9 +94,15 @@
 		}
 		
 		private function onResize(e:Event):void
-		{
+		{		
 			this.x = stage.stageWidth / 2 - Main.WIDTH2;
 			this.y = stage.stageHeight / 2 - Main.WIDTH2;
+			
+			if (monitor)
+			{
+				monitor.x = 0;
+				monitor.y = y;
+			}
 		}
 	}
 	

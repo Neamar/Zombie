@@ -64,6 +64,11 @@ package entity
 		public static const MAX_INFLUENCE:int = Heatmap.MAX_INFLUENCE;
 		
 		/**
+		 * The level the zombies live on
+		 */
+		public var level:Level;
+		
+		/**
 		 * Function the zombie uses to move.
 		 * Can be replaced, for instance when zombie is dead ;)
 		 * Therefore, we don't need to remove him from the frame , when he'll awake, he'll see he's dead.
@@ -76,9 +81,14 @@ package entity
 		public var maxInfluence:int;
 
 		/**
-		 * Is the zombie going to hit the player nextFrame ?
+		 * The first time the zombie meets the player, we store the current frameNumber in this variable.
+		 * The next time we're near the player, we check this value.
+		 * - If too much time passed since last encounter, he should "prepare" himself again (and thus not strike for this frame)
+		 * - If the last encounter was in our last waking phase, the player forgot (or was unable) to move : hit him.
+		 * 
+		 * In other words, this variable allos for a "prepare before strike" time.
 		 */
-		public var willHit:Boolean = false;
+		public var lastEncounter:int = -1;
 		
 		/**
 		 * Shortcut to heatmap.bitmapData
@@ -89,6 +99,7 @@ package entity
 		{
 			this.x = x;
 			this.y = y;
+			this.level = parent;
 			maxInfluence = Heatmap.MAX_INFLUENCE
 			super(parent);
 			influenceMap = heatmap.bitmapData;
@@ -139,15 +150,17 @@ package entity
 			//Are we on the player ? If so, hit him.
 			if (maxValue >= maxInfluence)
 			{
-				if (willHit)
+				if (lastEncounter + 10 == level.frameNumber)
 				{
 					//Hit the player !
 					this.hit();
-					willHit = false;
+					
+					//Prepare ourselves to hit the player again in two wakes :
+					lastEncounter = level.frameNumber + 10;
 				}
 				else
 				{
-					willHit = true;
+					lastEncounter = level.frameNumber;
 				}
 				return 10;
 			}
@@ -202,7 +215,7 @@ package entity
 		 */
 		public function hit():void
 		{
-			(parent as Level).player.hit(this, strengthBlow);
+			level.player.hit(this, strengthBlow);
 		}
 	}
 }

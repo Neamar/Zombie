@@ -140,7 +140,7 @@ package entity
 		/**
 		 * All weapons the player may use
 		 */
-		public var availableWeapon:Vector.<Weapon> = new Vector.<Weapon>();
+		public var availableWeapons:Vector.<Weapon> = new Vector.<Weapon>();
 		
 		/**
 		 * Count the number of frames since the player begins playing.
@@ -199,11 +199,8 @@ package entity
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 
 			//Populate weapons
-			this.availableWeapon.push(new Handgun(parent, this));
-			this.availableWeapon.push(new Uzi(parent, this));
-			this.availableWeapon.push(new Railgun(parent, this));
-			this.availableWeapon.push(new Shotgun(parent, this));
-			this.currentWeapon = this.availableWeapon[this.availableWeapon.length - 1];
+			this.availableWeapons.push(new Handgun(parent, this));
+			this.currentWeapon = this.availableWeapons[0];
 		}
 		
 		public function destroy():void
@@ -220,7 +217,7 @@ package entity
 			Main.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
-			this.availableWeapon.length = 0;
+			this.availableWeapons.length = 0;
 			this.currentWeapon = null;
 		}
 		/**
@@ -296,13 +293,13 @@ package entity
 		protected function onMouseWheel(e:MouseEvent):void
 		{
 			//Select next / prev weapon
-			var offset:int = (availableWeapon.indexOf(currentWeapon) + e.delta / Math.abs(e.delta)) % availableWeapon.length;
+			var offset:int = (availableWeapons.indexOf(currentWeapon) + e.delta / Math.abs(e.delta)) % availableWeapons.length;
 			if (offset < 0)
 			{
-				offset = availableWeapon.length + offset;
+				offset = availableWeapons.length + offset;
 			}
 			
-			currentWeapon = availableWeapon[offset];
+			currentWeapon = availableWeapons[offset];
 		}
 
 		/**

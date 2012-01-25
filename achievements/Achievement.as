@@ -1,5 +1,6 @@
 package achievements 
 {
+	import entity.Player;
 	import levels.Level;
 	/**
 	 * Base class for all achievements.
@@ -8,10 +9,15 @@ package achievements
 	 */
 	public class Achievement 
 	{
+		protected var game:Game;
+		protected var level:Level;
+		protected var player:Player;
 		
-		public function Achievement() 
+		public function setGame(game:Game):void
 		{
-			
+			this.game = game;
+			level = game.level;
+			player = level.player;
 		}
 		
 		/**

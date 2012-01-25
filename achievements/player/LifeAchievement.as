@@ -1,17 +1,16 @@
 package achievements.player 
 {
 	/**
-	 * ...
+	 * Improve player life
+	 * 
 	 * @author Neamar
 	 */
-	public class LifeAchievement 
+	public final class LifeAchievement 
 	{
-		
-		public function LifeAchievement() 
+		public override function apply():void
 		{
 			
 		}
-		
 	}
 
 }

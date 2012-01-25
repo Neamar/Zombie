@@ -1,17 +1,16 @@
 package achievements.weapon 
 {
 	/**
-	 * ...
+	 * Improve the capacity of a magazine for a given weapon
+	 * 
 	 * @author Neamar
 	 */
-	public class CapacityAchievement 
+	public final class CapacityAchievement 
 	{
-		
-		public function CapacityAchievement() extends WeaponAchievement
+		public override function apply():void
 		{
 			
 		}
-		
 	}
 
 }

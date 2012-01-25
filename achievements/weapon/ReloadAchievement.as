@@ -1,17 +1,16 @@
 package achievements.weapon 
 {
 	/**
-	 * ...
+	 * Improve the reload time of a given weapon
+	 * 
 	 * @author Neamar
 	 */
-	public class ReloadAchievement extends WeaponAchievement 
+	public final class ReloadAchievement extends WeaponAchievement 
 	{
-		
-		public function ReloadAchievement() 
+		public override function apply():void
 		{
 			
 		}
-		
 	}
 
 }

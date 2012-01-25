@@ -20,7 +20,6 @@ package achievements
 		 * params is the params to use for the achievements
 		 */
 		public var achievementsList:Array = new Array(
-		[0, UnlockAchievement, Handgun],
 		[1, RangeAchievement, Handgun, 200]
 		);
 		
@@ -58,7 +57,7 @@ package achievements
 			{
 				//Apply current achievement
 				var currentRow:Array = achievementsList.shift();
-				var currentAchievement:Achievement = new currentRow[1]();
+				var currentAchievement:Achievement = new currentRow[1](game);
 				var params:Array = currentRow.slice(2);
 				
 				currentAchievement.setParams(params);

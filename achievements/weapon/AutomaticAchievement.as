@@ -1,17 +1,16 @@
 package achievements.weapon 
 {
 	/**
-	 * ...
+	 * Automatically reload magazine of a given weapon
+	 * 
 	 * @author Neamar
 	 */
-	public class AutomaticAchievement extends WeaponAchievement
+	public final class AutomaticAchievement extends WeaponAchievement
 	{
-		
-		public function AutomaticAchievement() 
+		public override function apply():void
 		{
 			
-		}
-		
+		}	
 	}
 
 }

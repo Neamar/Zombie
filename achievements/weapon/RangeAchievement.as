@@ -1,17 +1,16 @@
 package achievements.weapon 
 {
 	/**
-	 * ...
+	 * Improve the range of a given weapon
+	 * 
 	 * @author Neamar
 	 */
-	public class RangeAchievement extends WeaponAchievement
+	public final class RangeAchievement extends WeaponAchievement
 	{
-		
-		public function RangeAchievement() 
+		public override function apply():void
 		{
 			
 		}
-		
 	}
 
 }

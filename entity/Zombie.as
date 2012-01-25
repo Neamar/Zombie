@@ -12,6 +12,8 @@ package entity
 	 */
 	public class Zombie extends Entity 
 	{
+		public static const ZOMBIE_DEAD:String = "zombieDead";
+		
 		/**
 		 * Zombie radius.
 		 * For drawing, block, and shoot.
@@ -106,6 +108,10 @@ package entity
 
 			//Avoid null pointer exception, should the zombie awake in some future frame.
 			move = function():void { };
+			
+			//Inform the level we're dead :
+			parent.dispatchEvent(new Event(ZOMBIE_DEAD));
+			
 			parent.removeChild(this);
 
 		}

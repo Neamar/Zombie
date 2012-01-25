@@ -6,13 +6,7 @@ package achievements.weapon
 	 * @author Neamar
 	 */
 	public class WeaponAchievement extends Achievement
-	{
-		
-		public function WeaponAchievement() 
-		{
-			
-		}
-		
+	{		
 	}
 
 }

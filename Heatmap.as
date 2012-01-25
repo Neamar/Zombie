@@ -9,6 +9,7 @@ package
 	
 	/**
 	 * Heatmap (other names : influence map, potential fields)
+	 * TODO : move to package levels
 	 * 
 	 * @see http://aigamedev.com/open/tutorials/potential-fields/
 	 * @author Neamar

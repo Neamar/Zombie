@@ -6,12 +6,15 @@ package achievements.weapon
 	 */
 	public class UnlockAchievement extends WeaponAchievement
 	{
-		
-		public function UnlockAchievement() 
+		public override function setParams(params:Array):void
 		{
-			
+			trace(params);
 		}
 		
+		public override function apply():void
+		{
+			trace('applied');
+		}
 	}
 
 }

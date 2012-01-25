@@ -1,6 +1,7 @@
 package achievements 
 {
 	import achievements.weapon.*;
+	import flash.events.Event;
 	import weapon.*;
 	/**
 	 * Handle the list of unlocks.
@@ -24,6 +25,11 @@ package achievements
 		);
 		
 		/**
+		 * Game associated with those achievements
+		 */
+		public var game:Game;
+		
+		/**
 		 * Total number of zombies killed
 		 */
 		public var zombiesKilled:int = 0;
@@ -33,16 +39,16 @@ package achievements
 		 */
 		public var zombiesKilledSinceLastAchievement:int = 0;
 		
-		public function AchievementsHandler() 
+		public function AchievementsHandler(game:Game) 
 		{
-			
+			this.game = game;
 		}
 		
 		/**
 		 * A zombie was killed.
 		 * Test if an accomplishment was unlocked.
 		 */
-		public function onZombieKilled():void
+		public function onZombieKilled(e:Event = null):void
 		{
 			zombiesKilled++;
 			zombiesKilledSinceLastAchievement++;
@@ -53,7 +59,7 @@ package achievements
 				//Apply current achievement
 				var currentRow:Array = achievementsList.shift();
 				var currentAchievement:Achievement = new currentRow[1]();
-				var params:Array = currentRow.slice(1);
+				var params:Array = currentRow.slice(2);
 				
 				currentAchievement.setParams(params);
 				

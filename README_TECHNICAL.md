@@ -86,39 +86,48 @@ Achievements
 1. Handgun: increased range (200)
 1. Handgun: increased magazine capacity (6)
 2. **Shotgun unlocked**
+9. Player: subconscious vision (1%)
 1. Handgun: jungle style magazines
 2. Shotgun: increased range (100)
 1. Handgun: infinite range
 2. Shotgun: increased range (200)
+9. Player: more resistant (75)
 1. Handgun: faster cooldown (20)
 1. Handgun: increased magazine capacity (10)
 1. Handgun: faster cooldown (15)
 3. **Railgun unlocked**
+9. Player: larger lamplight (120)
 2. Shotgun: increased magazine capacity (2)
 1. Handgun: increased magazine capacity (16)
 1. Handgun: faster reload (30)
 2. Shotgun: infinite range
 1. Handgun: automatic reload
+9. Player: shorter convalescence (2)
 3. Railgun: infinite range
 2. Shotgun: faster cooldown (30)
 2. Shotgun: increased magazine capacity (6)
 3. Railgun: faster cooldown (30)
 4. **Uzi unlocked**
+9. Player: improved subconscious vision (5%)
 2. Shotgun: faster reload (40)
 2. Shotgun: faster cooldown (20)
 4. Uzi: increased range (100)
 3. Railgun: faster cooldown (20)
+9. Player: more resistant (100)
 4. Uzi: increased magazine capacity (25)
 2. Shotgun: automatic reload
 4. Uzi: increased range (200)
 4. Uzi: jungle style magazine
 2. Shotgun: defensive shot
+9. Player: tamed bloodrush
 4. Uzi: increased magazine capacity (30)
 4. Uzi: faster cooldown (2)
 4. Uzi: faster reload (15)
 2. Shotgun: wider shot
+9. Player: improved subconscious vision  (10%)
 4. Uzi: automatic reload
 5. *Outstanding*! Handgun: faster cooldown (8) & faster reload (15)
 5. *Outstanding*! Railgun: faster cooldown (10)
 5. *Outstanding*! Shotgun: faster cooldown (15) & faster reload (35)
 5. *Outstanding*! Uzi: increased magazine capacity (100)
+5. *Outstanding*! Player: optimal subconscious vision (50%)

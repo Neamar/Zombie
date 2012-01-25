@@ -7,7 +7,7 @@ package achievements.weapon
 	public class CapacityAchievement 
 	{
 		
-		public function CapacityAchievement() 
+		public function CapacityAchievement() extends WeaponAchievement
 		{
 			
 		}

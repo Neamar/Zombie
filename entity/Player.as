@@ -366,7 +366,8 @@ package entity
 				//Is a zombie blocking move ?
 				if (move)
 				{
-					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
+					//TODO : implement collision again
+					/*var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
 					for each(var zombie:Zombie in potentialZombies)
 					{
 						if (zombie.x - Zombie.RADIUS < destX && zombie.x + Zombie.RADIUS > destX && zombie.y - Zombie.RADIUS < destY && zombie.y + Zombie.RADIUS > destY)
@@ -374,7 +375,7 @@ package entity
 							move = false;
 							break;
 						}
-					}
+					}*/
 					
 					// No zombie + no wall : ok.
 					if (move)

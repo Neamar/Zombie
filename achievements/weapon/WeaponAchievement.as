@@ -1,10 +1,11 @@
 package achievements.weapon 
 {
+	import achievements.Achievement;
 	/**
 	 * ...
 	 * @author Neamar
 	 */
-	public class WeaponAchievement 
+	public class WeaponAchievement extends Achievement
 	{
 		
 		public function WeaponAchievement() 

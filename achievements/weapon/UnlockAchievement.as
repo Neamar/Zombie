@@ -4,10 +4,10 @@ package achievements.weapon
 	 * ...
 	 * @author Neamar
 	 */
-	public class UnlockAchievement 
+	public class UnlockAchievement extends WeaponAchievement
 	{
 		
-		public function UnlockAchievement() extends WeaponAchievement
+		public function UnlockAchievement() 
 		{
 			
 		}

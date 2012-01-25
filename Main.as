@@ -1,5 +1,6 @@
 ﻿package 
 {
+	import achievements.AchievementsHandler;
 	import entity.Zombie;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -54,6 +55,9 @@
 			stage.addChild(monitor);
 			
 			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);
+			
+			var ah:AchievementsHandler = new AchievementsHandler();
+			ah.onZombieKilled();
 		}
 		
 		/**

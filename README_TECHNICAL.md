@@ -25,21 +25,21 @@ Achievements
 ### Default values
 ```
 	handgunCapacity = 3
-	handgunRange = 50
+	handgunRange = 150
 	handgunCooldown = 30
 	handgunReload = 60
 	handgunAutomatic = false
 	shotgunCapacity = 1
-	shotgunRange = 50
+	shotgunRange = 150
 	shotgunCooldown = 40
 	shotgunReload = 60
 	shotgunAutomatic = false
 	railgunCapacity = 50
-	railgunRange = 50
+	railgunRange = 150
 	railgunCooldown = 45
 	railgunAutomatic = false
 	uziCapacity = 15
-	uziRange = 30
+	uziRange = 100
 	uziCooldown = 4
 	uziReload = 30
 	uziAutomatic = false
@@ -83,14 +83,14 @@ Achievements
 ### Global Achievements
 
 1. **Handgun unlocked**
-1. Handgun: increased range (200)
+1. Handgun: increased range (250)
 1. Handgun: increased magazine capacity (6)
 2. **Shotgun unlocked**
 9. Player: subconscious vision (1%)
 1. Handgun: jungle style magazines
-2. Shotgun: increased range (100)
-1. Handgun: infinite range
 2. Shotgun: increased range (200)
+1. Handgun: infinite range
+2. Shotgun: increased range (300)
 9. Player: more resistant (75)
 1. Handgun: faster cooldown (20)
 1. Handgun: increased magazine capacity (10)
@@ -111,7 +111,7 @@ Achievements
 9. Player: improved subconscious vision (5%)
 2. Shotgun: faster reload (40)
 2. Shotgun: faster cooldown (20)
-4. Uzi: increased range (100)
+4. Uzi: increased range (150)
 3. Railgun: faster cooldown (20)
 9. Player: more resistant (100)
 4. Uzi: increased magazine capacity (25)
@@ -124,6 +124,7 @@ Achievements
 4. Uzi: faster cooldown (2)
 4. Uzi: faster reload (15)
 2. Shotgun: wider shot
+4. Uzi: infinite range
 9. Player: improved subconscious vision  (10%)
 4. Uzi: automatic reload
 5. *Outstanding*! Handgun: faster cooldown (8) & faster reload (15)

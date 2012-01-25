@@ -5,7 +5,7 @@ package achievements.player
 	 * 
 	 * @author Neamar
 	 */
-	public final class LifeAchievement 
+	public final class LifeAchievement extends PlayerAchievement
 	{
 		public override function apply():void
 		{

@@ -53,7 +53,7 @@ package weapon
 			this.parent = level;
 			this.player = player;
 			
-			range = 200;
+			range = 150;
 			reloadTime = 2 * cooldown;
 			reload();
 		}

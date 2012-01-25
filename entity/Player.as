@@ -28,7 +28,7 @@ package entity
 		/**
 		 * For debug : the player is never hurt.
 		 */
-		public static const INVINCIBLE:Boolean = false;
+		public static const INVINCIBLE:Boolean = true;
 		
 		/**
 		 * Player radius (he's a fatty!)
@@ -156,6 +156,11 @@ package entity
 		 * Initial value is 10, for fun ;)
 		 */
 		public var hasShot:int = 10;
+		
+		/**
+		 * Opacity of invisible parts
+		 */
+		public var subconsciousVision:Number = .02;
 		
 		/**
 		 * Current health of the player.
@@ -402,7 +407,7 @@ package entity
 				maskGraphics.clear();
 
 				//Everything is gray-dark, except when a weapon was just fired or when you're hurt
-				maskGraphics.beginFill(0, .05 * (hasShot + 1));
+				maskGraphics.beginFill(0, subconsciousVision + 0.05 * (hasShot));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.WIDTH2, Main.WIDTH, Main.WIDTH);
 				//Except for the player, which is visible no matter what
 				maskGraphics.beginFill(0, 1);

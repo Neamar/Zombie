@@ -1,5 +1,6 @@
 package achievements 
 {
+	import achievements.player.*;
 	import achievements.weapon.*;
 	import flash.events.Event;
 	import weapon.*;
@@ -20,8 +21,11 @@ package achievements
 		 * params is the params to use for the achievements
 		 */
 		public var achievementsList:Array = new Array(
-		[1, RangeAchievement, Handgun, 400],
-		[Infinity, Achievement, 0]
+		[1, RangeAchievement, Handgun, 250],
+		[0, CapacityAchievement, Handgun, 6],
+		[0, UnlockAchievement, Shotgun],
+		[1, SubconcsiousVisionAchievement, 5],
+		[Infinity, Achievement, 0] /* final achievement, unreachable. */
 		);
 		
 		/**
@@ -63,6 +67,7 @@ package achievements
 				currentAchievement.setParams(currentRow.slice(2));
 
 				currentAchievement.apply();
+				trace(currentAchievement, currentRow.slice(2));
 				
 				//Back to zero.
 				zombiesKilledSinceLastAchievement = 0;

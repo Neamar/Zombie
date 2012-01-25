@@ -16,7 +16,7 @@ package weapon
 			//Low cooldown, but enough to avoid one shoot per frame.
 			cooldown = Main.stage.frameRate / 15;
 			super(level, player);
-			range = 150;
+			range = 100;
 		}
 		
 		public override function fire():int		{

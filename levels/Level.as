@@ -153,12 +153,6 @@ package levels
 				}
 			}
 			
-			//Quick hack: add a satanus
-			var satanus:Satanus = new Satanus(this, player.x + 50, player.y + 1);
-			addChild(satanus);
-			zombies.push(satanus);
-			frameWaker[30].push(satanus);
-			
 			//Quick hack: add a survivor
 			var survivor:Survivor = new Survivor(this, player.x + 200, player.y + 1);
 			addChild(survivor);

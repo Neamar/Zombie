@@ -112,7 +112,13 @@ Achievements
 2. Shotgun: automatic reload
 4. Uzi: increased range (200)
 4. Uzi: jungle style magazine
+2. Shotgun: defensive shot
 4. Uzi: increased magazine capacity (30)
 4. Uzi: faster cooldown (2)
 4. Uzi: faster reload (15)
+2. Shotgun: wider shot
 4. Uzi: automatic reload
+5. *Outstanding*! Handgun: faster cooldown (8) & faster reload (15)
+5. *Outstanding*! Railgun: faster cooldown (10)
+5. *Outstanding*! Shotgun: faster cooldown (15) & faster reload (35)
+5. *Outstanding*! Uzi: increased magazine capacity (100)

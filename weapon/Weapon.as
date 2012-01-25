@@ -43,11 +43,17 @@ package weapon
 		 */
 		public var ammoInCurrentMagazine:int;
 		
+		/**
+		 * Range of the weapon, in pixel.
+		 */
+		public var range:int;
+		
 		public function Weapon(level:Level, player:Player) 
 		{
 			this.parent = level;
 			this.player = player;
 			
+			range = 200;
 			reloadTime = 2 * cooldown;
 			reload();
 		}
@@ -111,7 +117,7 @@ package weapon
 		 * @param	limit max px before giving up and considering bullet lost.
 		 * @return radius to the last casualty
 		 */
-		protected function raycast(deltaAngle:Number, limit:int = Main.WIDTH):int
+		protected function raycast(deltaAngle:Number):int
 		{
 			var theta:Number = player.rotation * Player.TO_RADIANS + deltaAngle;
 			var hitmapTest:Function = player.hitmapTest;
@@ -139,7 +145,7 @@ package weapon
 				}
 				
 				radius += Zombie.RADIUS;
-				if (radius >= limit)
+				if (radius >= range)
 				{
 					break;
 				}

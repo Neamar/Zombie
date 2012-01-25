@@ -43,6 +43,9 @@ Achievements
 	uziCooldown = 4
 	uziReload = 30
 	uziAutomatic = false
+	playerSubconsciousVision = 5%
+	playerLife = 50
+	playerLamplight = 100°
 ```
 
 ### Final values
@@ -86,7 +89,7 @@ Achievements
 1. Handgun: increased range (250)
 1. Handgun: increased magazine capacity (6)
 2. **Shotgun unlocked**
-9. Player: subconscious vision (1%)
+9. Player: subconscious vision (5%)
 1. Handgun: jungle style magazines
 2. Shotgun: increased range (200)
 1. Handgun: infinite range
@@ -108,7 +111,7 @@ Achievements
 2. Shotgun: increased magazine capacity (6)
 3. Railgun: faster cooldown (30)
 4. **Uzi unlocked**
-9. Player: improved subconscious vision (5%)
+9. Player: improved subconscious vision (10%)
 2. Shotgun: faster reload (40)
 2. Shotgun: faster cooldown (20)
 4. Uzi: increased range (150)
@@ -125,10 +128,10 @@ Achievements
 4. Uzi: faster reload (15)
 2. Shotgun: wider shot
 4. Uzi: infinite range
-9. Player: improved subconscious vision  (10%)
+9. Player: improved subconscious vision  (15%)
 4. Uzi: automatic reload
 5. *Outstanding*! Handgun: faster cooldown (8) & faster reload (15)
 5. *Outstanding*! Railgun: faster cooldown (10)
 5. *Outstanding*! Shotgun: faster cooldown (15) & faster reload (35)
 5. *Outstanding*! Uzi: increased magazine capacity (100)
-5. *Outstanding*! Player: optimal subconscious vision (50%)
+5. *Outstanding*! Player: optimal subconscious vision (40%)

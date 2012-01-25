@@ -161,6 +161,7 @@ package levels
 			var loaderInfo:LoaderInfo = e.target as LoaderInfo;
 			loaderInfo.removeEventListener(Event.COMPLETE, onResourceLoaded);
 			loaderInfo.removeEventListener(Event.COMPLETE, dict[loaderInfo]);
+			loaderInfo.loader.unload();
 			dict[loaderInfo] = null;
 			
 			remainingResourcesToLoad--;

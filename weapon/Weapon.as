@@ -21,7 +21,7 @@ package weapon
 		/**
 		 * Number of frames before the player can fire again after hitting "reload"
 		 */
-		public var reloadTime:int;
+		public var reloadTime:int = -1;
 		
 		/**
 		 * Id of last frame this weapon was used
@@ -54,7 +54,9 @@ package weapon
 			this.player = player;
 			
 			range = 150;
-			reloadTime = 2 * cooldown;
+			if(reloadTime == -1)
+				reloadTime = 2 * cooldown;
+			
 			reload();
 		}
 		

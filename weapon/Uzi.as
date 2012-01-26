@@ -10,17 +10,17 @@ package weapon
 	{
 		public function Uzi(level:Level, player:Player) 
 		{
-			magazineCapacity = 20;
+			magazineCapacity = 15;
 			magazineNumber = 15;
+			cooldown = 4;
+			reloadTime = 30;
 			
-			//Low cooldown, but enough to avoid one shoot per frame.
-			cooldown = Main.stage.frameRate / 15;
 			super(level, player);
 			range = 100;
 		}
 		
-		public override function fire():int		{
-			
+		public override function fire():int
+		{
 			if (beforeFiring())
 			{
 				raycast(0);

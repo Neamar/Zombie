@@ -11,9 +11,9 @@ package weapon
 	{
 		public function Railgun(level:Level, player:Player) 
 		{
-			cooldown = Main.stage.frameRate;
+			cooldown = 45;
 			magazineCapacity = Infinity;
-			ammoInCurrentMagazine = 10;
+			ammoInCurrentMagazine = 50;
 			
 			super(level, player);
 		}

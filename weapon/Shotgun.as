@@ -10,9 +10,10 @@ package weapon
 	{
 		public function Shotgun(level:Level, player:Player) 
 		{
-			cooldown = Main.stage.frameRate;
-			magazineCapacity = 4;
+			cooldown = 40;
+			magazineCapacity = 1;
 			magazineNumber = 4;
+			reloadTime = 60;
 			
 			super(level, player);
 		}

@@ -90,7 +90,8 @@ Achievements
 
 ### Global Achievements
 
-1. **Handgun unlocked**
+**Handgun unlocked**
+
 1. Handgun: increased range (250)
 1. Handgun: increased magazine capacity (6)
 2. **Shotgun unlocked**

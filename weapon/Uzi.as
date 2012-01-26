@@ -6,7 +6,7 @@ package weapon
 	 * ...
 	 * @author Neamar
 	 */
-	public final class Uzi extends Weapon
+	public final class Uzi extends JungleStyleWeapon
 	{
 		public function Uzi(level:Level, player:Player) 
 		{

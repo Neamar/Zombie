@@ -22,7 +22,7 @@ package achievements
 		 */
 		public var achievementsList:Array = new Array(
 		[1, RangeAchievement, Handgun, 250],
-		[0, CapacityAchievement, Handgun, 6],
+		[0, CapacityAchievement, Handgun, 2],
 		[0, UnlockAchievement, Shotgun],
 		[1, SubconcsiousVisionAchievement, 5],
 		[Infinity, Achievement, 0] /* final achievement, unreachable. */

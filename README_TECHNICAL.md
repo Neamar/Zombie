@@ -45,6 +45,7 @@ Achievements
 	uziAutomatic = false
 	playerSubconsciousVision = 5%
 	playerLife = 50
+	playerRecuperation = 3
 	playerLamplight = 100°
 ```
 
@@ -69,6 +70,10 @@ Achievements
 	uziCooldown = 2
 	uziReload = 15
 	uziAutomatic = true
+	playerSubconsciousVision = 15%
+	playerLife = 100
+	playerRecuperation = 1
+	playerLamplight = 120°
 ```
 
 ### Weapon achievement typical list
@@ -93,8 +98,9 @@ Achievements
 1. Handgun: jungle style magazines
 2. Shotgun: increased range (200)
 1. Handgun: infinite range
-2. Shotgun: increased range (300)
 9. Player: more resistant (75)
+2. Shotgun: increased range (300)
+9. Player: shorter convalescence (2)
 1. Handgun: faster cooldown (20)
 1. Handgun: increased magazine capacity (10)
 1. Handgun: faster cooldown (15)
@@ -105,7 +111,7 @@ Achievements
 1. Handgun: faster reload (30)
 2. Shotgun: infinite range
 1. Handgun: automatic reload
-9. Player: shorter convalescence (2)
+9. Player: shorter convalescence (1)
 3. Railgun: infinite range
 2. Shotgun: faster cooldown (30)
 2. Shotgun: increased magazine capacity (6)

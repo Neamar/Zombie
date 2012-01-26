@@ -9,7 +9,7 @@ package achievements.weapon
 	{
 		public override function apply():void
 		{
-			
+			//TODO
 		}	
 	}
 

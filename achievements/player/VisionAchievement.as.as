@@ -5,11 +5,11 @@ package achievements.player
 	 * 
 	 * @author Neamar
 	 */
-	public final class SubconcsiousVisionAchievement extends PlayerAchievement
+	public final class VisionAchievement extends PlayerAchievement
 	{
 		public override function apply():void
 		{
-			player.subconsciousVision = value / 100;
+			player.halfAngularVisibility = value;
 		}
 	}
 

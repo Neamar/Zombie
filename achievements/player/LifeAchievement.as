@@ -9,7 +9,7 @@ package achievements.player
 	{
 		public override function apply():void
 		{
-			
+			player.maxHealthPoints = value;
 		}
 	}
 

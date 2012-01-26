@@ -21,10 +21,31 @@ package achievements
 		 * params is the params to use for the achievements
 		 */
 		public var achievementsList:Array = new Array(
-		[1, RangeAchievement, Handgun, 250],
-		[0, CapacityAchievement, Handgun, 2],
-		[0, UnlockAchievement, Shotgun],
-		[1, SubconcsiousVisionAchievement, 5],
+		/* 1 - 10 */
+			[1, RangeAchievement, Handgun, 250],
+			[0, CapacityAchievement, Handgun, 2],
+			[0, UnlockAchievement, Shotgun],
+			[1, SubconcsiousVisionAchievement, 5],
+			[1, JungleAchievement, Handgun, true],
+			[1, RangeAchievement, Shotgun, 200],
+			[1, RangeAchievement, Handgun, 3000],
+			[1, RangeAchievement, Shotgun, 300],
+			[1, LifeAchievement, 75],
+		/* 11 - 20 */
+			[1, CooldownAchievement, Handgun, 20],
+			[1, CapacityAchievement, Handgun, 10],
+			[1, CooldownAchievement, Handgun, 15],
+			[1, UnlockAchievement, Railgun],
+			[1, VisionAchievement, 60],
+			[1, CapacityAchievement, Shotgun, 2],
+			[1, CapacityAchievement, Handgun, 16],
+			[1, ReloadAchievement, Handgun, 30],
+			[1, RangeAchievement, Shotgun, 3000],
+			[1, AutomaticAchievement, Handgun, true],
+		/* 21 - 30 */
+		/* 31 - 40 */
+		/* 41 - 50 */
+		/* 50+ */
 		[Infinity, Achievement, 0] /* final achievement, unreachable. */
 		);
 		

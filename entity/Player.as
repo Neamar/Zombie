@@ -39,16 +39,6 @@ package entity
 		 * Player speed when moving
 		 */
 		public const SPEED:int = 4;
-		
-		/**
-		 * Max player life
-		 */
-		public const MAX_HEALTHPOINTS:int = 50;
-
-		/**
-		 * Half-angular visiblity. Full value should be 180° in realistic game, however 100 gives more fun.
-		 */
-		public const ANGULAR_VISIBILITY2:int = 50;
 
 		/**
 		 * Max width one may see if no obstacles in front.
@@ -158,14 +148,24 @@ package entity
 		public var hasShot:int = 10;
 		
 		/**
+		 * Half-angular visiblity. Full value should be 90° in realistic game, however lower values gives more fun.
+		 */
+		public var halfAngularVisibility:int = 50;
+		
+		/**
 		 * Opacity of invisible parts
 		 */
 		public var subconsciousVision:Number = .02;
 		
 		/**
+		 * Max player life
+		 */
+		public var maxHealthPoints:int = 50;
+		
+		/**
 		 * Current health of the player.
 		 * You can't move when you're hurt.
-		 * If damagesTaken > MAX_HEALTHPOINTS, you die.
+		 * If damagesTaken > maxHealthPoints, you die.
 		 */
 		public var damagesTaken:int = 0;
 
@@ -236,10 +236,10 @@ package entity
 			{
 				damagesTaken += power;
 			}
-			if (damagesTaken > MAX_HEALTHPOINTS)
+			if (damagesTaken > maxHealthPoints)
 			{
-				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);
-				damagesTaken = MAX_HEALTHPOINTS;
+				trace('You die : ', damagesTaken - maxHealthPoints);
+				damagesTaken = maxHealthPoints;
 			}
 		}
 
@@ -396,8 +396,8 @@ package entity
 				parent.y = Main.WIDTH2 - y;
 
 				//Torch & masking
-				var startAngle:Number = ((rotation - ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
-				var endAngle:Number = ((rotation + ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
+				var startAngle:Number = ((rotation - halfAngularVisibility) % 360) * TO_RADIANS;
+				var endAngle:Number = ((rotation + halfAngularVisibility) % 360) * TO_RADIANS;
 
 				var maskGraphics:Graphics = lightMask.graphics;
 				var theta:Number;
@@ -457,7 +457,7 @@ package entity
 			{
 				//Display bloodrush
 				bloodRush.visible = true;
-				bloodRush.alpha = damagesTaken / MAX_HEALTHPOINTS;
+				bloodRush.alpha = damagesTaken / maxHealthPoints;
 				bloodRush.x = x - Main.WIDTH2;
 				bloodRush.y = y - Main.WIDTH2;
 				

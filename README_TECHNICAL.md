@@ -34,6 +34,7 @@ Achievements
 	shotgunCooldown = 40
 	shotgunReload = 60
 	shotgunAutomatic = false
+	shotgunAmplitude = 20°
 	railgunCapacity = 50
 	railgunRange = 150
 	railgunCooldown = 45
@@ -61,6 +62,7 @@ Achievements
 	shotgunCooldown = 20
 	shotgunReload = 40
 	shotgunAutomatic = true
+	shotgunAmplitude = 30°
 	railgunCapacity = 50
 	railgunRange = ∞
 	railgunCooldown = 20

@@ -29,8 +29,9 @@ package achievements
 			[1, JungleAchievement, Handgun, true],
 			[1, RangeAchievement, Shotgun, 200],
 			[1, RangeAchievement, Handgun, 3000],
-			[1, RangeAchievement, Shotgun, 300],
 			[1, LifeAchievement, 75],
+			[1, RangeAchievement, Shotgun, 300],
+			[1, ConvalescenceAchievement, 2],
 		/* 11 - 20 */
 			[1, CooldownAchievement, Handgun, 20],
 			[1, CapacityAchievement, Handgun, 10],
@@ -43,11 +44,35 @@ package achievements
 			[1, RangeAchievement, Shotgun, 3000],
 			[1, AutomaticAchievement, Handgun, true],
 		/* 21 - 30 */
+			[1, ConvalescenceAchievement, 1],
+			[1, RangeAchievement, Railgun, 3000],
+			[1, CooldownAchievement, Shotgun, 30],
+			[1, CapacityAchievement, Shotgun, 6],
+			[1, CooldownAchievement, Railgun, 30],
+			[1, UnlockAchievement, Uzi],
+			[1, SubconcsiousVisionAchievement, 10],
+			[1, ReloadAchievement, Shotgun, 40],
+			[1, CooldownAchievement, Shotgun, 20],
+			[1, RangeAchievement, Uzi, 150],
 		/* 31 - 40 */
+			[1, CooldownAchievement, Railgun, 20],
+			[1, LifeAchievement, 100],
+			[1, CapacityAchievement, Uzi, 25],
+			[1, AutomaticAchievement, Shotgun, true],
+			[1, RangeAchievement, Uzi, 200],
+			[1, JungleAchievement, Uzi, true],
+			[1, AmplitudeAchievement, Shotgun, 15],
+			
 		/* 41 - 50 */
 		/* 50+ */
 		[Infinity, Achievement, 0] /* final achievement, unreachable. */
 		);
+		
+		/**
+		 * Achievement to start at
+		 * (for test or going back to a saved game)
+		 */
+		public var startAtAchievement:int = 30;
 		
 		/**
 		 * Game associated with those achievements
@@ -70,6 +95,18 @@ package achievements
 		}
 		
 		/**
+		 * Apply achievement precedenlty recorded (another game, or to cheat)
+		 */
+		public function applyDefaultsAchievements():void
+		{
+			while(startAtAchievement > 0)
+			{
+				startAtAchievement--;
+				applyAchievement(achievementsList.shift());
+			}
+		}
+		
+		/**
 		 * A zombie was killed.
 		 * Test if an accomplishment was unlocked.
 		 */
@@ -82,17 +119,23 @@ package achievements
 			while (achievementsList[0][0] <= zombiesKilledSinceLastAchievement)
 			{
 				//Apply current achievement
-				var currentRow:Array = achievementsList.shift();
-				var currentAchievement:Achievement = new currentRow[1]();
-				currentAchievement.setGame(game);
-				currentAchievement.setParams(currentRow.slice(2));
-
-				currentAchievement.apply();
-				trace(currentAchievement, currentRow.slice(2));
+				applyAchievement(achievementsList.shift());
 				
 				//Back to zero.
 				zombiesKilledSinceLastAchievement = 0;
 			}
+		}
+		
+		protected function applyAchievement(datas:Array):String
+		{
+			var currentAchievement:Achievement = new datas[1]();
+			currentAchievement.setGame(game);
+			currentAchievement.setParams(datas.slice(2));
+
+			currentAchievement.apply();
+			trace(currentAchievement, datas.slice(2));
+			
+			return 'Applied';
 		}
 	}
 

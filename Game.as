@@ -65,6 +65,8 @@ package
 			level = loader.getLevel()
 			level.addEventListener(Level.WIN, gotoNextLevel );
 			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
+			
+			achievementHandler.applyDefaultsAchievements();
 			addChild(level);
 		}
 		

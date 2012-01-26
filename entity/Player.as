@@ -28,7 +28,7 @@ package entity
 		/**
 		 * For debug : the player is never hurt.
 		 */
-		public static const INVINCIBLE:Boolean = true;
+		public static const INVINCIBLE:Boolean = false;
 		
 		/**
 		 * Player radius (he's a fatty!)
@@ -168,6 +168,12 @@ package entity
 		 * If damagesTaken > maxHealthPoints, you die.
 		 */
 		public var damagesTaken:int = 0;
+		
+		/**
+		 * Get back one healthpoint every recuperationSpeed frame
+		 */
+		public var recuperationSpeed:int = 3;
+		
 
 		public function Player(parent:Level, params:LevelParams)
 		{
@@ -461,8 +467,9 @@ package entity
 				bloodRush.x = x - Main.WIDTH2;
 				bloodRush.y = y - Main.WIDTH2;
 				
-				//Heal one-by-frame
-				damagesTaken--;
+				//Heal damages every recuperationSpeed frame
+				if(frameNumber % recuperationSpeed == 0)
+					damagesTaken--;
 				
 				if (damagesTaken == 0)
 				{

@@ -48,6 +48,11 @@ package weapon
 		 */
 		public var range:int;
 		
+		/**
+		 * Automatic reload
+		 */
+		public var automaticReload:Boolean = false;
+		
 		public function Weapon(level:Level, player:Player) 
 		{
 			this.parent = level;
@@ -91,6 +96,11 @@ package weapon
 			{
 				lastShot = player.frameNumber;
 				ammoInCurrentMagazine--;
+				
+				if (automaticReload && ammoInCurrentMagazine == 0)
+				{
+					reload();
+				}
 				
 				return true;
 			}

@@ -498,7 +498,7 @@ package entity
 				var matrix:Matrix = new Matrix();
 				matrix.createGradientBox(bd.width, bd.height, 0, -bd.width /2, -bd.height / 2);
 				
-				mask.graphics.beginGradientFill(GradientType.RADIAL, [0xFFFFFF, 0], [0, 1], [0, 255], matrix);
+				mask.graphics.beginGradientFill(GradientType.RADIAL, [0xFFFFFF, 0], [0.2, 1], [0, 255], matrix);
 				mask.graphics.drawCircle(0, 0, 200);
 				mask.graphics.endFill();
 				bd.draw(mask, new Matrix(1, 0, 0, 1, bd.width / 2, bd.height / 2), null, BlendMode.ALPHA);

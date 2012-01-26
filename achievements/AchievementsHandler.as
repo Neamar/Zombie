@@ -61,10 +61,16 @@ package achievements
 			[1, AutomaticAchievement, Shotgun, true],
 			[1, RangeAchievement, Uzi, 200],
 			[1, JungleAchievement, Uzi, true],
-			[1, AmplitudeAchievement, Shotgun, 15],
+			[1, AmplitudeAchievement, Shotgun, 14],
 			[1, BloodrushAchievement, true],
-			
+			[1, CapacityAchievement, Uzi, 30],
+			[1, CooldownAchievement, Uzi, 2],
 		/* 41 - 50 */
+			[1, ReloadAchievement, Uzi, 15],
+			[1, AmplitudeAchievement, Shotgun, 16],
+			[1, RangeAchievement, Uzi, 3000],
+			[1, SubconcsiousVisionAchievement, 15],
+			[1, AutomaticAchievement, Uzi, true],
 		/* 50+ */
 		[Infinity, Achievement, 0] /* final achievement, unreachable. */
 		);
@@ -73,7 +79,7 @@ package achievements
 		 * Achievement to start at
 		 * (for test or going back to a saved game)
 		 */
-		public var startAtAchievement:int = 37;
+		public var startAtAchievement:int =40;
 		
 		/**
 		 * Game associated with those achievements

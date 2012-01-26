@@ -62,6 +62,7 @@ package achievements
 			[1, RangeAchievement, Uzi, 200],
 			[1, JungleAchievement, Uzi, true],
 			[1, AmplitudeAchievement, Shotgun, 15],
+			[1, BloodrushAchievement, true],
 			
 		/* 41 - 50 */
 		/* 50+ */
@@ -72,7 +73,7 @@ package achievements
 		 * Achievement to start at
 		 * (for test or going back to a saved game)
 		 */
-		public var startAtAchievement:int = 30;
+		public var startAtAchievement:int = 37;
 		
 		/**
 		 * Game associated with those achievements

@@ -3,14 +3,17 @@ package entity
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
+	import flash.display.BlendMode;
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	import levels.Level;
 	import levels.LevelParams;
 	import weapon.Handgun;
@@ -174,6 +177,10 @@ package entity
 		 */
 		public var recuperationSpeed:int = 3;
 		
+		/**
+		 * Shall we improve the bloodrush by disminishing its intensity ?
+		 */
+		public var tamedBloodrush:Boolean = false;
 
 		public function Player(parent:Level, params:LevelParams)
 		{
@@ -199,7 +206,8 @@ package entity
 			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.WIDTH);
 			bloodRush = new Bitmap(bd)
 			bloodRush.visible = false;
-			bd.perlinNoise(Main.WIDTH, Main.WIDTH, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
+			bloodRush.x = bloodRush.y = -Main.WIDTH2;
+			drawBloodrush();
 			
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
@@ -475,6 +483,25 @@ package entity
 				{
 					bloodRush.visible = false;
 				}
+			}
+		}
+		
+		public function drawBloodrush():void
+		{
+			var bd:BitmapData = bloodRush.bitmapData;
+			bd.perlinNoise(Main.WIDTH, Main.WIDTH, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
+			
+			if (tamedBloodrush)
+			{
+				//Disminish intensity of the red around the player.
+				var mask:Shape = new Shape();
+				var matrix:Matrix = new Matrix();
+				matrix.createGradientBox(bd.width, bd.height, 0, -bd.width /2, -bd.height / 2);
+				
+				mask.graphics.beginGradientFill(GradientType.RADIAL, [0xFFFFFF, 0], [0, 1], [0, 255], matrix);
+				mask.graphics.drawCircle(0, 0, 200);
+				mask.graphics.endFill();
+				bd.draw(mask, new Matrix(1, 0, 0, 1, bd.width / 2, bd.height / 2), null, BlendMode.ALPHA);
 			}
 		}
 	}

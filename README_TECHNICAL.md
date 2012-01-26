@@ -62,7 +62,7 @@ Achievements
 	shotgunCooldown = 20
 	shotgunReload = 40
 	shotgunAutomatic = true
-	shotgunAmplitude = 30°
+	shotgunAmplitude = 32°
 	railgunCapacity = 50
 	railgunRange = ∞
 	railgunCooldown = 20
@@ -130,12 +130,12 @@ Achievements
 2. Shotgun: automatic reload
 4. Uzi: increased range (200)
 4. Uzi: jungle style magazine
-2. Shotgun: defensive shot
+2. Shotgun: wider shot (28)
 9. Player: tamed bloodrush
 4. Uzi: increased magazine capacity (30)
 4. Uzi: faster cooldown (2)
 4. Uzi: faster reload (15)
-2. Shotgun: wider shot
+2. Shotgun: wider shot (32)
 4. Uzi: infinite range
 9. Player: improved subconscious vision  (15%)
 4. Uzi: automatic reload

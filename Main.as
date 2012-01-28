@@ -38,18 +38,26 @@
 		
 		private function init(e:Event = null):void 
 		{
-			stage.frameRate = 3;
+			stage.frameRate = 5;
 			var za:ZombieAnim;
-				
-			for (var i:int = 0; i <= 6; i++)
+			
+			for (var j:int = 0; j < 8; j++)
 			{
-				za = new ZombieAnim();
-				za.x = 50 + 75 * i;
-				za.y = 150;
-				za.setState(i);
-				addChild(za);
-				addEventListener(Event.ENTER_FRAME, za.onMove);
+				for (var i:int = 0; i <= 6; i++)
+				{
+					za = new ZombieAnim();
+					za.x = 100 + 60 * j;
+					za.y = 3 + 60 * i;
+					za.setState(i);
+					za.currentRotation = j;
+					addChild(za);
+					addEventListener(Event.ENTER_FRAME, za.onMove);
+				}
 			}
+			
+			//For debug :
+			monitor = new Monitor();
+			stage.addChild(monitor);
 		}
 		
 		/**

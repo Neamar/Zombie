@@ -55,6 +55,11 @@ package entity
 		public static const statesLength:Vector.<int> = Vector.<int>([4, 8,	 4,  4,  2,  6,  8]);
 		
 		/**
+		 * Store zombie current rotation (from 0 to 7)
+		 */
+		public var currentRotation:int;
+		
+		/**
 		 * Store zombie current state
 		 */
 		protected var currentState:int;
@@ -97,6 +102,7 @@ package entity
 			//rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 			currentStateOffsetPosition = (currentStateOffsetPosition + 1) % currentStateLength;
 			sprites.x = -16 - 32 * (currentStateOffsetPosition + currentStateOffset);
+			sprites.y = -16 - 32 * currentRotation;
 		}
 		
 		/**

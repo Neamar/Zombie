@@ -1,6 +1,7 @@
 ﻿package 
 {
 	import entity.Zombie;
+	import entity.ZombieAnim;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -37,25 +38,18 @@
 		
 		private function init(e:Event = null):void 
 		{
-			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// Remember the stage and give static access ; some objects needs it to register events.
-			//TODO : do they ?
-			Main.stage = this.stage;
-			
-			//Forbid stage resizing
-			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.addEventListener(Event.RESIZE, onResize);
-			stage.dispatchEvent(new Event(Event.RESIZE));
-			
-			//Load first level
-			prepareLevel(FIRST_LEVEL);
-			
-			//For debug :
-			monitor = new Monitor();
-			stage.addChild(monitor);
-			
-			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);
+			stage.frameRate = 3;
+			var za:ZombieAnim;
+				
+			for (var i:int = 0; i <= 6; i++)
+			{
+				za = new ZombieAnim();
+				za.x = 50 + 75 * (i % 4);
+				za.y = 50 + 75 * Math.ceil(i / 4);
+				za.setState(i);
+				addChild(za);
+				addEventListener(Event.ENTER_FRAME, za.onMove);
+			}
 		}
 		
 		/**

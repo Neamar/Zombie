@@ -57,7 +57,7 @@ package entity
 		 * States of a zombie
 		 */
 		public const STATE_WALKING:int = 0;
-		public const STATE_HITTING:int = 5;
+		public const STATE_HITTING:int = 4;
 		
 		public var currentState:int = STATE_WALKING;
 		public var currentStatePosition:int = STATE_WALKING;

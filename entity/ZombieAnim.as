@@ -34,7 +34,8 @@ package entity
 		]);
 		
 		/**
-		 * States of a zombie
+		 * States of a zombie.
+		 * @see setState()
 		 */
 		public const STATE_IDLE:int = 0;
 		public const STATE_WALKING:int = 1;
@@ -44,49 +45,51 @@ package entity
 		public const STATE_DIE:int = 5;
 		public const STATE_DIE2:int = 6;
 		
-		public const statesOffset:Vector.<int> = Vector.<int>([
-			0,
-			4,
-			12,
-			16,
-			20,
-			22,
-			28
-		]);
+		/**
+		 * Offset and length to use regarding the sprites bitmap
+		 * Offset is the first picture to use,
+		 * Length is the length of the states
+		 * Index corresponds to the associated STATE_ value, e.g. index 2 is STATE_HITTING.
+		 */
+		public static const statesOffset:Vector.<int> = Vector.<int>([0, 4,	12, 16,	20,	22,	28]);
+		public static const statesLength:Vector.<int> = Vector.<int>([4, 8,	 4,  4,  2,  6,  8]);
 		
-		public const statesLength:Vector.<int> = Vector.<int>([
-			4,
-			8,
-			4,
-			4,
-			2,
-			6,
-			8
-		]);
-		
+		/**
+		 * Store zombie current state
+		 */
 		protected var currentState:int;
+		
+		/**
+		 * Store the offset and the length to use for the current state
+		 */
 		protected var currentStateOffset:int;
 		protected var currentStateLength:int;
+		
+		/**
+		 * Store the current image used
+		 */
 		protected var currentStateOffsetPosition:int;
 		
+		/**
+		 * All sprites for all states.
+		 * Wille be masked using scrollRect
+		 */
 		protected var sprites:Bitmap;
 		
 		public function ZombieAnim()
 		{
-			setState(STATE_IDLE);
-			
 			//Zombie graphics
 			sprites = new Bitmap(Zombie.spritesData);
-			scrollRect = new Rectangle(-16, -16, 32, 32);
-			sprites.x = - 21;
-			sprites.y = -12;
+			scrollRect = new Rectangle( -16, -16, 32, 32);
+			sprites.y = -16;
+			addChild(sprites);
+			setState(STATE_IDLE);
 			
 			this.graphics.lineStyle(1, 0xFF0000);
-			this.graphics.drawRect(-16, -16, 32, 32);
+			this.graphics.drawRect(-15, -15, 30, 30);
 			this.graphics.lineStyle(1, 0x990000);
-			this.graphics.moveTo(0, -12);
-			this.graphics.lineTo(0, 24);
-			addChild(sprites);
+			this.graphics.moveTo(0, -15);
+			this.graphics.lineTo(0, 15);
 		}
 		
 		public function onMove(e:Event):void
@@ -96,12 +99,21 @@ package entity
 			sprites.x = -16 - 32 * (currentStateOffsetPosition + currentStateOffset);
 		}
 		
+		/**
+		 * Define the state to use
+		 * Must be a STATE_ constant.
+		 * 
+		 * @param	newState the state to enter
+		 */
 		public function setState(newState:int):void
 		{
 			currentState = newState;
 			currentStateOffsetPosition = 0;
 			currentStateOffset = statesOffset[currentState];
 			currentStateLength = statesLength[currentState];
+			
+			//Offset to first sprite
+			sprites.x = -16 - 32 * currentStateOffset;
 		}
 	}
 	

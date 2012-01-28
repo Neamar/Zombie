@@ -15,8 +15,8 @@ package entity
 	public class Zombie extends Entity 
 	{
 		[Embed(source = "../assets/sprite/zombie/zombie_0.png")]
-		public static var spritesClass:Class;
-		public static var spritesData:BitmapData = (new Zombie.spritesClass()).bitmapData;
+		public static const spritesClass:Class;
+		public static const spritesData:BitmapData = (new Zombie.spritesClass()).bitmapData;
 		
 		/**
 		 * Zombie radius.
@@ -27,17 +27,17 @@ package entity
 		/**
 		 * When a zombie is asked to sleep, how long it should be. (in frames)
 		 */
-		public static const SLEEP_DURATION:int = 30;
+		public const SLEEP_DURATION:int = 30;
 		
 		/**
 		 * Moving speed (in manhattan-px)
 		 */
-		public static const SPEED:int = 3;
+		public const SPEED:int = 3;
 		
 		/**
 		 * To get swarming behavior, zombies should push themselves.
 		 */
-		public static const REPULSION:int = 15;
+		public const REPULSION:int = 15;
 		
 		/**
 		 * Angles depending on deltaX.
@@ -47,11 +47,21 @@ package entity
 		 * @note The 4 was chosen to improve compution since it is a power of 2, however it forces the vector to integrate "jump values", never used.
 		 * @note deltaX = 0 && deltaY == 0 does not exists (can't compute an angle if no moves are made)
 		 */
-		public static const ANGLES:Vector.<int> = Vector.<int>([
+		public const ANGLES:Vector.<int> = Vector.<int>([
 			/*dX = -1*/ -45 * 3, 180, 45 * 3, /*jump*/-1,
 			/*dX =  0*/ -90, -1, 90, /*jump*/-1,
 			/*dX =  1*/ -45, 0, 45
 		]);
+		
+		/**
+		 * States of a zombie
+		 */
+		public const STATE_WALKING:int = 0;
+		public const STATE_HITTING:int = 5;
+		
+		public var currentState:int = STATE_WALKING;
+		public var currentStatePosition:int = STATE_WALKING;
+		public var currentStateLength:int = 4;
 		
 		/**
 		 * To speed everything, we should not access static vars from another class.
@@ -91,18 +101,14 @@ package entity
 			influenceMap = heatmap.bitmapData;
 			
 			//Zombie graphics
-			scrollRect = new Rectangle( -12, -21, 24, 42);
 			sprites = new Bitmap(Zombie.spritesData);
-			sprites.x = -12;
-			sprites.y = -21;
-			/*
+			scrollRect = new Rectangle(-21, -12, 42, 24);
+			sprites.x = - 21;
+			sprites.y = -12;
+			
 			this.graphics.lineStyle(1, 0xFF0000);
-			this.graphics.beginFill(0xF00000);
-			this.graphics.drawCircle(0, 0, RADIUS);
-			this.graphics.lineStyle(1, 0);
-			this.graphics.lineTo(0, 0);
-			this.cacheAsBitmap = true;
-			*/
+			this.graphics.drawRect(-21, -12, 42, 24);
+
 			addChild(sprites);
 		}
 		
@@ -171,7 +177,8 @@ package entity
 				x += SPEED * maxI;
 				y += SPEED * maxJ;
 				//rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
-				
+				currentStatePosition = (currentStatePosition + 1) % currentStateLength;
+				sprites.x = -21 - 42 * currentStatePosition;
 				//Store repulsion
 				xScaled = x / RESOLUTION;
 				yScaled = y / RESOLUTION;

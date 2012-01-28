@@ -184,7 +184,7 @@ package
 			
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
 			valueToCompute.push(startInfluence);
-			nextInfluence[startOffset] = startInfluence + 2 * Zombie.REPULSION + 1; // Avoid blinking when zombie reach destination and is alone.
+			nextInfluence[startOffset] = startInfluence + 31; // Avoid blinking when zombie reach destination and is alone.
 		}
 		
 		/**

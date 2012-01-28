@@ -28,7 +28,7 @@ package entity
 		/**
 		 * For debug : the player is never hurt.
 		 */
-		public static const INVINCIBLE:Boolean = false;
+		public static const INVINCIBLE:Boolean = true;
 		
 		/**
 		 * Player radius (he's a fatty!)

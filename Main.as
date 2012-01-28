@@ -1,6 +1,8 @@
 ﻿package 
 {
 	import entity.Zombie;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.StageAlign;

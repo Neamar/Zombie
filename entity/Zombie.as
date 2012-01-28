@@ -1,9 +1,11 @@
 package entity
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	import levels.Level;
 	
 	/**
@@ -12,6 +14,10 @@ package entity
 	 */
 	public class Zombie extends Entity 
 	{
+		[Embed(source = "../assets/sprite/zombie/zombie_0.png")]
+		public static var spritesClass:Class;
+		public static var spritesData:BitmapData = (new Zombie.spritesClass()).bitmapData;
+		
 		/**
 		 * Zombie radius.
 		 * For drawing, block, and shoot.
@@ -74,7 +80,9 @@ package entity
 		 * Shortcut to heatmap.bitmapData
 		 */
 		public var influenceMap:BitmapData;
-
+		
+		public var sprites:Bitmap;
+		
 		public function Zombie(parent:Level, x:int, y:int)
 		{
 			this.x = x;
@@ -83,12 +91,19 @@ package entity
 			influenceMap = heatmap.bitmapData;
 			
 			//Zombie graphics
+			scrollRect = new Rectangle( -12, -21, 24, 42);
+			sprites = new Bitmap(Zombie.spritesData);
+			sprites.x = -12;
+			sprites.y = -21;
+			/*
 			this.graphics.lineStyle(1, 0xFF0000);
 			this.graphics.beginFill(0xF00000);
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
 			this.cacheAsBitmap = true;
+			*/
+			addChild(sprites);
 		}
 		
 		/**
@@ -155,7 +170,7 @@ package entity
 				//Move toward higher potential
 				x += SPEED * maxI;
 				y += SPEED * maxJ;
-				rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
+				//rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 				
 				//Store repulsion
 				xScaled = x / RESOLUTION;

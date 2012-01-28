@@ -77,12 +77,12 @@ package entity
 			
 			//Zombie graphics
 			sprites = new Bitmap(Zombie.spritesData);
-			scrollRect = new Rectangle(-21, -12, 42, 24);
+			scrollRect = new Rectangle(-16, -16, 32, 32);
 			sprites.x = - 21;
 			sprites.y = -12;
 			
 			this.graphics.lineStyle(1, 0xFF0000);
-			this.graphics.drawRect( -21, -12, 42, 24);
+			this.graphics.drawRect(-16, -16, 32, 32);
 			this.graphics.lineStyle(1, 0x990000);
 			this.graphics.moveTo(0, -12);
 			this.graphics.lineTo(0, 24);
@@ -93,7 +93,7 @@ package entity
 		{
 			//rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 			currentStateOffsetPosition = (currentStateOffsetPosition + 1) % currentStateLength;
-			sprites.x = -23 - 42 * (currentStateOffsetPosition + currentStateOffset);
+			sprites.x = -16 - 32 * (currentStateOffsetPosition + currentStateOffset);
 		}
 		
 		public function setState(newState:int):void

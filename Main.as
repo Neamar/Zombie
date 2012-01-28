@@ -44,8 +44,8 @@
 			for (var i:int = 0; i <= 6; i++)
 			{
 				za = new ZombieAnim();
-				za.x = 50 + 75 * (i % 4);
-				za.y = 50 + 75 * Math.ceil(i / 4);
+				za.x = 50 + 75 * i;
+				za.y = 150;
 				za.setState(i);
 				addChild(za);
 				addEventListener(Event.ENTER_FRAME, za.onMove);

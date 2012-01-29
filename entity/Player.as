@@ -42,6 +42,16 @@ package entity
 		 * Player speed when moving
 		 */
 		public const SPEED:int = 4;
+		
+		/**
+		 * Max player life
+		 */
+		public const MAX_HEALTHPOINTS:int = 100;
+
+		/**
+		 * Half-angular visiblity. Full value should be 180° in realistic game, however 100 gives more fun.
+		 */
+		public const ANGULAR_VISIBILITY2:int = 50;
 
 		/**
 		 * Max width one may see if no obstacles in front.

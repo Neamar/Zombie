@@ -1,6 +1,9 @@
 package levels
 {
+	import entity.Behemoth;
 	import entity.Player;
+	import entity.Satanus;
+	import entity.Survivor;
 	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BlendMode;
@@ -20,8 +23,14 @@ package levels
 		public static const LOST:String = 'lost';
 		
 		//TODO : remove (access via main.game.level)
+		/**
+		 * For the monitor.
+		 */
 		public static var current:Level = null;
 		
+		/**
+		 * The player on the map
+		 */
 		public var player:Player;
 		
 		/**
@@ -56,6 +65,11 @@ package levels
 		 * Current frame number % MAX_DURATION
 		 */
 		public var frameNumber:int = 0;
+
+		/*
+		 * Survivors (if any)
+		 */
+		public var survivors:Vector.<Survivor> = new Vector.<Survivor>();
 		
 		/**
 		 * Influence map, to compute easily multiples pathfindings without burying CPU
@@ -94,6 +108,7 @@ package levels
 			Level.current = this;
 			
 			player = new Player(this, params);
+			
 			heatmap = new Heatmap(this);
 
 			//Layouting everything on the display list
@@ -104,6 +119,8 @@ package levels
 			{
 				var spawnArea:Rectangle = params.zombiesLocation.pop();
 				var spawnQuantity:int = params.zombiesDensity.pop();
+				var behemothProbability:Number = 1 / params.behemothProbability.pop();
+				var satanusProbability:Number = 1 / params.satanusProbability.pop();
 				
 				for (var i:int = 0; i < spawnQuantity; i++)
 				{
@@ -116,7 +133,17 @@ package levels
 					}
 					else
 					{
-						var foe:Zombie = new Zombie(this, x, y);
+						var foe:Zombie;
+						if (Math.random() > behemothProbability)
+						{
+							if (Math.random() > satanusProbability)
+								foe = new Zombie(this, x, y);
+							else
+								foe = new Satanus(this, x, y);
+						}
+						else
+							foe = new Behemoth(this, x, y);
+							
 						zombies.push(foe);
 						//Set time for first awakening :
 						var firstWake:int = 30 + 30 * Math.random()
@@ -125,6 +152,12 @@ package levels
 					}
 				}
 			}
+			
+			//Quick hack: add a survivor
+			var survivor:Survivor = new Survivor(this, player.x + 200, player.y + 1);
+			addChild(survivor);
+			zombies.push(survivor);
+			survivors.push(survivor);
 
 			/**
 			 * Blending and masking

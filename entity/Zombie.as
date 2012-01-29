@@ -10,7 +10,9 @@ package entity
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * A simple zombie
+	 * 
+	 * "One I can manage, a thousand..."
 	 * @author Neamar
 	 */
 	public class Zombie extends Entity 
@@ -46,7 +48,12 @@ package entity
 		/**
 		 * Moving speed (in manhattan-px)
 		 */
-		public const SPEED:int = 3;
+		public var speed:int = 3;
+		
+		/**
+		 * Strength of the blow a zombie gives when hitting the player
+		 */
+		public var strengthBlow:int = 30;
 		
 		/**
 		 * To get swarming behavior, zombies should push themselves.
@@ -79,16 +86,31 @@ package entity
 		public static const MAX_INFLUENCE:int = Heatmap.MAX_INFLUENCE;
 		
 		/**
+		 * The level the zombies live on
+		 */
+		public var level:Level;
+		
+		/**
 		 * Function the zombie uses to move.
 		 * Can be replaced, for instance when zombie is dead ;)
 		 * Therefore, we don't need to remove him from the frame , when he'll awake, he'll see he's dead.
 		 */
 		public var move:Function = onMove;
+		
+		/**
+		 * Influence the zombie try to reach
+		 */
+		public var maxInfluence:int;
 
 		/**
-		 * Is the zombie going to hit the player nextFrame ?
+		 * The first time the zombie meets the player, we store the current frameNumber in this variable.
+		 * The next time we're near the player, we check this value.
+		 * - If too much time passed since last encounter, he should "prepare" himself again (and thus not strike for this frame)
+		 * - If the last encounter was in our last waking phase, the player forgot (or was unable) to move : hit him.
+		 * 
+		 * In other words, this variable allos for a "prepare before strike" time.
 		 */
-		public var willHit:Boolean = true;
+		public var lastEncounter:int = -1;
 		
 		/**
 		 * Shortcut to heatmap.bitmapData
@@ -159,6 +181,8 @@ package entity
 		{
 			this.x = x;
 			this.y = y;
+			this.level = parent;
+			maxInfluence = Heatmap.MAX_INFLUENCE
 			super(parent);
 			influenceMap = heatmap.bitmapData;
 			
@@ -188,7 +212,6 @@ package entity
 
 			//Inform the level we're dead :
 			parent.dispatchEvent(new Event(ZOMBIE_DEAD));
-
 		}
 		
 		public function onMove():int
@@ -211,6 +234,39 @@ package entity
 				return 25;
 			}
 			
+			if (maxValue >= MAX_INFLUENCE)
+			{
+				//We are "on" the player : let's fight !
+				
+				if (lastEncounter + 10 == level.frameNumber)
+				{
+					//Hit the player !
+					this.hit();
+					
+					//Prepare ourselves to hit the player again in two wakes :
+					lastEncounter = level.frameNumber + 10;
+				}
+				else
+				{
+					lastEncounter = level.frameNumber;
+				}
+
+				//Animation
+				if (currentState != STATE_HITTING + isBiter)
+				{
+					setState(STATE_HITTING + isBiter);
+					//Animation is long and the player may die before we finish hitting him, so start at offset 3
+					currentStateOffsetPosition = 3;
+				}
+				currentStateOffsetPosition = (currentStateOffsetPosition + 1) % currentStateLength;
+				spritesRect.x = 64 * (currentStateOffsetPosition + currentStateOffset);
+				sprites.scrollRect = spritesRect;
+				
+				return 10;
+			}
+			
+			
+			//We're on the heatmap, and we can't hit the player ? Move toward him
 			//Find the highest potential around the zombie
 			for (var i:int = -1; i <= 1; i++)
 			{
@@ -238,8 +294,8 @@ package entity
 				}
 				
 				//Move toward higher potential
-				x += SPEED * maxI;
-				y += SPEED * maxJ;
+				x += speed * maxI;
+				y += speed * maxJ;
 				
 				//Animation
 				if (currentState != STATE_WALKING)
@@ -258,44 +314,14 @@ package entity
 				
 				return 1;
 			}
-			else
-			{
-				if (maxValue >= MAX_INFLUENCE)
-				{
-					//We are "on" the player : let's fight !
-					
-					if (willHit)
-					{
-						//Hit the player !
-						(parent as Level).player.hit(this);
-						willHit = false;
-					}
-					else
-					{
-						willHit = true;
-					}
-					
-					//Animation
-					if (currentState != STATE_HITTING + isBiter)
-					{
-						setState(STATE_HITTING + isBiter);
-						//Animation is long and the player may die before we finish hitting him
-						currentStateOffsetPosition = 3;
-					}
-					currentStateOffsetPosition = (currentStateOffsetPosition + 1) % currentStateLength;
-					spritesRect.x = 64 * (currentStateOffsetPosition + currentStateOffset);
-					sprites.scrollRect = spritesRect;
-					
-					return 10;
-				}
-			}
-			
+
 			//No move available : some zombies are probably blocking us.
 			//Wait a little to let everything boil down.
 			return 10 + SLEEP_DURATION * Math.random();
 		}
 		
 		/**
+<<<<<<< HEAD
 		 * Animation for dying
 		 * @return 8 (number of frames before next part of the animation)
 		 */
@@ -340,6 +366,14 @@ package entity
 			//Offset to first sprite
 			spritesRect.x = 64 * currentStateOffset;
 			sprites.scrollRect = spritesRect;
+		}
+		
+		/**
+		 * Hit the player !
+		 */
+		public function hit():void
+		{
+			level.player.hit(this, strengthBlow);
 		}
 	}
 }

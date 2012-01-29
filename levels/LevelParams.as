@@ -24,14 +24,30 @@ package levels
 		/**
 		 * Spawn area for the zombies
 		 * @see zombieDensity
+		 * @see BehemothProbability
+		 * @see satanusProbability
 		 */
 		public var zombiesLocation:Vector.<Rectangle> = new Vector.<Rectangle>();
 		
 		/**
 		 * Density of zombies for each area.
 		 * @see zombiesLocation
+		 * @see behemothProbability
+		 * @see satanusProbability
 		 */
 		public var zombiesDensity:Vector.<int> = new Vector.<int>();
+		
+		/**
+		 * One zombie in behemothProbability[index] will be a behemoth.
+		 * This is a probability, and therefore you may have a few surprises
+		 */
+		public var behemothProbability:Vector.<int> = new Vector.<int>();
+		
+		/**
+		 * One zombie in satanusProbability[index] will be a satanus.
+		 * This is a probability, and therefore you may have a few surprises
+		 */
+		public var satanusProbability:Vector.<int> = new Vector.<int>();
 		
 		/**
 		 * Hitmap for the level

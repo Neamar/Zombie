@@ -17,7 +17,6 @@
 		
 		<hitmap>hitmap.png</hitmap>
 		<player x="195" y="915" resolution="48" />
-		<player x="435" y="250" resolution="48" />
 		<zombies>
 			<spawn-zone x="0" y="0" width="1000" height="1000" number="150" />
 			<spawn-zone x="480" y="300" width="150" height="30" number="50" behemoth-probability="10" />

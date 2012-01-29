@@ -15,7 +15,7 @@ package
 	 */
 	public final class Game extends Sprite 
 	{
-		public static const FIRST_LEVEL:String = "1";
+		public static const FIRST_LEVEL:String = "4";
 		
 		public var level:Level;
 		

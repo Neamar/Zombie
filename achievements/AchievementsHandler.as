@@ -23,8 +23,8 @@ package achievements
 		public var achievementsList:Array = new Array(
 		/* 1 - 10*/
 			[RangeAchievement, Handgun, 250],
-			[CapacityAchievement, Handgun, 2],
 			[UnlockAchievement, Shotgun],
+			[CapacityAchievement, Handgun, 2],
 			[SubconcsiousVisionAchievement, 5],
 			[JungleAchievement, Handgun, true],
 			[RangeAchievement, Shotgun, 200],
@@ -80,7 +80,7 @@ package achievements
 		 * 
 		 * @see https://docs.google.com/spreadsheet/ccc?key=0ApZXXCCC0GsvdHpFR1pLWUpSblVRbnBKZlEtQ1VBdEE
 		 */
-		public var achievementsDelta:Vector.<int> = Vector.<int>([1, 2, 3, 4, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 30, 35, 40, 50, 60, 80, 100, 120, 140, 160, 200]);
+		public var achievementsDelta:Vector.<int> = Vector.<int>([1,2,3,4,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,14,14,15,16,17,18,19,20,21,22,23,25,30,35,40,50,60,80,100,120,140,160,200,Infinity]);
 		
 		/**
 		 * Achievement to start at

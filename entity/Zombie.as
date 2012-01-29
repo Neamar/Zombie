@@ -129,6 +129,11 @@ package entity
 		 */
 		protected var sprites:Bitmap;
 		
+		/**
+		 * Rectangle to use for scrollRect (to clip the sprite)
+		 */
+		protected var spritesRect:Rectangle = new Rectangle( 0, 0, 32, 32);
+		
 		public function Zombie(parent:Level, x:int, y:int)
 		{
 			this.x = x;
@@ -138,11 +143,13 @@ package entity
 			
 			//Zombie graphics
 			sprites = new Bitmap(Zombie.spritesData);
-			scrollRect = new Rectangle( -16, -16, 32, 32);
+			sprites.scrollRect = spritesRect;
 			sprites.y = -16;
+			sprites.x = -16;
 			addChild(sprites);
 			setState(STATE_WALKING);
 			
+			/*
 			this.graphics.lineStyle(1, 0xFF0000);
 			this.graphics.drawRect(-15, -15, 30, 30);
 			this.graphics.lineStyle(1, 0x990000);
@@ -150,6 +157,7 @@ package entity
 			this.graphics.lineTo(0, 15);
 			this.graphics.moveTo(-15, 0);
 			this.graphics.lineTo(15, 0);
+			*/
 		}
 		
 		/**
@@ -217,9 +225,11 @@ package entity
 				x += SPEED * maxI;
 				y += SPEED * maxJ;
 				currentRotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
-				currentStateOffsetPosition = (currentStateOffsetPosition + 1) % currentStateLength;
-				sprites.x = -16 - 32 * (currentStateOffsetPosition + currentStateOffset);
-				sprites.y = -16 - 32 * currentRotation;
+				currentStateOffsetPosition = (currentStateOffsetPosition + 1) % (4 * currentStateLength);
+				spritesRect.x = 32 * ((currentStateOffsetPosition >> 3) + currentStateOffset);
+				spritesRect.y = 32 * currentRotation;
+				sprites.scrollRect = spritesRect;
+				
 				//Store repulsion
 				xScaled = x / RESOLUTION;
 				yScaled = y / RESOLUTION;
@@ -266,7 +276,8 @@ package entity
 			currentStateLength = statesLength[currentState];
 			
 			//Offset to first sprite
-			sprites.x = -16 - 32 * currentStateOffset;
+			spritesRect.x = 32 * currentStateOffset;
+			sprites.scrollRect = spritesRect;
 		}
 	}
 }

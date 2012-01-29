@@ -134,6 +134,13 @@ package entity
 		 */
 		protected var spritesRect:Rectangle = new Rectangle( 0, 0, 32, 32);
 		
+		/**
+		 * Determine which animation to use : hit or bite ?
+		 * (no ingame changes)
+		 */
+		protected var isBiter:int = 2 * Math.random();
+		protected var isExplodingOnDeath:int = 2 * Math.random();
+		
 		public function Zombie(parent:Level, x:int, y:int)
 		{
 			this.x = x;
@@ -147,7 +154,7 @@ package entity
 			sprites.y = -16;
 			sprites.x = -16;
 			addChild(sprites);
-			setState(STATE_WALKING);
+			setState(STATE_IDLE);
 			
 			/*
 			this.graphics.lineStyle(1, 0xFF0000);
@@ -165,17 +172,11 @@ package entity
 		 */
 		public function kill():void
 		{
-			//Draw the dead zombies on the map
-			this.filters = [new BlurFilter(8, 8, 2)];
-			(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1.4, 0, 0, 1.4, x, y));
-			this.graphics.clear();
-			
 			//Remove current zombie from global zombies list
 			(parent as Level).zombies.splice((parent as Level).zombies.indexOf(this), 1);
 
-			//Avoid null pointer exception, should the zombie awake in some future frame.
-			move = function():void { };
-			parent.removeChild(this);
+			//Start death animation. When the animation completes, the zombie will be removed from everywhere
+			move = onMoveDead;
 
 		}
 		
@@ -191,6 +192,10 @@ package entity
 			//Are we on the heatmap ? If not, just sleep.
 			if (maxValue == DEFAULT_COLOR)
 			{
+				//Animation
+				if (currentState != STATE_IDLE)
+					setState(STATE_IDLE);
+					
 				//Player ain't near. We may as well go to sleep to save some CPU.
 				return 25;
 			}
@@ -224,6 +229,11 @@ package entity
 				//Move toward higher potential
 				x += SPEED * maxI;
 				y += SPEED * maxJ;
+				
+				//Animation
+				if (currentState != STATE_WALKING)
+					setState(STATE_WALKING);
+				
 				currentRotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 				currentStateOffsetPosition = (currentStateOffsetPosition + 1) % (4 * currentStateLength);
 				spritesRect.x = 32 * ((currentStateOffsetPosition >> 3) + currentStateOffset);
@@ -253,6 +263,18 @@ package entity
 					{
 						willHit = true;
 					}
+					
+					//Animation
+					if (currentState != STATE_HITTING + isBiter)
+					{
+						setState(STATE_HITTING + isBiter);
+						//Animation is long and the player may die before we finish hitting him
+						currentStateOffsetPosition = 3;
+					}
+					currentStateOffsetPosition = (currentStateOffsetPosition + 1) % currentStateLength;
+					spritesRect.x = 32 * (currentStateOffsetPosition + currentStateOffset);
+					sprites.scrollRect = spritesRect;
+					
 					return 10;
 				}
 			}
@@ -260,6 +282,34 @@ package entity
 			//No move available : some zombies are probably blocking us.
 			//Wait a little to let everything boil down.
 			return 10 + SLEEP_DURATION * Math.random();
+		}
+		
+		/**
+		 * Animation for dying
+		 * @return 8 (number of frames before next part of the animation)
+		 */
+		public function onMoveDead():int
+		{
+			if (currentState != STATE_DIE + isExplodingOnDeath)
+				setState(STATE_DIE + isExplodingOnDeath);
+			
+			currentStateOffsetPosition = currentStateOffsetPosition + 1;
+			if (currentStateOffsetPosition == currentStateLength)
+			{
+				//We finished the animation
+				//Draw the dead zombies on the map
+				(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
+			
+				//Avoid null pointer exception, should the zombie awake in some future frame.
+				parent.removeChild(this);
+				
+				return 0;
+			}
+			
+			spritesRect.x = 32 * (currentStateOffsetPosition + currentStateOffset);
+			sprites.scrollRect = spritesRect;
+
+			return 4;
 		}
 		
 		/**

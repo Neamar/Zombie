@@ -19,6 +19,10 @@ package entity
 		public static const spritesClass:Class;
 		public static const spritesData:BitmapData = (new Zombie.spritesClass()).bitmapData;
 		
+		[Embed(source = "../assets/sprite/zombie/splatter.png")]
+		public static const splatterClass:Class;
+		public static const splatter:Bitmap = new Zombie.splatterClass(); { splatter.x = -splatter.width / 2; splatter.y = -splatter.height / 2; }
+		
 		/**
 		 * Zombie radius.
 		 * For drawing, block, and shoot.
@@ -156,16 +160,6 @@ package entity
 			sprites.x = -32;
 			addChild(sprites);
 			setState(STATE_IDLE);
-			
-			/*
-			this.graphics.lineStyle(1, 0xFF0000);
-			this.graphics.drawRect(-15, -15, 30, 30);
-			this.graphics.lineStyle(1, 0x990000);
-			this.graphics.moveTo(0, -15);
-			this.graphics.lineTo(0, 15);
-			this.graphics.moveTo(-15, 0);
-			this.graphics.lineTo(15, 0);
-			*/
 		}
 		
 		/**
@@ -176,6 +170,25 @@ package entity
 			//Remove current zombie from global zombies list
 			(parent as Level).zombies.splice((parent as Level).zombies.indexOf(this), 1);
 
+			//Add splatters
+			var player:Player = (parent as Level).player;
+			var angle:Number = Math.PI/2 + Math.atan2(y - player.y, x - player.x);
+			
+			for (var i:int = 0; i < 5; i++)
+			{
+				var matrix:Matrix = new Matrix();
+				var radius:int = 10 + 40 * Math.random();
+				var deltaAngle:Number = -2 + 4 * Math.random();
+				splatter.alpha = Math.random();
+				//matrix.a = 2 * Math.random()
+				//matrix.d = 2 * Math.random();
+				matrix.tx = x + radius * Math.cos(angle + radius) - splatter.width / 2;
+				matrix.ty = y + radius * Math.sin(angle + radius) - splatter.height / 2;
+				
+				(parent as Level).bitmapLevel.bitmapData.draw(splatter, matrix);
+			}
+			trace(angle * Player.TO_DEGREE);
+			
 			//Start death animation. When the animation completes, the zombie will be removed from everywhere
 			move = onMoveDead;
 
@@ -300,6 +313,8 @@ package entity
 				//He's dead, and has been on the floor for a time long enough.
 				//Draw the dead zombies on the map
 				this.filters = [new BevelFilter(.5)];
+				this.graphics.beginFill(0xFF0000);
+				this.graphics.drawCircle(0, 0, 5);
 				(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
 				parent.removeChild(this);
 				

@@ -19,6 +19,7 @@ package levels
 		public static const WIN:String = 'win';
 		public static const LOST:String = 'lost';
 		
+		//TODO : remove (access via main.game.level)
 		public static var current:Level = null;
 		
 		public var player:Player;

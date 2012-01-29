@@ -12,6 +12,7 @@ package
 	
 	/**
 	 * Heatmap (other names : influence map, potential fields)
+	 * TODO : move to package levels
 	 * 
 	 * @see http://aigamedev.com/open/tutorials/potential-fields/
 	 * @author Neamar
@@ -169,7 +170,7 @@ package
 				bitmapData.setVector(currentRect, nextInfluence);
 				//Add lamplight repulsion
 				var player:Player = level.player;
-				if (player.lamplightIsRepulsive)
+				if (player.isLamplightRepulsive)
 				{
 					var lightMask:Shape = player.lightMask;
 					bitmapData.draw(lightMask, new Matrix(1 / 5, 0, 0, 1 / 5, -player.x / RESOLUTION, -player.y / RESOLUTION), null, null );

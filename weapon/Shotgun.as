@@ -8,11 +8,20 @@ package weapon
 	 */
 	public final class Shotgun extends Weapon
 	{
+		/**
+		 * Amplitude of the shot.
+		 * One bullet will go every 4° for [-halfAmplitude, halfAmplitude]
+		 * Default : amplitude goes from -10° to +10° (halfAmplitude = 10), delta : 4. Max : 5 deaths.
+		 */
+		public var halfAmplitude:int;
+		
 		public function Shotgun(level:Level, player:Player) 
 		{
-			cooldown = Main.stage.frameRate;
-			magazineCapacity = 4;
+			cooldown = 40;
+			magazineCapacity = 1;
 			magazineNumber = 4;
+			reloadTime = 60;
+			halfAmplitude = 10;
 			
 			super(level, player);
 		}
@@ -20,8 +29,7 @@ package weapon
 		public override function fire():int		{
 			if (beforeFiring())
 			{
-				//Amplitude goes from -10° to +10°, delta : 4. Max : 5 deaths.
-				for (var i:int = -10; i <= 10; i+=4)
+				for (var i:int = -halfAmplitude; i <= halfAmplitude; i += 4)
 				{
 					raycast(i * Player.TO_RADIANS);
 				}

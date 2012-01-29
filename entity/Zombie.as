@@ -15,6 +15,9 @@ package entity
 	 */
 	public class Zombie extends Entity 
 	{
+		/**
+		 * Embed objects
+		 */
 		[Embed(source = "../assets/sprite/zombie/zombie_0.png")]
 		public static const spritesClass:Class;
 		public static const spritesData:BitmapData = (new Zombie.spritesClass()).bitmapData;
@@ -22,6 +25,12 @@ package entity
 		[Embed(source = "../assets/sprite/zombie/splatter.png")]
 		public static const splatterClass:Class;
 		public static const splatter:Bitmap = new Zombie.splatterClass();
+
+		/**
+		 * Events
+		 */
+		public static const ZOMBIE_DEAD:String = "zombieDead";
+
 		
 		/**
 		 * Zombie radius.
@@ -176,6 +185,9 @@ package entity
 			
 			//Start death animation. When the animation completes, the zombie will be removed from everywhere
 			move = onMoveDead;
+
+			//Inform the level we're dead :
+			parent.dispatchEvent(new Event(ZOMBIE_DEAD));
 
 		}
 		

@@ -3,14 +3,17 @@ package entity
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
+	import flash.display.BlendMode;
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	import levels.Level;
 	import levels.LevelParams;
 	import weapon.Handgun;
@@ -39,16 +42,6 @@ package entity
 		 * Player speed when moving
 		 */
 		public const SPEED:int = 4;
-		
-		/**
-		 * Max player life
-		 */
-		public const MAX_HEALTHPOINTS:int = 50;
-
-		/**
-		 * Half-angular visiblity. Full value should be 180° in realistic game, however 100 gives more fun.
-		 */
-		public const ANGULAR_VISIBILITY2:int = 50;
 
 		/**
 		 * Max width one may see if no obstacles in front.
@@ -140,7 +133,7 @@ package entity
 		/**
 		 * All weapons the player may use
 		 */
-		public var availableWeapon:Vector.<Weapon> = new Vector.<Weapon>();
+		public var availableWeapons:Vector.<Weapon> = new Vector.<Weapon>();
 		
 		/**
 		 * Count the number of frames since the player begins playing.
@@ -158,16 +151,41 @@ package entity
 		public var hasShot:int = 10;
 		
 		/**
+		 * Half-angular visiblity. Full value should be 90° in realistic game, however lower values gives more fun.
+		 */
+		public var halfAngularVisibility:int = 50;
+		
+		/**
+		 * Opacity of invisible parts
+		 */
+		public var subconsciousVision:Number = .02;
+		
+		/**
+		 * Max player life
+		 */
+		public var maxHealthPoints:int = 50;
+		
+		/**
 		 * Current health of the player.
 		 * You can't move when you're hurt.
-		 * If damagesTaken > MAX_HEALTHPOINTS, you die.
+		 * If damagesTaken > maxHealthPoints, you die.
 		 */
 		public var damagesTaken:int = 0;
+
+		/**
+		 * Get back one healthpoint every recuperationSpeed frame
+		 */
+		public var recuperationSpeed:int = 3;
+		
+		/**
+		 * Shall we improve the bloodrush by disminishing its intensity ?
+		 */
+		public var tamedBloodrush:Boolean = false;
 		
 		/**
 		 * Will zombie flee from the light to outflank the player ?
 		 */
-		public var lamplightIsRepulsive:Boolean = true;
+		public var isLamplightRepulsive:Boolean = false;
 
 		public function Player(parent:Level, params:LevelParams)
 		{
@@ -193,7 +211,8 @@ package entity
 			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.WIDTH);
 			bloodRush = new Bitmap(bd)
 			bloodRush.visible = false;
-			bd.perlinNoise(Main.WIDTH, Main.WIDTH, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
+			bloodRush.x = bloodRush.y = -Main.WIDTH2;
+			drawBloodrush();
 			
 			//Various initialisations
 			addEventListener(Event.ENTER_FRAME, onFrame);
@@ -204,11 +223,8 @@ package entity
 			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 
 			//Populate weapons
-			this.availableWeapon.push(new Handgun(parent, this));
-			this.availableWeapon.push(new Uzi(parent, this));
-			this.availableWeapon.push(new Railgun(parent, this));
-			this.availableWeapon.push(new Shotgun(parent, this));
-			this.currentWeapon = this.availableWeapon[this.availableWeapon.length - 1];
+			this.availableWeapons.push(new Handgun(parent, this));
+			this.currentWeapon = this.availableWeapons[0];
 		}
 		
 		public function destroy():void
@@ -225,7 +241,7 @@ package entity
 			Main.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			Main.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
-			this.availableWeapon.length = 0;
+			this.availableWeapons.length = 0;
 			this.currentWeapon = null;
 		}
 		/**
@@ -239,10 +255,10 @@ package entity
 			{
 				damagesTaken += power;
 			}
-			if (damagesTaken > MAX_HEALTHPOINTS)
+			if (damagesTaken > maxHealthPoints)
 			{
-				trace('You die : ', damagesTaken - MAX_HEALTHPOINTS);
-				damagesTaken = MAX_HEALTHPOINTS;
+				trace('You die : ', damagesTaken - maxHealthPoints);
+				damagesTaken = maxHealthPoints;
 			}
 		}
 
@@ -301,13 +317,13 @@ package entity
 		protected function onMouseWheel(e:MouseEvent):void
 		{
 			//Select next / prev weapon
-			var offset:int = (availableWeapon.indexOf(currentWeapon) + e.delta / Math.abs(e.delta)) % availableWeapon.length;
+			var offset:int = (availableWeapons.indexOf(currentWeapon) + e.delta / Math.abs(e.delta)) % availableWeapons.length;
 			if (offset < 0)
 			{
-				offset = availableWeapon.length + offset;
+				offset = availableWeapons.length + offset;
 			}
 			
-			currentWeapon = availableWeapon[offset];
+			currentWeapon = availableWeapons[offset];
 		}
 
 		/**
@@ -399,8 +415,8 @@ package entity
 				parent.y = Main.WIDTH2 - y;
 
 				//Torch & masking
-				var startAngle:Number = ((rotation - ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
-				var endAngle:Number = ((rotation + ANGULAR_VISIBILITY2) % 360) * TO_RADIANS;
+				var startAngle:Number = ((rotation - halfAngularVisibility) % 360) * TO_RADIANS;
+				var endAngle:Number = ((rotation + halfAngularVisibility) % 360) * TO_RADIANS;
 
 				var maskGraphics:Graphics = lightMask.graphics;
 				var theta:Number;
@@ -410,7 +426,7 @@ package entity
 				maskGraphics.clear();
 
 				//Everything is gray-dark, except when a weapon was just fired or when you're hurt
-				maskGraphics.beginFill(0, .05 * (hasShot + 1));
+				maskGraphics.beginFill(0, subconsciousVision + 0.05 * (hasShot));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.WIDTH2, Main.WIDTH, Main.WIDTH);
 
 				//And his line of sight
@@ -458,17 +474,37 @@ package entity
 			{
 				//Display bloodrush
 				bloodRush.visible = true;
-				bloodRush.alpha = damagesTaken / MAX_HEALTHPOINTS;
+				bloodRush.alpha = damagesTaken / maxHealthPoints;
 				bloodRush.x = x - Main.WIDTH2;
 				bloodRush.y = y - Main.WIDTH2;
 				
-				//Heal one-by-frame
-				damagesTaken--;
+				//Heal damages every recuperationSpeed frame
+				if(frameNumber % recuperationSpeed == 0)
+					damagesTaken--;
 				
 				if (damagesTaken == 0)
 				{
 					bloodRush.visible = false;
 				}
+			}
+		}
+		
+		public function drawBloodrush():void
+		{
+			var bd:BitmapData = bloodRush.bitmapData;
+			bd.perlinNoise(Main.WIDTH, Main.WIDTH, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
+			
+			if (tamedBloodrush)
+			{
+				//Disminish intensity of the red around the player.
+				var mask:Shape = new Shape();
+				var matrix:Matrix = new Matrix();
+				matrix.createGradientBox(bd.width, bd.height, 0, -bd.width /2, -bd.height / 2);
+				
+				mask.graphics.beginGradientFill(GradientType.RADIAL, [0xFFFFFF, 0], [0.2, 1], [0, 255], matrix);
+				mask.graphics.drawCircle(0, 0, 200);
+				mask.graphics.endFill();
+				bd.draw(mask, new Matrix(1, 0, 0, 1, bd.width / 2, bd.height / 2), null, BlendMode.ALPHA);
 			}
 		}
 	}

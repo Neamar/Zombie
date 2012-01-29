@@ -21,12 +21,17 @@ package
 		
 		public var achievementHandler:AchievementsHandler;
 		
+		public var hud:Hud;
+		
 		public function Game() 
 		{
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
 			
 			achievementHandler = new AchievementsHandler(this);
+			
+			hud = new Hud();
+			addChild(hud);
 		}
 		
 		/**
@@ -67,7 +72,9 @@ package
 			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
 			achievementHandler.applyDefaultsAchievements();
+			hud.displayMessage("Level loaded!");
 			addChild(level);
+			setChildIndex(hud, numChildren - 1);
 		}
 		
 	}

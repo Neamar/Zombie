@@ -132,7 +132,7 @@ package entity
 		/**
 		 * Rectangle to use for scrollRect (to clip the sprite)
 		 */
-		protected var spritesRect:Rectangle = new Rectangle( 0, 0, 32, 32);
+		protected var spritesRect:Rectangle = new Rectangle( 0, 0, 64, 64);
 		
 		/**
 		 * Determine which animation to use : hit or bite ?
@@ -151,8 +151,8 @@ package entity
 			//Zombie graphics
 			sprites = new Bitmap(Zombie.spritesData);
 			sprites.scrollRect = spritesRect;
-			sprites.y = -16;
-			sprites.x = -16;
+			sprites.y = -32;
+			sprites.x = -32;
 			addChild(sprites);
 			setState(STATE_IDLE);
 			
@@ -236,8 +236,8 @@ package entity
 				
 				currentRotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 				currentStateOffsetPosition = (currentStateOffsetPosition + 1) % (4 * currentStateLength);
-				spritesRect.x = 32 * ((currentStateOffsetPosition >> 3) + currentStateOffset);
-				spritesRect.y = 32 * currentRotation;
+				spritesRect.x = 64 * ((currentStateOffsetPosition >> 3) + currentStateOffset);
+				spritesRect.y = 64 * currentRotation;
 				sprites.scrollRect = spritesRect;
 				
 				//Store repulsion
@@ -272,7 +272,7 @@ package entity
 						currentStateOffsetPosition = 3;
 					}
 					currentStateOffsetPosition = (currentStateOffsetPosition + 1) % currentStateLength;
-					spritesRect.x = 32 * (currentStateOffsetPosition + currentStateOffset);
+					spritesRect.x = 64 * (currentStateOffsetPosition + currentStateOffset);
 					sprites.scrollRect = spritesRect;
 					
 					return 10;
@@ -306,7 +306,7 @@ package entity
 				return 0;
 			}
 			
-			spritesRect.x = 32 * (currentStateOffsetPosition + currentStateOffset);
+			spritesRect.x = 64 * (currentStateOffsetPosition + currentStateOffset);
 			sprites.scrollRect = spritesRect;
 
 			return 4;
@@ -326,7 +326,7 @@ package entity
 			currentStateLength = statesLength[currentState];
 			
 			//Offset to first sprite
-			spritesRect.x = 32 * currentStateOffset;
+			spritesRect.x = 64 * currentStateOffset;
 			sprites.scrollRect = spritesRect;
 		}
 	}

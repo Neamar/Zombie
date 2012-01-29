@@ -3,6 +3,7 @@ package entity
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.filters.BevelFilter;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
@@ -296,11 +297,10 @@ package entity
 			currentStateOffsetPosition = currentStateOffsetPosition + 1;
 			if (currentStateOffsetPosition == currentStateLength)
 			{
-				//We finished the animation
+				//He's dead, and has been on the floor for a time long enough.
 				//Draw the dead zombies on the map
+				this.filters = [new BevelFilter(.5)];
 				(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
-			
-				//Avoid null pointer exception, should the zombie awake in some future frame.
 				parent.removeChild(this);
 				
 				return 0;

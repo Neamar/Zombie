@@ -28,7 +28,7 @@ package entity
 		/**
 		 * For debug : the player is never hurt.
 		 */
-		public static const INVINCIBLE:Boolean = true;
+		public static const INVINCIBLE:Boolean = false;
 		
 		/**
 		 * Player radius (he's a fatty!)
@@ -163,6 +163,11 @@ package entity
 		 * If damagesTaken > MAX_HEALTHPOINTS, you die.
 		 */
 		public var damagesTaken:int = 0;
+		
+		/**
+		 * Will zombie flee from the light to outflank the player ?
+		 */
+		public var lamplightIsRepulsive:Boolean = true;
 
 		public function Player(parent:Level, params:LevelParams)
 		{
@@ -366,6 +371,7 @@ package entity
 				//Is a zombie blocking move ?
 				if (move)
 				{/*
+					TODO : restore!
 					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
 					for each(var zombie:Zombie in potentialZombies)
 					{
@@ -406,13 +412,9 @@ package entity
 				//Everything is gray-dark, except when a weapon was just fired or when you're hurt
 				maskGraphics.beginFill(0, .05 * (hasShot + 1));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.WIDTH2, Main.WIDTH, Main.WIDTH);
-				//Except for the player, which is visible no matter what
-				maskGraphics.beginFill(0, 1);
-				maskGraphics.drawCircle(x, y, RADIUS);
-				maskGraphics.endFill();
 
 				//And his line of sight
-				maskGraphics.moveTo(x, y);
+				maskGraphics.moveTo(x + (RADIUS + 2) * Math.cos(startAngle), y + (RADIUS + 2) * Math.sin(startAngle));
 				transformationMatrix.tx = x;
 				transformationMatrix.ty = y;
 				
@@ -432,6 +434,8 @@ package entity
 					}
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
+				maskGraphics.lineTo(x + (RADIUS + 2) * Math.cos(endAngle), y + (RADIUS + 2) * Math.sin(endAngle));
+				maskGraphics.endFill();
 				
 				if (hasShot > 0)
 				{

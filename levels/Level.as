@@ -97,7 +97,6 @@ package levels
 
 			//Layouting everything on the display list
 			addChild(bitmapLevel);
-			addChild(player);
 			
 			//Generate Zombies
 			while (params.zombiesLocation.length > 0)
@@ -139,6 +138,7 @@ package levels
 			//Is is incredibly faster than using a real as3-mask, since we don't have to cacheAsBitmap the level.
 			player.lightMask.blendMode = BlendMode.ALPHA;
 			
+			addChild(player);
 			addChild(player.bloodRush);
 		}
 		

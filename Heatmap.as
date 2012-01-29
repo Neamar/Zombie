@@ -167,12 +167,15 @@ package
 			{
 				//Draw last pass result.
 				bitmapData.setVector(currentRect, nextInfluence);
-				
 				//Add lamplight repulsion
 				var player:Player = level.player;
-				var lightMask:Shape = player.lightMask;
-				bitmapData.draw(lightMask, new Matrix(1 / 5, 0, 0, 1 / 5, -player.x / RESOLUTION, -player.y / RESOLUTION), null, null );
-
+				if (player.lamplightIsRepulsive)
+				{
+					var lightMask:Shape = player.lightMask;
+					bitmapData.draw(lightMask, new Matrix(1 / 5, 0, 0, 1 / 5, -player.x / RESOLUTION, -player.y / RESOLUTION), null, null );
+					//Force the central pixel color value
+					bitmapData.setPixel(player.x / RESOLUTION, player.y / RESOLUTION, BASE_ALPHA + MAX_INFLUENCE + 31);
+				}
 				//TODO : what for ?
 				bitmapData.unlock();
 				hasJustRedrawn = true;

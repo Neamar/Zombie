@@ -21,7 +21,7 @@ package entity
 		
 		[Embed(source = "../assets/sprite/zombie/splatter.png")]
 		public static const splatterClass:Class;
-		public static const splatter:Bitmap = new Zombie.splatterClass(); { splatter.x = -splatter.width / 2; splatter.y = -splatter.height / 2; }
+		public static const splatter:Bitmap = new Zombie.splatterClass();
 		
 		/**
 		 * Zombie radius.
@@ -171,23 +171,8 @@ package entity
 			(parent as Level).zombies.splice((parent as Level).zombies.indexOf(this), 1);
 
 			//Add splatters
-			var player:Player = (parent as Level).player;
-			var angle:Number = Math.PI/2 + Math.atan2(y - player.y, x - player.x);
-			
-			for (var i:int = 0; i < 5; i++)
-			{
-				var matrix:Matrix = new Matrix();
-				var radius:int = 10 + 40 * Math.random();
-				var deltaAngle:Number = -2 + 4 * Math.random();
-				splatter.alpha = Math.random();
-				//matrix.a = 2 * Math.random()
-				//matrix.d = 2 * Math.random();
-				matrix.tx = x + radius * Math.cos(angle + radius) - splatter.width / 2;
-				matrix.ty = y + radius * Math.sin(angle + radius) - splatter.height / 2;
-				
-				(parent as Level).bitmapLevel.bitmapData.draw(splatter, matrix);
-			}
-			trace(angle * Player.TO_DEGREE);
+			var matrix:Matrix = new Matrix(1, 0, 0, 1, x - splatter.width / 2, y - splatter.height / 2);
+			(parent as Level).bitmapLevel.bitmapData.draw(splatter, matrix, null, null, null, true);
 			
 			//Start death animation. When the animation completes, the zombie will be removed from everywhere
 			move = onMoveDead;

@@ -152,13 +152,6 @@ package levels
 					}
 				}
 			}
-			
-
-			//Quick hack: add a survivor
-			var survivor:Survivor = new Survivor(this, player.x + 200, player.y + 1);
-			addChild(survivor);
-			zombies.push(survivor);
-			survivors.push(survivor);
 
 			/**
 			 * Blending and masking

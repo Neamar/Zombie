@@ -8,6 +8,7 @@ package
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import levels.Level;
 	
 	/**
 	 * Heatmap (other names : influence map, potential fields)
@@ -15,7 +16,7 @@ package
 	 * @see http://aigamedev.com/open/tutorials/potential-fields/
 	 * @author Neamar
 	 */
-	public class Heatmap extends Bitmap
+	public final class Heatmap extends Bitmap
 	{
 		/**
 		 * To which scale shall we compute the Heatmap ?
@@ -39,14 +40,30 @@ package
 		public const DECAY:int = 7;
 		
 		/**
-		 * Influence under the player
+		 * Influence under the player.
+		 * @note Should be a multiple of RESOLUTION.
 		 */
-		public static const MAX_INFLUENCE:int = Main.WIDTH + 30;
+		public static const MAX_INFLUENCE:int = Main.WIDTH + 20;
+		
+		/**
+		 * Width and height of the influence bitmap, storing the influence for each pixels around the player up to MAX_INFLUENCE width.
+		 */
+		public static const MAX_INFLUENCE_WIDTH:int = (MAX_INFLUENCE / RESOLUTION) + 4;
+		
+		/**
+		 * Halved width.
+		 */
+		public static const MAX_INFLUENCE_WIDTH2:int = MAX_INFLUENCE_WIDTH / 2;
 		
 		/**
 		 * Some constants to deal with pseudo-non-transparent bitmaps.
 		 */
 		public static const BASE_ALPHA:uint = 0xff000000;
+		
+		/**
+		 * Default color (when no heatmap)
+		 */
+		public static const DEFAULT_COLOR:int = 255;
 		
 		/**
 		 * Base heatmap drawn according to the hitmap.
@@ -73,16 +90,6 @@ package
 		public var influenceHeight:int;
 		
 		/**
-		 * x-position of the player when we launched current computation
-		 */
-		public var startX:int = -1;
-		
-		/**
-		 * y-position of the player.
-		 */
-		public var startY:int = -1;
-		
-		/**
 		 * Flag used to avoid zombie buggering map.
 		 */
 		public var hasJustRedrawn:Boolean = false;
@@ -90,25 +97,31 @@ package
 		/**
 		 * List of offsets to compute before drawing heatmap.
 		 */
-		protected var offsetToCompute:Vector.<int>;
+		protected var offsetToCompute:Vector.<int> = new Vector.<int>();;
 		
 		/**
 		 * Associated values.
 		 */
-		protected var valueToCompute:Vector.<int>;
+		protected var valueToCompute:Vector.<int> = new Vector.<int>();;
 		
 		/**
 		 * Parent level
 		 */
 		protected var level:Level;
 		
+		/**
+		 * Rectangle currently computed
+		 * @see http://webr3.org/blog/haxe/bitmapdata-vectors-bytearrays-and-optimization/
+		 */
+		public var currentRect:Rectangle = new Rectangle(0, 0, MAX_INFLUENCE_WIDTH, MAX_INFLUENCE_WIDTH);
+		
 		public function Heatmap(level:Level)
-		{
+		{			
 			this.level = level;
 			
 			influenceWidth = level.hitmap.width / RESOLUTION;
 			influenceHeight = level.hitmap.height / RESOLUTION;
-			baseInfluence = new BitmapData(influenceWidth, influenceHeight, false, 255);
+			baseInfluence = new BitmapData(influenceWidth, influenceHeight, false, DEFAULT_COLOR);
 			baseInfluence.lock();
 			var rect:Rectangle = new Rectangle();
 			rect.width = RESOLUTION;
@@ -153,30 +166,36 @@ package
 			if (nextInfluence)
 			{
 				//Draw last pass result.
-				bitmapData.setVector(bitmapData.rect, nextInfluence);
+				bitmapData.setVector(currentRect, nextInfluence);
 				
 				//Add lamplight repulsion
 				var player:Player = level.player;
 				var lightMask:Shape = player.lightMask;
 				bitmapData.draw(lightMask, new Matrix(1 / 5, 0, 0, 1 / 5, -player.x / RESOLUTION, -player.y / RESOLUTION), null, null );
+
+				//TODO : what for ?
 				bitmapData.unlock();
 				hasJustRedrawn = true;
 			}
 
-			nextInfluence = baseInfluence.getVector(baseInfluence.rect);
-			offsetToCompute = new Vector.<int>();
-			valueToCompute = new Vector.<int>();
+			//Update currentRect for new computation
+			currentRect.x = Math.round(Math.min(influenceWidth - currentRect.width, Math.max(0, level.player.x / RESOLUTION - MAX_INFLUENCE_WIDTH2)));
+			currentRect.y = Math.round(Math.max(0, level.player.y / RESOLUTION - MAX_INFLUENCE_WIDTH2));
+			nextInfluence = baseInfluence.getVector(currentRect);
+			nextInfluence.fixed = true;
+
+			//Empty everything
+			offsetToCompute.length = 0;
+			valueToCompute.length = 0;
 			
-			var startNewX:int = level.player.x / RESOLUTION;
-			var startNewY:int = level.player.y / RESOLUTION;
-			var startOffset:int = fromXY(startNewY, startNewX)
+			var startNewX:int = level.player.x / RESOLUTION - currentRect.x;
+			var startNewY:int = level.player.y / RESOLUTION - currentRect.y;
+			var startOffset:int = fromXY(startNewY, startNewX);
 			offsetToCompute.push(startOffset);
 			
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
 			valueToCompute.push(startInfluence);
 			nextInfluence[startOffset] = startInfluence + 2 * Zombie.REPULSION + 1; // Avoid blinking when zombie reach destination and is alone.
-			startX = startNewX;
-			startY = startNewY;
 		}
 		
 		/**
@@ -239,7 +258,7 @@ package
 		 */
 		public function fromXY(x:int, y:int):int
 		{
-			return influenceWidth * x + y;
+			return MAX_INFLUENCE_WIDTH * x + y;
 		}
 		
 		/**
@@ -249,7 +268,7 @@ package
 		 */
 		public function xFromOffset(offset:int):int
 		{
-			return offset / influenceWidth;
+			return offset / MAX_INFLUENCE_WIDTH;
 		}
 		
 		/**
@@ -260,7 +279,7 @@ package
 		 */
 		public function yFromOffset(offset:int):int
 		{
-			return offset % influenceWidth;
+			return offset % MAX_INFLUENCE_WIDTH;
 		}
 	}
 }

@@ -1,10 +1,10 @@
 package entity
 {
-	import flash.display.BlendMode;
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
-	import Utilitaires.geom.Vector;
+	import levels.Level;
 	
 	/**
 	 * ...
@@ -21,23 +21,17 @@ package entity
 		/**
 		 * When a zombie is asked to sleep, how long it should be. (in frames)
 		 */
-		public const SLEEP_DURATION:int = 30;
+		public static const SLEEP_DURATION:int = 30;
 		
 		/**
 		 * Moving speed (in manhattan-px)
 		 */
-		public const SPEED:int = 3;
+		public static const SPEED:int = 3;
 		
 		/**
 		 * To get swarming behavior, zombies should push themselves.
 		 */
 		public static const REPULSION:int = 15;
-		
-		/**
-		 * Number of frames to precompute (for vector length).
-		 * Should be greater than SLEEP_DURATION + 10.
-		 */
-		public static const MAX_DURATION:int = 100;
 		
 		/**
 		 * Angles depending on deltaX.
@@ -54,43 +48,15 @@ package entity
 		]);
 		
 		/**
-		 * Which zombie should awake in which frame ?
+		 * To speed everything, we should not access static vars from another class.
+		 * Hence, we just duplicate them.
+		 * 
+		 * @see http://blog.controul.com/2009/04/how-slow-is-static-access-in-as3avm2-exactly/
+		 * @see Heatmap
 		 */
-		public static var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(MAX_DURATION);
-		
-		/**
-		 * Current frame number % MAX_DURATION
-		 */
-		public static var frameNumber:int = 0;
-		
-		/**
-		 * Don't forget to call this method before instantiating any zombie !
-		 * Populate frameWaker.
-		 */
-		public static function init():void
-		{
-			Main.stage.addEventListener(Event.ENTER_FRAME, onFrame);
-			for (frameNumber = 0; frameNumber < MAX_DURATION; frameNumber++)
-			{
-				frameWaker[frameNumber] = new Vector.<Zombie>();
-			}
-			frameNumber = 0;
-		}
-		
-		/**
-		 * This static function awake any zombies that registered for a watch on this frame.
-		 * @param	e
-		 */
-		public static function onFrame(e:Event = null):void
-		{
-			frameNumber = (frameNumber + 1) % MAX_DURATION;
-			
-			var currentFrame:Vector.<Zombie> = frameWaker[frameNumber];
-			while(currentFrame.length > 0)
-			{
-				currentFrame.pop().move();
-			}
-		}
+		public static const RESOLUTION:int = Heatmap.RESOLUTION;
+		public static const DEFAULT_COLOR:int = Heatmap.DEFAULT_COLOR;
+		public static const MAX_INFLUENCE:int = Heatmap.MAX_INFLUENCE;
 		
 		/**
 		 * Function the zombie uses to move.
@@ -98,12 +64,23 @@ package entity
 		 * Therefore, we don't need to remove him from the frame , when he'll awake, he'll see he's dead.
 		 */
 		public var move:Function = onMove;
+
+		/**
+		 * Is the zombie going to hit the player nextFrame ?
+		 */
+		public var willHit:Boolean = true;
 		
+		/**
+		 * Shortcut to heatmap.bitmapData
+		 */
+		public var influenceMap:BitmapData;
+
 		public function Zombie(parent:Level, x:int, y:int)
 		{
 			this.x = x;
 			this.y = y;
 			super(parent);
+			influenceMap = heatmap.bitmapData;
 			
 			//Zombie graphics
 			this.graphics.lineStyle(1, 0xFF0000);
@@ -111,10 +88,7 @@ package entity
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
-			
-			//Random starting-wake.
-			nextWakeIn(30 + SLEEP_DURATION * Math.random());
-			
+			this.cacheAsBitmap = true;
 		}
 		
 		/**
@@ -136,14 +110,21 @@ package entity
 
 		}
 		
-		public function onMove():void
+		public function onMove():int
 		{
-			var xScaled:int = x / Heatmap.RESOLUTION;
-			var yScaled:int = y / Heatmap.RESOLUTION;
+			var xScaled:int = x / RESOLUTION;
+			var yScaled:int = y / RESOLUTION;
 			
 			var maxI:int = 0;
 			var maxJ:int = 0;
-			var maxValue:int = heatmap.bitmapData.getPixel(xScaled , yScaled);
+			var maxValue:int = influenceMap.getPixel(xScaled , yScaled);
+			
+			//Are we on the heatmap ? If not, just sleep.
+			if (maxValue == DEFAULT_COLOR)
+			{
+				//Player ain't near. We may as well go to sleep to save some CPU.
+				return 25;
+			}
 			
 			//Find the highest potential around the zombie
 			for (var i:int = -1; i <= 1; i++)
@@ -154,9 +135,9 @@ package entity
 					if ( i == 0 && j == 0)
 						continue;
 					
-					if (heatmap.bitmapData.getPixel(xScaled + i, yScaled + j) > maxValue)
+					if (influenceMap.getPixel(xScaled + i, yScaled + j) > maxValue)
 					{
-						maxValue = heatmap.bitmapData.getPixel(xScaled + i, yScaled + j);
+						maxValue = influenceMap.getPixel(xScaled + i, yScaled + j);
 						maxI = i;
 						maxJ = j;
 					}
@@ -165,10 +146,10 @@ package entity
 			
 			if (maxI != 0 || maxJ != 0)
 			{
-				if (!(parent as Level).heatmap.hasJustRedrawn)
+				if (!heatmap.hasJustRedrawn)
 				{
 					//Do not undo-repulsion if a redraw has just occured, else we get flickering behavior.
-					heatmap.bitmapData.setPixel(xScaled, yScaled, heatmap.bitmapData.getPixel(xScaled , yScaled) + REPULSION);
+					influenceMap.setPixel(xScaled, yScaled, influenceMap.getPixel(xScaled , yScaled) + REPULSION);
 				}
 				
 				//Move toward higher potential
@@ -177,26 +158,35 @@ package entity
 				rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
 				
 				//Store repulsion
-				xScaled = x / Heatmap.RESOLUTION;
-				yScaled = y / Heatmap.RESOLUTION;
-				heatmap.bitmapData.setPixel(xScaled, yScaled, Math.max(0, heatmap.bitmapData.getPixel(xScaled, yScaled) - REPULSION));
+				xScaled = x / RESOLUTION;
+				yScaled = y / RESOLUTION;
+				influenceMap.setPixel(xScaled, yScaled, Math.max(0, influenceMap.getPixel(xScaled, yScaled) - REPULSION));
 				
-				nextWakeIn(1);
+				return 1;
 			}
 			else
 			{
-				//No move. We may as well go to sleep to save some CPU.
-				nextWakeIn(10 + SLEEP_DURATION * Math.random());
+				if (maxValue >= MAX_INFLUENCE)
+				{
+					//We are "on" the player : let's fight !
+					
+					if (willHit)
+					{
+						//Hit the player !
+						(parent as Level).player.hit(this);
+						willHit = false;
+					}
+					else
+					{
+						willHit = true;
+					}
+					return 10;
+				}
 			}
-		}
-		
-		/**
-		 * Register current zombie for future awakening.
-		 * @param	duration (frame)
-		 */
-		public function nextWakeIn(duration:int):void
-		{
-			frameWaker[(frameNumber + duration) % MAX_DURATION].push(this);
+			
+			//No move available : some zombies are probably blocking us.
+			//Wait a little to let everything boil down.
+			return 10 + SLEEP_DURATION * Math.random();
 		}
 	}
 	

@@ -1,15 +1,21 @@
 ﻿package {
+	import entity.Player;
 	import entity.Zombie;
-	import flash.display.Sprite;
+	import flash.display.BlendMode;
 	import flash.display.DisplayObjectContainer;
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.system.System;
 	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.getTimer;
-	public class MovieMonitor extends Sprite {
+	import levels.Level;
+	
+	/**
+	 * Monitor the movie, displaying framerate and other informations.
+	 */
+	public final class Monitor extends Sprite {
 		private var xml:XML;
 		private var theText:TextField;
 		private var fps:int=0;
@@ -18,7 +24,11 @@
 		private var maxMemory:Number=0;
 		private var fpsVector:Vector.<Number>=new Vector.<Number>();
 		private var childrenCount:int;
-		public function MovieMonitor():void {
+		
+		public function Monitor()
+		{
+			mouseEnabled = false;
+			
 			xml =
 			<xml>
 			<sectionTitle>FPS MONITOR</sectionTitle>
@@ -47,6 +57,10 @@
 			<nActiveZombie>-</nActiveZombie>
 			<sectionLabel>Weapon:</sectionLabel>
 			<currentWeapon>-</currentWeapon>
+			<sectionLabel>Prop:</sectionLabel>
+			<weaponProp>-</weaponProp>
+			<sectionLabel>Damages:</sectionLabel>
+			<currentDamages>-</currentDamages>
 			</xml>;
 			var style:StyleSheet = new StyleSheet();
 			style.setStyle("xml",{fontSize:"9px",fontFamily:"arial"});
@@ -63,6 +77,8 @@
 			style.setStyle("nZombie",{color:"#FFFFFF"});
 			style.setStyle("nActiveZombie",{color:"#FFFFFF"});
 			style.setStyle("currentWeapon",{color:"#FFFFFF"});
+			style.setStyle("weaponProp",{color:"#FFFFFF"});
+			style.setStyle("currentDamages",{color:"#FFFFFF"});
 			theText = new TextField();
 			theText.alpha=0.8;
 			theText.autoSize=TextFieldAutoSize.LEFT;
@@ -99,15 +115,26 @@
 				fps=0;
 				lastTimeCheck = timer;
 				
-				xml.nZombie = Level.current.zombies.length.toString();
-				xml.nActiveZombie = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].length.toString();
-				xml.currentWeapon = Level.current.player.currentWeapon;
-				xml.currentWeapon = xml.currentWeapon.toString().replace('object ', '');
+				if (Level.current != null)
+				{
+					var level:Level = Level.current;
+					var player:Player = level.player;
+					
+					xml.nZombie = level.zombies.length.toString();
+					xml.nActiveZombie = level.frameWaker[(level.frameNumber + 1) % level.FRAME_WAKER_LENGTH].length.toString();
+					xml.currentWeapon = player.currentWeapon;
+					xml.currentWeapon = xml.currentWeapon.toString().replace('object ', '');
+					xml.weaponProp = 'b' + player.currentWeapon.ammoInCurrentMagazine + " / m" + player.currentWeapon.magazineNumber;
+					xml.currentDamages = player.damagesTaken;
+				}
 			}
 			fps++;
 			xml.msFrame=(timer-ms);
 			ms=timer;
-			theText.htmlText=xml;
+			theText.htmlText = xml;
+			
+			//Always on top
+			parent.setChildIndex(this, numChildren - 1);
 		}
 		public function countDisplayList(container:DisplayObjectContainer):void {
 			childrenCount+=container.numChildren;

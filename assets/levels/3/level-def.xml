@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<level>
+	<!-- Interface and graphical settings -->
+	<visible>
+		<bitmap>bitmap.png</bitmap>
+		<lights>
+		</lights>
+	</visible>
+	
+	<!-- Technical details -->
+	<technical>
+		<name>3</name>
+		<followed-by>4</followed-by>
+		<success on="killing_all" />
+		
+		<hitmap>hitmap.png</hitmap>
+		<player x="230" y="780" />
+		<zombies>
+			<spawn-zone x="0" y="0" width="400" height="760" number="100" />
+		</zombies>
+		<sounds>
+			<ambient>ambient.mp3</ambient>
+		</sounds>
+	</technical>
+</level>

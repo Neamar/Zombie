@@ -12,7 +12,7 @@ package weapon
 		{
 			cooldown = 30;
 			magazineCapacity = 3;
-			magazineNumber = 3;
+			magazineNumber = 10;
 			super(level, player);
 		}
 		

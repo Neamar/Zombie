@@ -14,72 +14,79 @@ package achievements
 		/**
 		 * List of all the available achievements.
 		 * 
-		 * Each rwo respects the following structure :
-		 * [delta_zombie:int, achievement:Achievement, ...params]
+		 * Each row respects the following structure :
+		 * [achievement:Achievement, ...params]
 		 * 
-		 * delta_zombie is the number of zombie to kill since last achievement.
+		 * where achievement is a Class (and not an object)
 		 * params is the params to use for the achievements
 		 */
 		public var achievementsList:Array = new Array(
-		/* 1 - 10 */
-			[1, RangeAchievement, Handgun, 250],
-			[0, CapacityAchievement, Handgun, 2],
-			[0, UnlockAchievement, Shotgun],
-			[1, SubconcsiousVisionAchievement, 5],
-			[1, JungleAchievement, Handgun, true],
-			[1, RangeAchievement, Shotgun, 200],
-			[1, RangeAchievement, Handgun, 3000],
-			[1, LifeAchievement, 75],
-			[1, RangeAchievement, Shotgun, 300],
-			[1, ConvalescenceAchievement, 2],
+		/* 1 - 10*/
+			[RangeAchievement, Handgun, 250],
+			[CapacityAchievement, Handgun, 2],
+			[UnlockAchievement, Shotgun],
+			[SubconcsiousVisionAchievement, 5],
+			[JungleAchievement, Handgun, true],
+			[RangeAchievement, Shotgun, 200],
+			[RangeAchievement, Handgun, 3000],
+			[LifeAchievement, 75],
+			[RangeAchievement, Shotgun, 300],
+			[ConvalescenceAchievement, 2],
 		/* 11 - 20 */
-			[1, CooldownAchievement, Handgun, 20],
-			[1, CapacityAchievement, Handgun, 10],
-			[1, CooldownAchievement, Handgun, 15],
-			[1, UnlockAchievement, Railgun],
-			[1, VisionAchievement, 60],
-			[1, CapacityAchievement, Shotgun, 2],
-			[1, CapacityAchievement, Handgun, 16],
-			[1, ReloadAchievement, Handgun, 30],
-			[1, RangeAchievement, Shotgun, 3000],
-			[1, AutomaticAchievement, Handgun, true],
+			[CooldownAchievement, Handgun, 20],
+			[CapacityAchievement, Handgun, 10],
+			[CooldownAchievement, Handgun, 15],
+			[UnlockAchievement, Railgun],
+			[VisionAchievement, 60],
+			[CapacityAchievement, Shotgun, 2],
+			[CapacityAchievement, Handgun, 16],
+			[ReloadAchievement, Handgun, 30],
+			[RangeAchievement, Shotgun, 3000],
+			[AutomaticAchievement, Handgun, true],
 		/* 21 - 30 */
-			[1, ConvalescenceAchievement, 1],
-			[1, RangeAchievement, Railgun, 3000],
-			[1, CooldownAchievement, Shotgun, 30],
-			[1, CapacityAchievement, Shotgun, 6],
-			[1, CooldownAchievement, Railgun, 30],
-			[1, UnlockAchievement, Uzi],
-			[1, SubconcsiousVisionAchievement, 10],
-			[1, ReloadAchievement, Shotgun, 40],
-			[1, CooldownAchievement, Shotgun, 20],
-			[1, RangeAchievement, Uzi, 150],
+			[ConvalescenceAchievement, 1],
+			[RangeAchievement, Railgun, 3000],
+			[CooldownAchievement, Shotgun, 30],
+			[CapacityAchievement, Shotgun, 6],
+			[CooldownAchievement, Railgun, 30],
+			[UnlockAchievement, Uzi],
+			[SubconcsiousVisionAchievement, 10],
+			[ReloadAchievement, Shotgun, 40],
+			[CooldownAchievement, Shotgun, 20],
+			[RangeAchievement, Uzi, 150],
 		/* 31 - 40 */
-			[1, CooldownAchievement, Railgun, 20],
-			[1, LifeAchievement, 100],
-			[1, CapacityAchievement, Uzi, 25],
-			[1, AutomaticAchievement, Shotgun, true],
-			[1, RangeAchievement, Uzi, 200],
-			[1, JungleAchievement, Uzi, true],
-			[1, AmplitudeAchievement, Shotgun, 14],
-			[1, BloodrushAchievement, true],
-			[1, CapacityAchievement, Uzi, 30],
-			[1, CooldownAchievement, Uzi, 2],
+			[CooldownAchievement, Railgun, 20],
+			[LifeAchievement, 100],
+			[CapacityAchievement, Uzi, 25],
+			[AutomaticAchievement, Shotgun, true],
+			[RangeAchievement, Uzi, 200],
+			[JungleAchievement, Uzi, true],
+			[AmplitudeAchievement, Shotgun, 14],
+			[BloodrushAchievement, true],
+			[CapacityAchievement, Uzi, 30],
+			[CooldownAchievement, Uzi, 2],
 		/* 41 - 50 */
-			[1, ReloadAchievement, Uzi, 15],
-			[1, AmplitudeAchievement, Shotgun, 16],
-			[1, RangeAchievement, Uzi, 3000],
-			[1, SubconcsiousVisionAchievement, 15],
-			[1, AutomaticAchievement, Uzi, true],
+			[ReloadAchievement, Uzi, 15],
+			[AmplitudeAchievement, Shotgun, 16],
+			[RangeAchievement, Uzi, 3000],
+			[SubconcsiousVisionAchievement, 15],
+			[AutomaticAchievement, Uzi, true],
 		/* 50+ */
-		[Infinity, Achievement, 0] /* final achievement, unreachable. */
+			[Infinity, Achievement, 0] /* final achievement, unreachable. */
 		);
+		
+		/**
+		 * Number of zombies to kill between achievement n and n+1
+		 * 
+		 * @see https://docs.google.com/spreadsheet/ccc?key=0ApZXXCCC0GsvdHpFR1pLWUpSblVRbnBKZlEtQ1VBdEE
+		 */
+		public var achievementsDelta:Vector.<int> = Vector.<int>([1, 2, 3, 4, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 30, 35, 40, 50, 60, 80, 100, 120, 140, 160, 200]);
 		
 		/**
 		 * Achievement to start at
 		 * (for test or going back to a saved game)
 		 */
-		public var startAtAchievement:int =40;
+		public var startAtAchievement:int = 0;
 		
 		/**
 		 * Game associated with those achievements
@@ -109,6 +116,7 @@ package achievements
 			while(startAtAchievement > 0)
 			{
 				startAtAchievement--;
+				achievementsDelta.shift();
 				applyAchievement(achievementsList.shift());
 			}
 		}
@@ -123,8 +131,9 @@ package achievements
 			zombiesKilledSinceLastAchievement++;
 			
 			//While loop is required for "0 based" achievements (unlocking multiple achievement at the same time)
-			while (achievementsList[0][0] <= zombiesKilledSinceLastAchievement)
+			while (achievementsDelta[0] <= zombiesKilledSinceLastAchievement)
 			{
+				achievementsDelta.shift();
 				//Apply current achievement
 				applyAchievement(achievementsList.shift());
 				
@@ -135,12 +144,12 @@ package achievements
 		
 		protected function applyAchievement(datas:Array):String
 		{
-			var currentAchievement:Achievement = new datas[1]();
+			var currentAchievement:Achievement = new datas[0]();
 			currentAchievement.setGame(game);
-			currentAchievement.setParams(datas.slice(2));
+			currentAchievement.setParams(datas.slice(1));
 
 			currentAchievement.apply();
-			trace(currentAchievement, datas.slice(2));
+			trace(currentAchievement, datas.slice(1), achievementsDelta[0]);
 			
 			return 'Applied';
 		}

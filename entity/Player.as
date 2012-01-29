@@ -210,6 +210,7 @@ package entity
 			this.graphics.beginFill(0xAAAAAA, 1);
 			this.graphics.drawCircle(0, 0, RADIUS);
 			this.graphics.lineTo(0, 0);
+			this.alpha = .7;
 			this.cacheAsBitmap = true;
 			
 			//Great effect, but may causes flickering

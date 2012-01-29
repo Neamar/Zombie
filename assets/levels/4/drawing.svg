@@ -16,7 +16,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="drawing.svg">
+   sodipodi:docname="drawing.svg"
+   inkscape:export-filename="/home/neamar/Documents/src/Zombie/assets/levels/4/hitmap.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <marker
@@ -376,6 +379,81 @@
          in2="result94"
          mode="multiply" />
     </filter>
+    <filter
+       id="filter6461-4"
+       inkscape:label="Stained glass"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Illuminated stained glass effect"
+       height="1.5"
+       width="1.5"
+       y="-0.25"
+       x="-0.25"
+       color-interpolation-filters="sRGB">
+      <feBlend
+         id="feBlend6463-6"
+         in2="SourceGraphic"
+         result="result1"
+         mode="screen" />
+      <feGaussianBlur
+         id="feGaussianBlur6465-3"
+         stdDeviation="7"
+         result="result6" />
+      <feComposite
+         id="feComposite6467-1"
+         in2="result6"
+         operator="xor"
+         in="result6"
+         result="result7" />
+      <feComposite
+         id="feComposite6469-2"
+         in2="result1"
+         operator="atop"
+         in="result6"
+         result="result92" />
+      <feComposite
+         id="feComposite6471-0"
+         in2="result92"
+         result="result4"
+         in="result7"
+         operator="xor" />
+      <feGaussianBlur
+         id="feGaussianBlur6473-65"
+         result="result3"
+         stdDeviation="0.7"
+         in="result4" />
+      <feSpecularLighting
+         id="feSpecularLighting6475-1"
+         result="result5"
+         specularExponent="50"
+         specularConstant="1.5"
+         surfaceScale="4">
+        <fePointLight
+           id="fePointLight6477-9"
+           z="20000"
+           y="-8000"
+           x="-5000" />
+      </feSpecularLighting>
+      <feComposite
+         k4="0"
+         k1="0"
+         id="feComposite6479-44"
+         in2="SourceGraphic"
+         in="result3"
+         k3="1"
+         k2="1"
+         operator="arithmetic"
+         result="result93" />
+      <feComposite
+         id="feComposite6481-68"
+         in2="result93"
+         in="result5"
+         operator="atop"
+         result="result94" />
+      <feBlend
+         id="feBlend6483-1"
+         in2="result94"
+         mode="multiply" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -385,8 +463,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.70710678"
-     inkscape:cx="639.17149"
-     inkscape:cy="664.77108"
+     inkscape:cx="676.49834"
+     inkscape:cy="550.06129"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="true"
@@ -419,9 +497,10 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="Bitmap">
+     inkscape:label="Bitmap"
+     style="display:inline">
     <rect
-       style="color:#000000;fill:url(#sand_bitmap);fill-opacity:1.0;fill-rule:nonzero;stroke:none;stroke-width:10;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:url(#sand_bitmap);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3867"
        width="1500"
        height="740"
@@ -429,7 +508,7 @@
        y="0" />
     <path
        sodipodi:type="arc"
-       style="color:#000000;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="color:#000000;fill:none;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="path5335"
        sodipodi:cx="160"
        sodipodi:cy="220"
@@ -451,8 +530,8 @@
      x="55.15625"
      style="font-size:30px;writing-mode:lr-tb;fill:#550000">        Use your mouse to aim</tspan></tspan></textPath></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:4.26401424;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
-       d="m 300,197.81472 80,0"
+       style="fill:none;stroke:#000000;stroke-width:3.01511335;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="m 292,197.81472 40,0"
        id="path5472"
        inkscape:connector-curvature="0" />
     <path
@@ -464,7 +543,7 @@
     <flowRoot
        xml:space="preserve"
        id="flowRoot6152"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#550000;fill-opacity:1;stroke:none;font-family:Sans;filter:url(#filter6461)"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#550000;fill-opacity:1;stroke:none;filter:url(#filter6461);font-family:Sans"
        transform="translate(107.25,57.567534)"><flowRegion
          id="flowRegion6154"><rect
            id="rect6156"
@@ -493,7 +572,7 @@
     <flowRoot
        xml:space="preserve"
        id="flowRoot6253"
-       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
          id="flowRegion6255"><rect
            id="rect6257"
            width="66.46804"
@@ -516,7 +595,7 @@
        xml:space="preserve"
        id="flowRoot6152-3"
        style="font-size:18px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#550000;fill-opacity:1;stroke:none;filter:url(#filter6461-1);font-family:Sans"
-       transform="translate(-372.75,143.74433)"><flowRegion
+       transform="translate(-378.75,143.74433)"><flowRegion
          id="flowRegion6154-4"><rect
            id="rect6156-7"
            width="374.7666"
@@ -524,7 +603,19 @@
            x="572.75647"
            y="42.577419"
            style="font-size:18px;fill:#550000" /></flowRegion><flowPara
-         id="flowPara6160-7">Z to move</flowPara></flowRoot>  </g>
+         id="flowPara6160-7">Z to move</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot6152-0"
+       style="font-size:22px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#550000;fill-opacity:1;stroke:none;display:inline;filter:url(#filter6461-4);font-family:Sans"
+       transform="translate(527.25,595.50902)"><flowRegion
+         id="flowRegion6154-8"><rect
+           id="rect6156-1"
+           width="374.7666"
+           height="145.664"
+           x="572.75647"
+           y="42.577419"
+           style="font-size:22px;fill:#550000" /></flowRegion><flowPara
+         id="flowPara6160-9">Scroll or S to switch weapon</flowPara></flowRoot>  </g>
   <g
      inkscape:label="Hitmap"
      inkscape:groupmode="layer"

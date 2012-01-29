@@ -9,7 +9,7 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<name>1</name>
+		<name>1-first-encounter</name>
 		<followed-by>2</followed-by>
 		<success on="accessing_area">
 			<area x="1834" y="0" width="100" height="100" />

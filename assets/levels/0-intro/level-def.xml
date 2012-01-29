@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<level>
+	<!-- Interface and graphical settings -->
+	<visible>
+		<bitmap>bitmap.png</bitmap>
+		<lights>
+		</lights>
+	</visible>
+	
+	<!-- Technical details -->
+	<technical>
+		<name>0-intro</name>
+		<followed-by>1-first-encounter</followed-by>
+		<success on="accessing_area">
+			<area x="0" y="400" width="200" height="320" />
+		</success>
+		
+		<hitmap>hitmap.png</hitmap>
+		<player x="150" y="200" resolution="40" />
+		<zombies>
+			<!-- First zombie ! -->
+			<spawn-zone x="1240" y="0" width="160" height="200" number="1" behemoth-probability="10000000" satanus-probability="10000000" />
+			<spawn-zone x="1160" y="260" width="340" height="300" number="3" behemoth-probability="10000000" satanus-probability="10000000" />
+			<spawn-zone x="180" y="400" width="860" height="320" number="6" behemoth-probability="10000000" satanus-probability="10000000" />
+		</zombies>
+		<sounds>
+			<ambient>ambient.mp3</ambient>
+		</sounds>
+	</technical>
+</level>

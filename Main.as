@@ -21,7 +21,6 @@
 	[SWF(width="600", height="400", backgroundColor="#000000",frameRate="30")]
 	public final class Main extends Sprite 
 	{
-		public static var stage:Stage;
 		public static const WIDTH:int = 400;
 		public static const WIDTH2:int = WIDTH / 2;
 		
@@ -36,9 +35,6 @@
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			// Remember the stage and give static access ; some objects needs it to register events.
-			//TODO : do they ?
-			Main.stage = this.stage;
 			
 			//Forbid stage resizing
 			stage.align = StageAlign.TOP_LEFT;

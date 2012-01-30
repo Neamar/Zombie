@@ -34,8 +34,8 @@ package
 		 */
 		protected function gotoNextLevel(e:Event):void
 		{
-			removeChild(level);
 			level.destroy();
+			removeChild(level);
 			level.removeEventListener(Level.WIN, gotoNextLevel);
 			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			

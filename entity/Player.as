@@ -202,6 +202,11 @@ package entity
 		 */
 		public var level:Level;
 
+		/**
+		 * Create the player
+		 * @param	parent
+		 * @param	params needed to get start information
+		 */
 		public function Player(parent:Level, params:LevelParams)
 		{
 			super(parent);
@@ -232,13 +237,16 @@ package entity
 			drawBloodrush();
 			
 			//Various initialisations
-			addEventListener(Event.ENTER_FRAME, onFrame);
-			Main.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			Main.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			Main.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-
+			addEventListener(Event.ADDED_TO_STAGE, function():void
+			{
+				stage.addEventListener(Event.ENTER_FRAME, onFrame);
+				stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+				stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+				stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			});
+			
 			//Populate weapons
 			this.availableWeapons.push(new Handgun(parent, this));
 			this.currentWeapon = this.availableWeapons[0];
@@ -251,12 +259,12 @@ package entity
 			lightMask.filters = [];
 			
 			bloodRush.bitmapData.dispose();
-			removeEventListener(Event.ENTER_FRAME, onFrame);
-			Main.stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			Main.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			Main.stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			Main.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			Main.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
 			this.availableWeapons.length = 0;
 			this.currentWeapon = null;

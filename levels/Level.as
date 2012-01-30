@@ -136,6 +136,8 @@ package levels
 		
 		public function destroy():void
 		{
+			player.destroy();
+			
 			//Remove all children for faster GC
 			while (numChildren > 0)
 				removeChildAt(0);
@@ -148,7 +150,6 @@ package levels
 			
 			//Clean up proprieties :
 			zombies.length = 0;
-			player.destroy();
 			
 			hitmap.loaderInfo.loader.unloadAndStop();
 			bitmapLevel.loaderInfo.loader.unloadAndStop();
@@ -264,6 +265,7 @@ package levels
 						var firstWake:int = 30 + 30 * Math.random()
 						frameWaker[(frameNumber + firstWake) % FRAME_WAKER_LENGTH].push(foe);
 						addChild(foe);
+						setChildIndex(foe, 1);
 					}
 				}
 			}

@@ -24,6 +24,14 @@ package levels
             checker.start();
 		}
 		
+		public override function destroy():void
+		{
+			checker.stop();
+			checker.removeEventListener(TimerEvent.TIMER, onTimer);
+			
+			super.destroy();
+		}
+		
 		/**
 		 * This function dispatch the WIN event and stop the timer.
 		 */

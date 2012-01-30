@@ -13,7 +13,6 @@ package
 	public final class Hud extends Sprite 
 	{
 		protected var finalMessagePosition:int = Main.WIDTH - 120;
-		
 		public function Hud() 
 		{
 
@@ -28,7 +27,7 @@ package
 			var message:TextField = new TextField();
 			message.textColor = 0xFFFFFF;
 			message.width = Main.WIDTH;
-			message.y = Main.WIDTH + 15;
+			message.y = int(Main.WIDTH + 5 + 15 * Math.random());
 			message.autoSize = TextFieldAutoSize.CENTER;
 			message.multiline = false;
 			addChild(message);

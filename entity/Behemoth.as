@@ -22,7 +22,8 @@ package entity
 		public var damagesTaken:int = 0;
 		
 		public function Behemoth(parent:Level, x:int, y:int) 
-		{		
+		{
+			radius = radius * 2;
 			super(parent, x, y);
 		
 			speed--;
@@ -32,7 +33,7 @@ package entity
 			this.graphics.clear();
 			this.graphics.lineStyle(1, 0xFF0000);
 			this.graphics.beginFill(0x00F000);
-			this.graphics.drawCircle(0, 0, RADIUS * 2);
+			this.graphics.drawCircle(0, 0, radius);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
 			this.cacheAsBitmap = true;

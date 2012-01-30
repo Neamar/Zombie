@@ -38,7 +38,7 @@ package entity
 		 * Zombie radius.
 		 * For drawing, block, and shoot.
 		 */
-		public static const RADIUS:int = 5;
+		public var radius:int = 5;
 		
 		/**
 		 * When a zombie is asked to sleep, how long it should be. (in frames)

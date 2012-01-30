@@ -12,6 +12,7 @@ package entity
 	{		
 		public function Satanus(parent:Level, x:int, y:int) 
 		{		
+			radius = radius * 1.75;
 			super(parent, x, y);
 		
 			speed += 2;
@@ -21,7 +22,7 @@ package entity
 			this.graphics.clear();
 			this.graphics.lineStyle(1, 0xFF0000);
 			this.graphics.beginFill(0x0000F0);
-			this.graphics.drawCircle(0, 0, RADIUS * 2);
+			this.graphics.drawCircle(0, 0, radius);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
 			this.cacheAsBitmap = true;

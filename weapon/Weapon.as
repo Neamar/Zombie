@@ -9,6 +9,8 @@ package weapon
 	 */
 	public class Weapon
 	{
+		public const ZOMBIE_RADIUS:int = 5;
+		
 		public var parent:Level;
 		
 		public var player:Player;
@@ -146,7 +148,7 @@ package weapon
 				
 				for each(var zombie:Zombie in parent.zombies)
 				{
-					if (zombie.x - Zombie.RADIUS < curX && zombie.x + Zombie.RADIUS > curX && zombie.y - Zombie.RADIUS < curY && zombie.y + Zombie.RADIUS > curY)
+					if (zombie.x - ZOMBIE_RADIUS < curX && zombie.x + ZOMBIE_RADIUS > curX && zombie.y - ZOMBIE_RADIUS < curY && zombie.y + ZOMBIE_RADIUS > curY)
 					{
 						if (shoot(zombie) == false)
 						{
@@ -156,7 +158,7 @@ package weapon
 					}
 				}
 				
-				radius += Zombie.RADIUS;
+				radius += ZOMBIE_RADIUS;
 				if (radius >= range)
 				{
 					break;

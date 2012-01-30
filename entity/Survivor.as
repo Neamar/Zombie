@@ -17,7 +17,7 @@ package entity
 			this.graphics.clear();
 			this.graphics.lineStyle(1, 0x0000FF);
 			this.graphics.beginFill(0x0000F0);
-			this.graphics.drawCircle(0, 0, RADIUS);
+			this.graphics.drawCircle(0, 0, radius);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
 		}

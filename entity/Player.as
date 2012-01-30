@@ -196,6 +196,11 @@ package entity
 		 * Will zombie flee from the light to outflank the player ?
 		 */
 		public var isLamplightRepulsive:Boolean = false;
+		
+		/**
+		 * Current level we're on
+		 */
+		public var level:Level;
 
 		public function Player(parent:Level, params:LevelParams)
 		{
@@ -203,6 +208,7 @@ package entity
 
 			x = params.playerStartX;
 			y = params.playerStartY;
+			level = parent;
 			resolution = params.playerStartResolution;
 
 			//Player graphics
@@ -397,17 +403,16 @@ package entity
 
 				//Is a zombie blocking move ?
 				if (move)
-				{/*
-					TODO : restore!
-					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
+				{
+					var potentialZombies:Vector.<Zombie> = level.frameWaker[(level.frameNumber + 1) % level.FRAME_WAKER_LENGTH].concat(level.frameWaker[(level.frameNumber + 9) % level.FRAME_WAKER_LENGTH]);
 					for each(var zombie:Zombie in potentialZombies)
 					{
-						if (zombie.x - Zombie.RADIUS < destX && zombie.x + Zombie.RADIUS > destX && zombie.y - Zombie.RADIUS < destY && zombie.y + Zombie.RADIUS > destY)
+						if (zombie.x - zombie.radius < destX && zombie.x + zombie.radius > destX && zombie.y - zombie.radius < destY && zombie.y + zombie.radius > destY)
 						{
 							move = false;
 							break;
 						}
-					}*/
+					}
 					
 					// No zombie + no wall : ok.
 					if (move)

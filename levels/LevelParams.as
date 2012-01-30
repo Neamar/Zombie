@@ -86,18 +86,13 @@ package levels
 		public var successArea:Rectangle
 		
 		/////////////////////////////////////
-		// SPECIAL PARAMETERS : AccessingAreaLevel
+		// SPECIAL PARAMETERS : WavesLevel
 		/////////////////////////////////////
-		
-		/**
-		 * Spawn area for the zombies at each wave
-		 */
+		public var wavesDelay:Vector.<int> = new Vector.<int>();
 		public var wavesZombiesLocation:Vector.<Vector.<Rectangle>> = new Vector.<Vector.<Rectangle>>();
-		
-		/**
-		 * Density of zombies for each area and each wave.
-		 */
 		public var wavesZombiesDensity:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
+		public var wavesBehemothProbability:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
+		public var wavesSatanusProbability:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
 	}
 
 }

@@ -104,7 +104,21 @@ package levels
 			else if (successXML.@on == 'surviving_waves')
 			{
 				params.LevelClass = WavesLevel;
-				//params.waves = 
+				for each(var wave:XML in successXML.wave)
+				{
+					params.wavesDelay.push(int(wave.@delay.toString()));
+					var zombiesLocation:Vector.<Rectangle> = new Vector.<Rectangle>();
+					var zombiesDensity:Vector.<int> = new Vector.<int>();
+					var behemothProbability:Vector.<int> = new Vector.<int>();
+					var satanusProbability:Vector.<int> = new Vector.<int>();
+					
+					buildSpawnZone(wave.children(), zombiesLocation, zombiesDensity, behemothProbability, satanusProbability);
+					
+					params.wavesZombiesLocation.push(zombiesLocation);
+					params.wavesZombiesDensity.push(zombiesDensity);
+					params.wavesBehemothProbability.push(behemothProbability);
+					params.wavesSatanusProbability.push(satanusProbability);
+				}
 			}
 			else
 			{
@@ -121,7 +135,7 @@ package levels
 				params.playerStartResolution = playerXML.@resolution;
 				
 			//Number of zombies per area
-			buildSpawnZone(xml.technical.zombies[0].elements('spawn-zone'), params.zombiesLocation, params.zombiesDensity);
+			buildSpawnZone(xml.technical.zombies[0].elements('spawn-zone'), params.zombiesLocation, params.zombiesDensity, params.behemothProbability, params.satanusProbability);
 		}
 		
 		private function loadAssets(url:String, callback:Function):void
@@ -182,7 +196,7 @@ package levels
 		 * @param	location vector to be filled with location data
 		 * @param	density vector to be filled with density data
 		 */
-		private function buildSpawnZone(spawnXML:XMLList, location:Vector.<Rectangle>, density:Vector.<int>):void
+		private function buildSpawnZone(spawnXML:XMLList, location:Vector.<Rectangle>, density:Vector.<int>, behemothProbability:Vector.<int>, satanusProbability:Vector.<int>):void
 		{
 			//Number of zombies per area
 			for each(var spawnAreaXML:XML in spawnXML)
@@ -192,14 +206,14 @@ package levels
 				
 				//TODO : probability should be area-specific
 				if (spawnAreaXML["@behemoth-probability"].toXMLString() != "")
-					params.behemothProbability.push(spawnAreaXML["@behemoth-probability"]);
+					behemothProbability.push(spawnAreaXML["@behemoth-probability"]);
 				else
-					params.behemothProbability.push(50);//Default : one in 50 zombie is a behemoth
+					behemothProbability.push(50);//Default : one in 50 zombie is a behemoth
 					
 				if (spawnAreaXML["@satanus-probability"].toXMLString() != "")
-					params.satanusProbability.push(spawnAreaXML["@satanus-probability"]);
+					satanusProbability.push(spawnAreaXML["@satanus-probability"]);
 				else
-					params.satanusProbability.push(50);//Default : one in 50 zombie is a satanus
+					satanusProbability.push(50);//Default : one in 50 zombie is a satanus
 			}
 		}
 		

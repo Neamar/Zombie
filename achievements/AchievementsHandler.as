@@ -86,7 +86,7 @@ package achievements
 		 * Achievement to start at
 		 * (for test or going back to a saved game)
 		 */
-		public var startAtAchievement:int = 0;
+		public var startAtAchievement:int = 40;
 		
 		/**
 		 * Game associated with those achievements

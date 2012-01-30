@@ -115,43 +115,7 @@ package levels
 			addChild(bitmapLevel);
 			
 			//Generate Zombies
-			while (params.zombiesLocation.length > 0)
-			{
-				var spawnArea:Rectangle = params.zombiesLocation.pop();
-				var spawnQuantity:int = params.zombiesDensity.pop();
-				var behemothProbability:Number = 1 / params.behemothProbability.pop();
-				var satanusProbability:Number = 1 / params.satanusProbability.pop();
-				
-				for (var i:int = 0; i < spawnQuantity; i++)
-				{
-					var x:int = spawnArea.x + spawnArea.width * Math.random();
-					var y:int = spawnArea.y + spawnArea.height * Math.random();
-					
-					if (hitmap.bitmapData.getPixel32(x, y) != 0)
-					{
-						i--;
-					}
-					else
-					{
-						var foe:Zombie;
-						if (Math.random() > behemothProbability)
-						{
-							if (Math.random() > satanusProbability)
-								foe = new Zombie(this, x, y);
-							else
-								foe = new Satanus(this, x, y);
-						}
-						else
-							foe = new Behemoth(this, x, y);
-							
-						zombies.push(foe);
-						//Set time for first awakening :
-						var firstWake:int = 30 + 30 * Math.random()
-						frameWaker[firstWake].push(foe);
-						addChild(foe);
-					}
-				}
-			}
+			generateZombies(params.zombiesLocation, params.zombiesDensity, params.behemothProbability, params.satanusProbability);
 
 			/**
 			 * Blending and masking
@@ -251,6 +215,57 @@ package levels
 			for each(var zombie:Zombie in zombies)
 			{
 				setChildIndex(zombie, numChildren - 2);
+			}
+		}
+		
+		/**
+		 * Add some zombies according to the specified parameters.
+		 * 
+		 * @param	zombiesLocation
+		 * @param	zombiesDensity
+		 * @param	behemothProbabilityVector
+		 * @param	satanusProbabilityVector
+		 * @param	avoidPlayer whether to add zombies right in front of the player
+		 */
+		protected function generateZombies(zombiesLocation:Vector.<Rectangle>, zombiesDensity:Vector.<int>, behemothProbabilityVector:Vector.<int>, satanusProbabilityVector:Vector.<int>, avoidPlayer:Boolean = false):void
+		{
+			//Generate Zombies
+			while (zombiesLocation.length > 0)
+			{
+				var spawnArea:Rectangle = zombiesLocation.pop();
+				var spawnQuantity:int = zombiesDensity.pop();
+				var behemothProbability:Number = 1 / behemothProbabilityVector.pop();
+				var satanusProbability:Number = 1 / satanusProbabilityVector.pop();
+				
+				for (var i:int = 0; i < spawnQuantity; i++)
+				{
+					var x:int = spawnArea.x + spawnArea.width * Math.random();
+					var y:int = spawnArea.y + spawnArea.height * Math.random();
+					
+					if (hitmap.bitmapData.getPixel32(x, y) != 0 || (avoidPlayer && (Math.abs(x - player.x) < 200 && Math.abs(y - player.y) < 200)))
+					{
+						i--;
+					}
+					else
+					{
+						var foe:Zombie;
+						if (Math.random() > behemothProbability)
+						{
+							if (Math.random() > satanusProbability)
+								foe = new Zombie(this, x, y);
+							else
+								foe = new Satanus(this, x, y);
+						}
+						else
+							foe = new Behemoth(this, x, y);
+							
+						zombies.push(foe);
+						//Set time for first awakening :
+						var firstWake:int = 30 + 30 * Math.random()
+						frameWaker[(frameNumber + firstWake) % FRAME_WAKER_LENGTH].push(foe);
+						addChild(foe);
+					}
+				}
 			}
 		}
 	}

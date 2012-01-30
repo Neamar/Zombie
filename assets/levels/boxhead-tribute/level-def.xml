@@ -12,15 +12,32 @@
 		<name>boxhead-tribute</name>
 		<followed-by>0-intro</followed-by>
 		<success on="surviving_waves">
-			<wave number="0" delay="5000">
-				<spawn-zone x="0" y="0" width="800" height="800" number="200" />
+			<wave number="0" delay="1000">
+				<spawn-zone x="0" y="0" width="800" height="800" number="3" />
+			</wave>
+			<wave number="0" delay="3000">
+				<spawn-zone x="0" y="0" width="800" height="800" number="10" satanus-probability="1" />
+			</wave>
+			<wave number="1" delay="5000">
+				<spawn-zone x="0" y="0" width="800" height="800" number="20" />
+			</wave>
+			<wave number="2" delay="7000">
+				<spawn-zone x="0" y="0" width="800" height="800" number="30" />
+			</wave>
+			<wave number="3" delay="12000">
+				<spawn-zone x="0" y="0" width="800" height="800" number="40" />
+			</wave>
+			<wave number="4" delay="20000">
+				<spawn-zone x="0" y="0" width="800" height="800" number="30" />
+			</wave>
+			<wave number="5" delay="30000">
+				<spawn-zone x="0" y="0" width="800" height="800" number="50" behemoth-probability="10" satanus-probability="3"/>
 			</wave>
 		</success>
 		
 		<hitmap>hitmap.png</hitmap>
 		<player x="60" y="430" />
 		<zombies>
-			<spawn-zone x="0" y="0" width="800" height="800" number="1" />
 		</zombies>
 		<sounds>
 			<ambient>ambient.mp3</ambient>

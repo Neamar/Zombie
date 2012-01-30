@@ -1,15 +1,19 @@
 package 
 {
+	import entity.Player;
 	import entity.Survivor;
 	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import levels.Level;
 	
 	/**
 	 * Heatmap (other names : influence map, potential fields)
+	 * TODO : move to package levels
 	 * 
 	 * @see http://aigamedev.com/open/tutorials/potential-fields/
 	 * @author Neamar
@@ -163,7 +167,18 @@ package
 		{
 			if (nextInfluence)
 			{
+				//Draw last pass result.
 				bitmapData.setVector(currentRect, nextInfluence);
+				//Add lamplight repulsion
+				var player:Player = level.player;
+				if (player.isLamplightRepulsive)
+				{
+					var lightMask:Shape = player.lightMask;
+					bitmapData.draw(lightMask, new Matrix(1 / 5, 0, 0, 1 / 5, -player.x / RESOLUTION, -player.y / RESOLUTION), null, null );
+					//Force the central pixel color value
+					bitmapData.setPixel(player.x / RESOLUTION, player.y / RESOLUTION, BASE_ALPHA + MAX_INFLUENCE + 31);
+				}
+				//TODO : what for ?
 				bitmapData.unlock();
 				hasJustRedrawn = true;
 			}
@@ -185,9 +200,8 @@ package
 			
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
 			valueToCompute.push(startInfluence);
-			nextInfluence[startOffset] = startInfluence + 2 * Zombie.REPULSION + 1; // Avoid blinking when zombie reach destination and is alone.
 
-
+			nextInfluence[startOffset] = startInfluence + 31; // Avoid blinking when zombie reach destination and is alone.
 		}
 		
 		/**

@@ -1,6 +1,9 @@
 ﻿package 
 {
+	import achievements.AchievementsHandler;
 	import entity.Zombie;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.display.StageAlign;
@@ -15,16 +18,14 @@
 	 * "When in doubt, call an airstrike."
 	 * @author Neamar
 	 */
-	[SWF(width="400", height="400", backgroundColor="#000000",frameRate="30")]
+	[SWF(width="600", height="400", backgroundColor="#000000",frameRate="30")]
 	public final class Main extends Sprite 
 	{
 		public static var stage:Stage;
 		public static const WIDTH:int = 400;
 		public static const WIDTH2:int = WIDTH / 2;
 		
-		public static const FIRST_LEVEL:String = "1";
-		
-		public var level:Level;
+		public var monitor:Monitor;
 		
 		public function Main()
 		{
@@ -45,58 +46,25 @@
 			stage.addEventListener(Event.RESIZE, onResize);
 			stage.dispatchEvent(new Event(Event.RESIZE));
 			
-			//Load first level
-			prepareLevel(FIRST_LEVEL);
+			addChild(new Game());
 			
 			//For debug :
-			var movieMonitor:Monitor = new Monitor();
-			addChild(movieMonitor);
-			movieMonitor.addEventListener(MouseEvent.CLICK, function(e:Event):void { movieMonitor.alpha = .3; } );
+			monitor = new Monitor();
+			stage.addChild(monitor);
 			
 			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);
 		}
 		
-		/**
-		 * Call when the WIN event is dispatched
-		 */
-		public function gotoNextLevel(e:Event):void
-		{
-			removeChild(level);
-			level.destroy();
-			level.removeEventListener(Level.WIN, gotoNextLevel);
-			
-			prepareLevel(level.nextLevelName);
-		}
-		
-		/**
-		 * Call when a new level should be loaded
-		 * @param	levelName
-		 */
-		public function prepareLevel(levelName:String):void
-		{
-			//Load current level
-			var loader:LevelLoader = new LevelLoader(levelName);
-			loader.addEventListener(Event.COMPLETE, addLevel);
-		}
-		
-		/**
-		 * Call when a new level is ready for play
-		 * @param	e
-		 */
-		public function addLevel(e:Event):void
-		{
-			var loader:LevelLoader = e.target as LevelLoader;
-			loader.removeEventListener(Event.COMPLETE, addLevel);
-
-			level = loader.getLevel()
-			level.addEventListener(Level.WIN, gotoNextLevel );
-			addChild(level);
-		}
-		
 		private function onResize(e:Event):void
-		{
+		{		
 			this.x = stage.stageWidth / 2 - Main.WIDTH2;
 			this.y = stage.stageHeight / 2 - Main.WIDTH2;
+			
+			if (monitor)
+			{
+				monitor.x = 0;
+				monitor.y = y;
+			}
 		}
 	}
 	

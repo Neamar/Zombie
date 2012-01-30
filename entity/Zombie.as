@@ -1,17 +1,39 @@
 package entity
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.filters.BevelFilter;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * A simple zombie
+	 * 
+	 * "One I can manage, a thousand..."
 	 * @author Neamar
 	 */
 	public class Zombie extends Entity 
 	{
+		/**
+		 * Embed objects
+		 */
+		[Embed(source = "../assets/sprite/zombie/zombie_0.png")]
+		public static const spritesClass:Class;
+		public static const spritesData:BitmapData = (new Zombie.spritesClass()).bitmapData;
+		
+		[Embed(source = "../assets/sprite/zombie/splatter.png")]
+		public static const splatterClass:Class;
+		public static const splatter:Bitmap = new Zombie.splatterClass();
+
+		/**
+		 * Events
+		 */
+		public static const ZOMBIE_DEAD:String = "zombieDead";
+
+		
 		/**
 		 * Zombie radius.
 		 * For drawing, block, and shoot.
@@ -21,7 +43,7 @@ package entity
 		/**
 		 * When a zombie is asked to sleep, how long it should be. (in frames)
 		 */
-		public static const SLEEP_DURATION:int = 30;
+		public const SLEEP_DURATION:int = 30;
 		
 		/**
 		 * Moving speed (in manhattan-px)
@@ -36,7 +58,7 @@ package entity
 		/**
 		 * To get swarming behavior, zombies should push themselves.
 		 */
-		public static const REPULSION:int = 15;
+		public const REPULSION:int = 15;
 		
 		/**
 		 * Angles depending on deltaX.
@@ -46,10 +68,10 @@ package entity
 		 * @note The 4 was chosen to improve compution since it is a power of 2, however it forces the vector to integrate "jump values", never used.
 		 * @note deltaX = 0 && deltaY == 0 does not exists (can't compute an angle if no moves are made)
 		 */
-		public static const ANGLES:Vector.<int> = Vector.<int>([
-			/*dX = -1*/ -45 * 3, 180, 45 * 3, /*jump*/-1,
-			/*dX =  0*/ -90, -1, 90, /*jump*/-1,
-			/*dX =  1*/ -45, 0, 45
+		public const ANGLES:Vector.<int> = Vector.<int>([
+			/*dX = -1*/ 2,  1, 0, /*jump*/-1,
+			/*dX =  0*/ 3, -1, 7, /*jump*/-1,
+			/*dX =  1*/ 4, 5, 6
 		]);
 		
 		/**
@@ -64,6 +86,11 @@ package entity
 		public static const MAX_INFLUENCE:int = Heatmap.MAX_INFLUENCE;
 		
 		/**
+		 * The level the zombies live on
+		 */
+		public var level:Level;
+		
+		/**
 		 * Function the zombie uses to move.
 		 * Can be replaced, for instance when zombie is dead ;)
 		 * Therefore, we don't need to remove him from the frame , when he'll awake, he'll see he's dead.
@@ -76,30 +103,96 @@ package entity
 		public var maxInfluence:int;
 
 		/**
-		 * Is the zombie going to hit the player nextFrame ?
+		 * The first time the zombie meets the player, we store the current frameNumber in this variable.
+		 * The next time we're near the player, we check this value.
+		 * - If too much time passed since last encounter, he should "prepare" himself again (and thus not strike for this frame)
+		 * - If the last encounter was in our last waking phase, the player forgot (or was unable) to move : hit him.
+		 * 
+		 * In other words, this variable allos for a "prepare before strike" time.
 		 */
-		public var willHit:Boolean = false;
+		public var lastEncounter:int = -1;
 		
 		/**
 		 * Shortcut to heatmap.bitmapData
 		 */
 		public var influenceMap:BitmapData;
-
+		
+		/**
+		 * States of a zombie.
+		 * @see setState()
+		 */
+		public const STATE_IDLE:int = 0;
+		public const STATE_WALKING:int = 1;
+		public const STATE_HITTING:int = 2;
+		public const STATE_HITTING2:int = 3;
+		public const STATE_BLOCK:int = 4;
+		public const STATE_DIE:int = 5;
+		public const STATE_DIE2:int = 6;
+		
+		/**
+		 * Offset and length to use regarding the sprites bitmap
+		 * Offset is the first picture to use,
+		 * Length is the length of the states
+		 * Index corresponds to the associated STATE_ value, e.g. index 2 is STATE_HITTING.
+		 */
+		public static const statesOffset:Vector.<int> = Vector.<int>([0, 4,	12, 16,	20,	22,	28]);
+		public static const statesLength:Vector.<int> = Vector.<int>([4, 8,	 4,  4,  2,  6,  8]);
+		
+		/**
+		 * Store zombie current rotation (from 0 to 7)
+		 */
+		public var currentRotation:int;
+		
+		/**
+		 * Store zombie current state
+		 */
+		protected var currentState:int;
+		
+		/**
+		 * Store the offset and the length to use for the current state
+		 */
+		protected var currentStateOffset:int;
+		protected var currentStateLength:int;
+		
+		/**
+		 * Store the current image used
+		 */
+		protected var currentStateOffsetPosition:int;
+		
+		/**
+		 * All sprites for all states.
+		 * Wille be masked using scrollRect
+		 */
+		protected var sprites:Bitmap;
+		
+		/**
+		 * Rectangle to use for scrollRect (to clip the sprite)
+		 */
+		protected var spritesRect:Rectangle = new Rectangle( 0, 0, 64, 64);
+		
+		/**
+		 * Determine which animation to use : hit or bite ?
+		 * (no ingame changes)
+		 */
+		protected var isBiter:int = 2 * Math.random();
+		protected var isExplodingOnDeath:int = 2 * Math.random();
+		
 		public function Zombie(parent:Level, x:int, y:int)
 		{
 			this.x = x;
 			this.y = y;
+			this.level = parent;
 			maxInfluence = Heatmap.MAX_INFLUENCE
 			super(parent);
 			influenceMap = heatmap.bitmapData;
 			
 			//Zombie graphics
-			this.graphics.lineStyle(1, 0xFF0000);
-			this.graphics.beginFill(0xF00000);
-			this.graphics.drawCircle(0, 0, RADIUS);
-			this.graphics.lineStyle(1, 0);
-			this.graphics.lineTo(0, 0);
-			this.cacheAsBitmap = true;
+			sprites = new Bitmap(Zombie.spritesData);
+			sprites.scrollRect = spritesRect;
+			sprites.y = -32;
+			sprites.x = -32;
+			addChild(sprites);
+			setState(STATE_IDLE);
 		}
 		
 		/**
@@ -107,17 +200,18 @@ package entity
 		 */
 		public function kill():void
 		{
-			//Draw the dead zombies on the map
-			this.filters = [new BlurFilter(8, 8, 2)];
-			(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1.4, 0, 0, 1.4, x, y));
-			this.graphics.clear();
-			
 			//Remove current zombie from global zombies list
 			(parent as Level).zombies.splice((parent as Level).zombies.indexOf(this), 1);
 
-			//Avoid null pointer exception, should the zombie awake in some future frame.
-			move = function():void { };
-			parent.removeChild(this);
+			//Add splatters
+			var matrix:Matrix = new Matrix(1, 0, 0, 1, x - splatter.width / 2, y - splatter.height / 2);
+			(parent as Level).bitmapLevel.bitmapData.draw(splatter, matrix, null, null, null, true);
+			
+			//Start death animation. When the animation completes, the zombie will be removed from everywhere
+			move = onMoveDead;
+
+			//Inform the level we're dead :
+			parent.dispatchEvent(new Event(ZOMBIE_DEAD));
 		}
 		
 		public function onMove():int
@@ -132,25 +226,45 @@ package entity
 			//Are we on the heatmap ? If not, just sleep.
 			if (maxValue == DEFAULT_COLOR)
 			{
+				//Animation
+				if (currentState != STATE_IDLE)
+					setState(STATE_IDLE);
+					
 				//Player ain't near. We may as well go to sleep to save some CPU.
 				return 25;
 			}
 			
-			//Are we on the player ? If so, hit him.
-			if (maxValue >= maxInfluence)
+			if (maxValue >= MAX_INFLUENCE)
 			{
-				if (willHit)
+				//We are "on" the player : let's fight !
+				
+				if (lastEncounter + 10 == level.frameNumber)
 				{
 					//Hit the player !
 					this.hit();
-					willHit = false;
+					
+					//Prepare ourselves to hit the player again in two wakes :
+					lastEncounter = level.frameNumber + 10;
 				}
 				else
 				{
-					willHit = true;
+					lastEncounter = level.frameNumber;
 				}
+
+				//Animation
+				if (currentState != STATE_HITTING + isBiter)
+				{
+					setState(STATE_HITTING + isBiter);
+					//Animation is long and the player may die before we finish hitting him, so start at offset 3
+					currentStateOffsetPosition = 3;
+				}
+				currentStateOffsetPosition = (currentStateOffsetPosition + 1) % currentStateLength;
+				spritesRect.x = 64 * (currentStateOffsetPosition + currentStateOffset);
+				sprites.scrollRect = spritesRect;
+				
 				return 10;
 			}
+			
 			
 			//We're on the heatmap, and we can't hit the player ? Move toward him
 			//Find the highest potential around the zombie
@@ -182,7 +296,16 @@ package entity
 				//Move toward higher potential
 				x += speed * maxI;
 				y += speed * maxJ;
-				rotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
+				
+				//Animation
+				if (currentState != STATE_WALKING)
+					setState(STATE_WALKING);
+				
+				currentRotation = ANGLES[(maxI + 1) * 4 + (maxJ + 1)];
+				currentStateOffsetPosition = (currentStateOffsetPosition + 1) % (4 * currentStateLength);
+				spritesRect.x = 64 * ((currentStateOffsetPosition >> 3) + currentStateOffset);
+				spritesRect.y = 64 * currentRotation;
+				sprites.scrollRect = spritesRect;
 				
 				//Store repulsion
 				xScaled = x / RESOLUTION;
@@ -191,10 +314,58 @@ package entity
 				
 				return 1;
 			}
-			
+
 			//No move available : some zombies are probably blocking us.
 			//Wait a little to let everything boil down.
 			return 10 + SLEEP_DURATION * Math.random();
+		}
+		
+		/**
+<<<<<<< HEAD
+		 * Animation for dying
+		 * @return 8 (number of frames before next part of the animation)
+		 */
+		public function onMoveDead():int
+		{
+			if (currentState != STATE_DIE + isExplodingOnDeath)
+				setState(STATE_DIE + isExplodingOnDeath);
+			
+			currentStateOffsetPosition = currentStateOffsetPosition + 1;
+			if (currentStateOffsetPosition == currentStateLength)
+			{
+				//He's dead, and has been on the floor for a time long enough.
+				//Draw the dead zombies on the map
+				this.filters = [new BevelFilter(.5)];
+				this.graphics.beginFill(0xFF0000);
+				this.graphics.drawCircle(0, 0, 5);
+				(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
+				parent.removeChild(this);
+				
+				return 0;
+			}
+			
+			spritesRect.x = 64 * (currentStateOffsetPosition + currentStateOffset);
+			sprites.scrollRect = spritesRect;
+
+			return 4;
+		}
+		
+		/**
+		 * Define the state to use
+		 * Must be a STATE_ constant.
+		 * 
+		 * @param	newState the state to enter
+		 */
+		public function setState(newState:int):void
+		{
+			currentState = newState;
+			currentStateOffsetPosition = 0;
+			currentStateOffset = statesOffset[currentState];
+			currentStateLength = statesLength[currentState];
+			
+			//Offset to first sprite
+			spritesRect.x = 64 * currentStateOffset;
+			sprites.scrollRect = spritesRect;
 		}
 		
 		/**
@@ -202,7 +373,7 @@ package entity
 		 */
 		public function hit():void
 		{
-			(parent as Level).player.hit(this, strengthBlow);
+			level.player.hit(this, strengthBlow);
 		}
 	}
 }

@@ -6,13 +6,13 @@ package weapon
 	 * ...
 	 * @author Neamar
 	 */
-	public final class Handgun extends Weapon
+	public final class Handgun extends JungleStyleWeapon
 	{
 		public function Handgun(level:Level, player:Player) 
 		{
-			cooldown = Main.stage.frameRate;
-			magazineCapacity = 6;
-			magazineNumber = 50;
+			cooldown = 30;
+			magazineCapacity = 3;
+			magazineNumber = 10;
 			super(level, player);
 		}
 		

@@ -2,6 +2,7 @@ package levels
 {
 	import entity.Behemoth;
 	import entity.Player;
+	import entity.Satanus;
 	import entity.Survivor;
 	import entity.Zombie;
 	import flash.display.Bitmap;
@@ -21,8 +22,15 @@ package levels
 		public static const WIN:String = 'win';
 		public static const LOST:String = 'lost';
 		
+		//TODO : remove (access via main.game.level)
+		/**
+		 * For the monitor.
+		 */
 		public static var current:Level = null;
 		
+		/**
+		 * The player on the map
+		 */
 		public var player:Player;
 		
 		/**
@@ -105,13 +113,14 @@ package levels
 
 			//Layouting everything on the display list
 			addChild(bitmapLevel);
-			addChild(player);
 			
 			//Generate Zombies
 			while (params.zombiesLocation.length > 0)
 			{
 				var spawnArea:Rectangle = params.zombiesLocation.pop();
 				var spawnQuantity:int = params.zombiesDensity.pop();
+				var behemothProbability:Number = 1 / params.behemothProbability.pop();
+				var satanusProbability:Number = 1 / params.satanusProbability.pop();
 				
 				for (var i:int = 0; i < spawnQuantity; i++)
 				{
@@ -124,7 +133,17 @@ package levels
 					}
 					else
 					{
-						var foe:Zombie = new Zombie(this, x, y);
+						var foe:Zombie;
+						if (Math.random() > behemothProbability)
+						{
+							if (Math.random() > satanusProbability)
+								foe = new Zombie(this, x, y);
+							else
+								foe = new Satanus(this, x, y);
+						}
+						else
+							foe = new Behemoth(this, x, y);
+							
 						zombies.push(foe);
 						//Set time for first awakening :
 						var firstWake:int = 30 + 30 * Math.random()
@@ -133,18 +152,6 @@ package levels
 					}
 				}
 			}
-			
-			//Quick hack: add behemoth
-			var behemoth:Behemoth = new Behemoth(this, player.x + 50, player.y + 1);
-			zombies.push(behemoth);
-			frameWaker[10].push(behemoth);
-			addChild(behemoth);
-			
-			//Quick hack: add a survivor
-			var survivor:Survivor = new Survivor(this, player.x + 200, player.y + 1);
-			addChild(survivor);
-			zombies.push(survivor);
-			survivors.push(survivor);
 
 			/**
 			 * Blending and masking
@@ -159,6 +166,7 @@ package levels
 			//Is is incredibly faster than using a real as3-mask, since we don't have to cacheAsBitmap the level.
 			player.lightMask.blendMode = BlendMode.ALPHA;
 			
+			addChild(player);
 			addChild(player.bloodRush);
 		}
 		

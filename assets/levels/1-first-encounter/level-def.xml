@@ -9,7 +9,7 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<name>1</name>
+		<name>1-first-encounter</name>
 		<followed-by>2</followed-by>
 		<success on="accessing_area">
 			<area x="1834" y="0" width="100" height="100" />
@@ -18,7 +18,7 @@
 		<hitmap>hitmap.png</hitmap>
 		<player x="30" y="30" />
 		<zombies>
-			<spawn-zone x="34" y="0" width="1900" height="1094" number="200" />
+			<spawn-zone x="34" y="150" width="1900" height="894" number="200" behemoth-probability="1000000" satanus-probability="1000000" />
 		</zombies>
 		<sounds>
 			<ambient>ambient.mp3</ambient>

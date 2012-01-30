@@ -21,7 +21,7 @@ package weapon
 		/**
 		 * Number of frames before the player can fire again after hitting "reload"
 		 */
-		public var reloadTime:int;
+		public var reloadTime:int = -1;
 		
 		/**
 		 * Id of last frame this weapon was used
@@ -43,12 +43,25 @@ package weapon
 		 */
 		public var ammoInCurrentMagazine:int;
 		
+		/**
+		 * Range of the weapon, in pixel.
+		 */
+		public var range:int;
+		
+		/**
+		 * Automatic reload
+		 */
+		public var automaticReload:Boolean = false;
+		
 		public function Weapon(level:Level, player:Player) 
 		{
 			this.parent = level;
 			this.player = player;
 			
-			reloadTime = 2 * cooldown;
+			range = 150;
+			if(reloadTime == -1)
+				reloadTime = 2 * cooldown;
+			
 			reload();
 		}
 		
@@ -84,6 +97,11 @@ package weapon
 				lastShot = player.frameNumber;
 				ammoInCurrentMagazine--;
 				
+				if (automaticReload && ammoInCurrentMagazine == 0)
+				{
+					reload();
+				}
+				
 				return true;
 			}
 			
@@ -92,7 +110,8 @@ package weapon
 		
 		public function reload():void
 		{
-			if (magazineNumber > 0)
+			//Do not reload if the magazine is full or you don't have any more magazine
+			if (magazineNumber > 0 && ammoInCurrentMagazine != magazineCapacity)
 			{
 				ammoInCurrentMagazine = magazineCapacity;
 				magazineNumber--;
@@ -110,7 +129,7 @@ package weapon
 		 * @param	limit max px before giving up and considering bullet lost.
 		 * @return radius to the last casualty
 		 */
-		protected function raycast(deltaAngle:Number, limit:int = Main.WIDTH):int
+		protected function raycast(deltaAngle:Number):int
 		{
 			var theta:Number = player.rotation * Player.TO_RADIANS + deltaAngle;
 			var hitmapTest:Function = player.hitmapTest;
@@ -138,7 +157,7 @@ package weapon
 				}
 				
 				radius += Zombie.RADIUS;
-				if (radius >= limit)
+				if (radius >= range)
 				{
 					break;
 				}

@@ -3,13 +3,15 @@ package entity
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * A behemoth is a slow but very strong zombie
+	 * 
+	 * "Take your time to aim"
 	 * @author Neamar
 	 */
 	public final class Behemoth extends Zombie 
 	{
 		/**
-		 * Max player life
+		 * Max behemoth life
 		 */
 		public const MAX_HEALTHPOINTS:int = 8;
 		
@@ -30,7 +32,7 @@ package entity
 			this.graphics.clear();
 			this.graphics.lineStyle(1, 0xFF0000);
 			this.graphics.beginFill(0x00F000);
-			this.graphics.drawCircle(0, 0, RADIUS * 1.5);
+			this.graphics.drawCircle(0, 0, RADIUS * 2);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
 			this.cacheAsBitmap = true;

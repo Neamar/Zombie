@@ -16,6 +16,8 @@
 	 * Monitor the movie, displaying framerate and other informations.
 	 */
 	public final class Monitor extends Sprite {
+		private var game:Game;
+		
 		private var xml:XML;
 		private var theText:TextField;
 		private var fps:int=0;
@@ -25,8 +27,9 @@
 		private var fpsVector:Vector.<Number>=new Vector.<Number>();
 		private var childrenCount:int;
 		
-		public function Monitor()
+		public function Monitor(game:Game)
 		{
+			this.game = game;
 			mouseEnabled = false;
 			
 			xml =
@@ -115,9 +118,9 @@
 				fps=0;
 				lastTimeCheck = timer;
 				
-				if (Level.current != null)
+				if (game.level != null)
 				{
-					var level:Level = Level.current;
+					var level:Level = game.level;
 					var player:Player = level.player;
 					
 					xml.nZombie = level.zombies.length.toString();

@@ -22,12 +22,6 @@ package levels
 		public static const WIN:String = 'win';
 		public static const LOST:String = 'lost';
 		
-		//TODO : remove (access via main.game.level)
-		/**
-		 * For the monitor.
-		 */
-		public static var current:Level = null;
-		
 		/**
 		 * The player on the map
 		 */
@@ -104,9 +98,6 @@ package levels
 			this.nextLevelName = params.nextLevelName
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
-			
-			//For debug, store current instance (used by monitor)
-			Level.current = this;
 			
 			player = new Player(this, params);
 			

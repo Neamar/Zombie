@@ -16,6 +16,12 @@
 	
 	/**
 	 * "When in doubt, call an airstrike."
+	 * 
+	 * TODO : organize imports
+	 * TODO : clean code
+	 * TODO : run FD Analyzer
+	 * TODO : watch for useless static properties
+	 * 
 	 * @author Neamar
 	 */
 	[SWF(width="600", height="400", backgroundColor="#000000",frameRate="30")]
@@ -24,7 +30,15 @@
 		public static const WIDTH:int = 400;
 		public static const WIDTH2:int = WIDTH / 2;
 		
-		public var monitor:Monitor;
+		/**
+		 * Current game.
+		 */
+		protected var game:Game;
+		
+		/**
+		 * Monitor game data for debug.
+		 */
+		protected var monitor:Monitor;
 		
 		public function Main()
 		{
@@ -42,12 +56,14 @@
 			stage.addEventListener(Event.RESIZE, onResize);
 			stage.dispatchEvent(new Event(Event.RESIZE));
 			
-			addChild(new Game());
+			game = new Game();
+			addChild(game);
 			
 			//For debug :
-			monitor = new Monitor();
+			monitor = new Monitor(game);
 			stage.addChild(monitor);
 			
+			//Clip (avoid displaying all the level on fullscreen)
 			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);
 		}
 		

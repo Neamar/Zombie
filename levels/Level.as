@@ -14,7 +14,7 @@ package levels
 	/**
 	 * [abstract]
 	 * Basis for a level.
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public class Level extends Sprite
@@ -40,7 +40,7 @@ package levels
 		/**
 		 * Zombies.
 		 * We need to keep a complete list, to count ombies and to shoot them
-		 * 
+		 *
 		 * @see Weapon
 		 */
 		public var zombies:Vector.<Zombie> = new Vector.<Zombie>();
@@ -52,7 +52,7 @@ package levels
 		
 		/**
 		 * Which zombie should awake in which frame ?
-		 * 
+		 *
 		 */
 		public var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(FRAME_WAKER_LENGTH, true);
 		
@@ -60,7 +60,7 @@ package levels
 		 * Current frame number % MAX_DURATION
 		 */
 		public var frameNumber:int = 0;
-
+		
 		/*
 		 * Survivors (if any)
 		 */
@@ -68,7 +68,7 @@ package levels
 		
 		/**
 		 * Influence map, to compute easily multiples pathfindings without burying CPU
-		 * 
+		 *
 		 * @see http://aigamedev.com/open/tutorials/potential-fields/
 		 */
 		public var heatmap:Heatmap;
@@ -102,13 +102,13 @@ package levels
 			player = new Player(this, params);
 			
 			heatmap = new Heatmap(this);
-
+			
 			//Layouting everything on the display list
 			addChild(bitmap);
 			
 			//Generate Zombies
 			generateZombies(params.zombiesLocation, params.zombiesDensity, params.behemothProbability, params.satanusProbability);
-
+			
 			/**
 			 * Blending and masking
 			 * @see http://active.tutsplus.com/tutorials/games/introducing-blend-modes-in-flash/
@@ -159,18 +159,17 @@ package levels
 			frameNumber = (frameNumber + 1) % FRAME_WAKER_LENGTH;
 			
 			var currentFrame:Vector.<Zombie> = frameWaker[frameNumber];
-			while(currentFrame.length > 0)
+			while (currentFrame.length > 0)
 			{
 				//Move the zombies.
 				var zombie:Zombie = currentFrame.pop();
 				//The function returns the number of frames before moving the same zombie again
 				var duration:int = zombie.move();
 				
-				if(duration != 0)
+				if (duration != 0)
 					frameWaker[(frameNumber + duration) % FRAME_WAKER_LENGTH].push(zombie);
 			}
 		}
-		
 		
 		/**
 		 * This function dispatch the WIN event.
@@ -180,7 +179,6 @@ package levels
 			dispatchEvent(new Event(Level.WIN));
 		}
 		
-	
 		/**
 		 * Toggle debug mode and view the influence map.
 		 * @param	e
@@ -193,7 +191,7 @@ package levels
 				removeChild(player.lightMask);
 				addChild(heatmap);
 			}
-			else if(heatmap.parent == this)
+			else if (heatmap.parent == this)
 			{
 				removeChild(heatmap);
 				addChild(bitmap);
@@ -205,7 +203,7 @@ package levels
 			
 			//Player and zombies ought to be visible at any time
 			setChildIndex(player, numChildren - 1);
-			for each(var zombie:Zombie in zombies)
+			for each (var zombie:Zombie in zombies)
 			{
 				setChildIndex(zombie, numChildren - 2);
 			}
@@ -213,7 +211,7 @@ package levels
 		
 		/**
 		 * Add some zombies according to the specified parameters.
-		 * 
+		 *
 		 * @param	zombiesLocation
 		 * @param	zombiesDensity
 		 * @param	behemothProbabilityVector
@@ -251,7 +249,7 @@ package levels
 						}
 						else
 							foe = new Behemoth(this, x, y);
-							
+						
 						zombies.push(foe);
 						//Set time for first awakening :
 						var firstWake:int = 30 + 30 * Math.random()
@@ -263,5 +261,5 @@ package levels
 			}
 		}
 	}
-	
+
 }

@@ -1,14 +1,14 @@
-package entity 
+package entity
 {
 	import levels.Level;
 	
 	/**
 	 * A behemoth is a slow but very strong zombie
-	 * 
+	 *
 	 * "Take your time to aim"
 	 * @author Neamar
 	 */
-	public final class Behemoth extends Zombie 
+	public final class Behemoth extends Zombie
 	{
 		/**
 		 * Max behemoth life
@@ -21,11 +21,11 @@ package entity
 		 */
 		public var damagesTaken:int = 0;
 		
-		public function Behemoth(parent:Level, x:int, y:int) 
+		public function Behemoth(parent:Level, x:int, y:int)
 		{
 			radius = radius * 2;
 			super(parent, x, y);
-		
+			
 			speed--;
 			strengthBlow = 40;
 			
@@ -51,7 +51,7 @@ package entity
 				super.kill();
 			}
 		}
-		
+	
 	}
 
 }

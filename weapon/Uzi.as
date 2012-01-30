@@ -1,14 +1,15 @@
-package weapon 
+package weapon
 {
 	import entity.Player;
 	import levels.Level;
+	
 	/**
 	 * ...
 	 * @author Neamar
 	 */
 	public final class Uzi extends JungleStyleWeapon
 	{
-		public function Uzi(level:Level, player:Player) 
+		public function Uzi(level:Level, player:Player)
 		{
 			magazineCapacity = 15;
 			magazineNumber = 15;

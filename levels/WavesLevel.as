@@ -1,4 +1,4 @@
-package levels 
+package levels
 {
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
@@ -7,10 +7,10 @@ package levels
 	/**
 	 * Wave of zombie keeps spawning.
 	 * Fight them.
-	 * 
+	 *
 	 * @author Neamar
 	 */
-	public final class WavesLevel extends TimedLevel 
+	public final class WavesLevel extends TimedLevel
 	{
 		private var spawner:Timer;
 		
@@ -31,8 +31,8 @@ package levels
 			wavesSatanusProbability = params.wavesSatanusProbability;
 			
 			spawner = new Timer(params.wavesDelay.shift());
-            spawner.addEventListener(TimerEvent.TIMER, onSpawner);
-            spawner.start();
+			spawner.addEventListener(TimerEvent.TIMER, onSpawner);
+			spawner.start();
 		}
 		
 		public override function destroy():void

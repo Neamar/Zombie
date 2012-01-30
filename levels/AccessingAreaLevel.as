@@ -1,4 +1,4 @@
-package levels 
+package levels
 {
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
@@ -7,11 +7,11 @@ package levels
 	 * Success on accessing some area (stored in successArea)
 	 * @author Neamar
 	 */
-	public final class AccessingAreaLevel extends TimedLevel 
-	{		
+	public final class AccessingAreaLevel extends TimedLevel
+	{
 		public var successArea:Rectangle;
 		
-		public function AccessingAreaLevel(params:LevelParams) 
+		public function AccessingAreaLevel(params:LevelParams)
 		{
 			super(params);
 			this.successArea = params.successArea;

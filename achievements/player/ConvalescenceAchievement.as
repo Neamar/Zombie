@@ -1,8 +1,9 @@
-package achievements.player 
+package achievements.player
 {
+	
 	/**
 	 * Improve player recuperation
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public final class ConvalescenceAchievement extends PlayerAchievement

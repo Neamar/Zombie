@@ -9,6 +9,7 @@ package levels
 	import flash.net.URLRequest;
 	import flash.system.System;
 	import flash.utils.Dictionary;
+	
 	/**
 	 * Load a level.
 	 * Dispatch Event.COMPLETE when every assets has been loaded
@@ -36,7 +37,7 @@ package levels
 		 * forbidding the GC to dispose of the Loader & LevelLoader & LevelParams class.
 		 */
 		private var dict:Dictionary = new Dictionary(true);
-
+		
 		/**
 		 * Parameters to use for the level
 		 */
@@ -52,18 +53,18 @@ package levels
 		{
 			//Load associated XML :
 			var loader:URLLoader = new URLLoader(new URLRequest(buildUrl(levelName) + '/level-def.xml'));
-			loader.addEventListener(Event.COMPLETE, loadLevelData );
+			loader.addEventListener(Event.COMPLETE, loadLevelData);
 		}
 		
 		/**
 		 * This function should be called after the Event.COMPLET has been dispatched.
 		 * Else, it returns null.
-		 * 
+		 *
 		 * After it is called, the levelLoader is cleaned up, ready to be disposed.
-		 * 
+		 *
 		 * @return the level
 		 */
-		public function getLevel():Level 
+		public function getLevel():Level
 		{
 			var l:Level = level;
 			level = null;
@@ -71,6 +72,7 @@ package levels
 			System.disposeXML(xml);
 			return l;
 		}
+		
 		/**
 		 * Load a level from XML file
 		 * @param	e
@@ -85,8 +87,14 @@ package levels
 			// Load external assets asap
 			var bitmapUrl:String = buildUrl(xml.technical.name) + '/' + xml.visible.bitmap;
 			var hitmapUrl:String = buildUrl(xml.technical.name) + '/' + xml.technical.hitmap;
-			loadAssets(bitmapUrl, function(e:Event):void { params.bitmap = e.target.content } );
-			loadAssets(hitmapUrl, function(e:Event):void { params.hitmap = e.target.content } );
+			loadAssets(bitmapUrl, function(e:Event):void
+				{
+					params.bitmap = e.target.content
+				});
+			loadAssets(hitmapUrl, function(e:Event):void
+				{
+					params.hitmap = e.target.content
+				});
 			
 			// Read other parameters and parse them into LevelParams
 			//Load success type
@@ -104,7 +112,7 @@ package levels
 			else if (successXML.@on == 'surviving_waves')
 			{
 				params.LevelClass = WavesLevel;
-				for each(var wave:XML in successXML.wave)
+				for each (var wave:XML in successXML.wave)
 				{
 					params.wavesDelay.push(int(wave.@delay.toString()));
 					var zombiesLocation:Vector.<Rectangle> = new Vector.<Rectangle>();
@@ -133,7 +141,7 @@ package levels
 			params.playerStartY = playerXML.@y;
 			if (playerXML.@resolution.toXMLString() != "")
 				params.playerStartResolution = playerXML.@resolution;
-				
+			
 			//Number of zombies per area
 			buildSpawnZone(xml.technical.zombies[0].elements('spawn-zone'), params.zombiesLocation, params.zombiesDensity, params.behemothProbability, params.satanusProbability);
 		}
@@ -141,12 +149,12 @@ package levels
 		private function loadAssets(url:String, callback:Function):void
 		{
 			remainingResourcesToLoad++;
-
+			
 			var loader:Loader = new Loader();
 			loader.load(new URLRequest(url));
 			
 			//Execute defined callback function when complete
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, callback );
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, callback);
 			
 			//Remember the callback function to clean after ourselves :
 			// (weakReference on the addEventListener would simply result in the suppression of our listener...)
@@ -155,7 +163,6 @@ package levels
 			//Shall we wait for anymore assets to load ?
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onResourceLoaded);
 		}
-		
 		
 		private function buildLevel():void
 		{
@@ -167,7 +174,7 @@ package levels
 		/**
 		 * Called when a resource finishes loading.
 		 * Dispatch the COMPLETE event if it was the last.
-		 * 
+		 *
 		 * Needs some specific care regarding memory managements and listeners.
 		 * @param	e
 		 */
@@ -180,7 +187,7 @@ package levels
 			dict[loaderInfo] = null;
 			
 			remainingResourcesToLoad--;
-		
+			
 			//Are we finished yet ?
 			if (remainingResourcesToLoad == 0)
 			{
@@ -191,7 +198,7 @@ package levels
 		/**
 		 * Build spawn zones with the parameters in the XML
 		 * Used for all levels once, and more on waves-level.
-		 * 
+		 *
 		 * @param	xml
 		 * @param	location vector to be filled with location data
 		 * @param	density vector to be filled with density data
@@ -199,7 +206,7 @@ package levels
 		private function buildSpawnZone(spawnXML:XMLList, location:Vector.<Rectangle>, density:Vector.<int>, behemothProbability:Vector.<int>, satanusProbability:Vector.<int>):void
 		{
 			//Number of zombies per area
-			for each(var spawnAreaXML:XML in spawnXML)
+			for each (var spawnAreaXML:XML in spawnXML)
 			{
 				density.push(spawnAreaXML.@number);
 				location.push(new Rectangle(spawnAreaXML.@x, spawnAreaXML.@y, spawnAreaXML.@width, spawnAreaXML.@height));
@@ -208,12 +215,12 @@ package levels
 				if (spawnAreaXML["@behemoth-probability"].toXMLString() != "")
 					behemothProbability.push(spawnAreaXML["@behemoth-probability"]);
 				else
-					behemothProbability.push(50);//Default : one in 50 zombie is a behemoth
-					
+					behemothProbability.push(50); //Default : one in 50 zombie is a behemoth
+				
 				if (spawnAreaXML["@satanus-probability"].toXMLString() != "")
 					satanusProbability.push(spawnAreaXML["@satanus-probability"]);
 				else
-					satanusProbability.push(50);//Default : one in 50 zombie is a satanus
+					satanusProbability.push(50); //Default : one in 50 zombie is a satanus
 			}
 		}
 		

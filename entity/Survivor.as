@@ -1,15 +1,16 @@
-package entity 
+package entity
 {
 	import levels.Heatmap;
 	import levels.Level;
+	
 	/**
 	 * ...
 	 * @author Neamar
 	 */
-	public class Survivor extends Zombie 
+	public class Survivor extends Zombie
 	{
 		
-		public function Survivor(parent:Level, x:int, y:int) 
+		public function Survivor(parent:Level, x:int, y:int)
 		{
 			super(parent, x, y);
 			maxInfluence = Heatmap.MAX_INFLUENCE - 5 * Heatmap.DECAY

@@ -1,4 +1,4 @@
-package  
+package
 {
 	import achievements.AchievementsHandler;
 	import entity.Zombie;
@@ -10,10 +10,10 @@ package
 	/**
 	 * There is one game per session.
 	 * This class embeds the levels and remember the unlocked achievements from level to level.
-	 * 
+	 *
 	 * @author Neamar
 	 */
-	public final class Game extends Sprite 
+	public final class Game extends Sprite
 	{
 		public static const FIRST_LEVEL:String = "boxhead-tribute";
 		
@@ -21,7 +21,7 @@ package
 		
 		public var achievementHandler:AchievementsHandler;
 		
-		public function Game() 
+		public function Game()
 		{
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
@@ -61,15 +61,13 @@ package
 		{
 			var loader:LevelLoader = e.target as LevelLoader;
 			loader.removeEventListener(Event.COMPLETE, addLevel);
-
+			
 			level = loader.getLevel()
-			level.addEventListener(Level.WIN, gotoNextLevel );
+			level.addEventListener(Level.WIN, gotoNextLevel);
 			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
 			achievementHandler.applyDefaultsAchievements();
 			addChild(level);
 		}
-		
 	}
-
 }

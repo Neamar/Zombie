@@ -1,15 +1,15 @@
-package levels 
+package levels
 {
 	import flash.display.Bitmap;
 	import flash.geom.Rectangle;
-
+	
 	/**
 	 * Parameters for a level
-	 * 
+	 *
 	 * No class taking a LevelParams as a parameter should store it for further use. It is a temporary holder for the XML information.
 	 * @author Neamar
 	 */
-	public final class LevelParams 
+	public final class LevelParams
 	{
 		/**
 		 * Class to use to instantiate the Level.

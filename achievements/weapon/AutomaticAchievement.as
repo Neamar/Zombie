@@ -1,8 +1,9 @@
-package achievements.weapon 
+package achievements.weapon
 {
+	
 	/**
 	 * Automatically reload magazine of a given weapon
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public final class AutomaticAchievement extends WeaponAchievement
@@ -10,7 +11,7 @@ package achievements.weapon
 		public override function apply():void
 		{
 			weapon.automaticReload = true;
-		}	
+		}
 	}
 
 }

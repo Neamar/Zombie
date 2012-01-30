@@ -1,9 +1,10 @@
-package achievements.weapon 
+package achievements.weapon
 {
 	import weapon.JungleStyleWeapon;
+	
 	/**
 	 * Improve the capacity of a magazine for a given weapon
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public final class JungleAchievement extends WeaponAchievement

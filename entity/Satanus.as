@@ -1,20 +1,20 @@
-package entity 
+package entity
 {
 	import levels.Level;
 	
 	/**
 	 * A satanus is a very fast zombie.
-	 * 
+	 *
 	 * "Kill him or get killed"
 	 * @author Neamar
 	 */
-	public final class Satanus extends Zombie 
-	{		
-		public function Satanus(parent:Level, x:int, y:int) 
-		{		
+	public final class Satanus extends Zombie
+	{
+		public function Satanus(parent:Level, x:int, y:int)
+		{
 			radius = radius * 1.75;
 			super(parent, x, y);
-		
+			
 			speed += 2;
 			strengthBlow = 25;
 			

@@ -1,7 +1,8 @@
-package weapon 
+package weapon
 {
 	import entity.Player;
 	import levels.Level;
+	
 	/**
 	 * ...
 	 * @author Neamar
@@ -15,7 +16,7 @@ package weapon
 		 */
 		public var halfAmplitude:int;
 		
-		public function Shotgun(level:Level, player:Player) 
+		public function Shotgun(level:Level, player:Player)
 		{
 			cooldown = 40;
 			magazineCapacity = 1;
@@ -26,7 +27,8 @@ package weapon
 			super(level, player);
 		}
 		
-		public override function fire():int		{
+		public override function fire():int
+		{
 			if (beforeFiring())
 			{
 				for (var i:int = -halfAmplitude; i <= halfAmplitude; i += 4)

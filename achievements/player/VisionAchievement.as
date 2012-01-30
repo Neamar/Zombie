@@ -1,8 +1,9 @@
-package achievements.player 
+package achievements.player
 {
+	
 	/**
 	 * Improve the subconscious vision of the player
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public final class VisionAchievement extends PlayerAchievement

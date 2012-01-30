@@ -11,12 +11,16 @@
 	<technical>
 		<name>boxhead-tribute</name>
 		<followed-by>0-intro</followed-by>
-		<success on="killing_all" />
+		<success on="surviving_waves">
+			<wave number="0">
+				<spawn-zone x="0" y="0" width="800" height="800" number="20" />
+			</wave>
+		</success>
 		
 		<hitmap>hitmap.png</hitmap>
 		<player x="60" y="430" />
 		<zombies>
-			<spawn-zone x="0" y="0" width="800" height="800" number="75" />
+			<spawn-zone x="0" y="0" width="800" height="800" number="20" />
 		</zombies>
 		<sounds>
 			<ambient>ambient.mp3</ambient>

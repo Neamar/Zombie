@@ -2,6 +2,7 @@ package levels
 {
 	import flash.display.Bitmap;
 	import flash.geom.Rectangle;
+
 	/**
 	 * Parameters for a level
 	 * 
@@ -83,6 +84,20 @@ package levels
 		 * Area to reach to win the level
 		 */
 		public var successArea:Rectangle
+		
+		/////////////////////////////////////
+		// SPECIAL PARAMETERS : AccessingAreaLevel
+		/////////////////////////////////////
+		
+		/**
+		 * Spawn area for the zombies at each wave
+		 */
+		public var wavesZombiesLocation:Vector.<Vector.<Rectangle>> = new Vector.<Vector.<Rectangle>>();
+		
+		/**
+		 * Density of zombies for each area and each wave.
+		 */
+		public var wavesZombiesDensity:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
 	}
 
 }

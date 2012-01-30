@@ -3,10 +3,11 @@ package levels
 	import flash.events.TimerEvent;
 	
 	/**
-	 * ...
+	 * Kill all zombie to acces next level.
+	 * 
 	 * @author Neamar
 	 */
-	public final class KillAllLevel extends TimedLevel 
+	public class KillAllLevel extends TimedLevel 
 	{
 		
 		public function KillAllLevel(params:LevelParams) 

@@ -40,13 +40,14 @@ package levels
 		
 		/**
 		 * Texture for the game
-		 * @todo Rename to bitmap ? I used to had problems with that, can't remember why.
 		 */
-		public var bitmapLevel:Bitmap;
+		public var bitmap:Bitmap;
 		
 		/**
-		 * Zombies
-		 * TODO : is it really useful ?
+		 * Zombies.
+		 * We need to keep a complete list, to count ombies and to shoot them
+		 * 
+		 * @see Weapon
 		 */
 		public var zombies:Vector.<Zombie> = new Vector.<Zombie>();
 		
@@ -99,7 +100,7 @@ package levels
 			
 			//Register parameters
 			this.hitmap = params.hitmap;
-			this.bitmapLevel = params.bitmap;
+			this.bitmap = params.bitmap;
 			this.nextLevelName = params.nextLevelName
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
@@ -112,7 +113,7 @@ package levels
 			heatmap = new Heatmap(this);
 
 			//Layouting everything on the display list
-			addChild(bitmapLevel);
+			addChild(bitmap);
 			
 			//Generate Zombies
 			generateZombies(params.zombiesLocation, params.zombiesDensity, params.behemothProbability, params.satanusProbability);
@@ -152,7 +153,7 @@ package levels
 			zombies.length = 0;
 			
 			hitmap.loaderInfo.loader.unloadAndStop();
-			bitmapLevel.loaderInfo.loader.unloadAndStop();
+			bitmap.loaderInfo.loader.unloadAndStop();
 			
 			//Remove listener
 			this.removeEventListener(Event.ENTER_FRAME, onFrame);
@@ -197,14 +198,14 @@ package levels
 		{
 			if (player.lightMask.parent == this)
 			{
-				removeChild(bitmapLevel);
+				removeChild(bitmap);
 				removeChild(player.lightMask);
 				addChild(heatmap);
 			}
 			else if(heatmap.parent == this)
 			{
 				removeChild(heatmap);
-				addChild(bitmapLevel);
+				addChild(bitmap);
 			}
 			else
 			{

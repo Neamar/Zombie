@@ -206,7 +206,7 @@ package entity
 
 			//Add splatters
 			var matrix:Matrix = new Matrix(1, 0, 0, 1, x - splatter.width / 2, y - splatter.height / 2);
-			(parent as Level).bitmapLevel.bitmapData.draw(splatter, matrix, null, null, null, true);
+			(parent as Level).bitmap.bitmapData.draw(splatter, matrix, null, null, null, true);
 			
 			//Start death animation. When the animation completes, the zombie will be removed from everywhere
 			move = onMoveDead;
@@ -322,7 +322,6 @@ package entity
 		}
 		
 		/**
-<<<<<<< HEAD
 		 * Animation for dying
 		 * @return 8 (number of frames before next part of the animation)
 		 */
@@ -339,7 +338,7 @@ package entity
 				this.filters = [new BevelFilter(.5)];
 				this.graphics.beginFill(0xFF0000);
 				this.graphics.drawCircle(0, 0, 5);
-				(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
+				(parent as Level).bitmap.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
 				parent.removeChild(this);
 				
 				return 0;

@@ -167,6 +167,7 @@ package
 		{
 			if (nextInfluence)
 			{
+				bitmapData.lock();
 				//Draw last pass result.
 				bitmapData.setVector(currentRect, nextInfluence);
 				//Add lamplight repulsion
@@ -178,8 +179,8 @@ package
 					//Force the central pixel color value
 					bitmapData.setPixel(player.x / RESOLUTION, player.y / RESOLUTION, BASE_ALPHA + MAX_INFLUENCE + 31);
 				}
-				//TODO : what for ?
-				bitmapData.unlock();
+				
+				bitmapData.unlock(currentRect);
 				hasJustRedrawn = true;
 			}
 

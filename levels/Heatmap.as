@@ -1,4 +1,4 @@
-package 
+package levels
 {
 	import entity.Player;
 	import entity.Survivor;
@@ -9,11 +9,9 @@ package
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	import levels.Level;
 	
 	/**
 	 * Heatmap (other names : influence map, potential fields)
-	 * TODO : move to package levels
 	 * 
 	 * @see http://aigamedev.com/open/tutorials/potential-fields/
 	 * @author Neamar
@@ -99,12 +97,12 @@ package
 		/**
 		 * List of offsets to compute before drawing heatmap.
 		 */
-		protected var offsetToCompute:Vector.<int> = new Vector.<int>();;
+		protected var offsetToCompute:Vector.<int> = new Vector.<int>();
 		
 		/**
 		 * Associated values.
 		 */
-		protected var valueToCompute:Vector.<int> = new Vector.<int>();;
+		protected var valueToCompute:Vector.<int> = new Vector.<int>();
 		
 		/**
 		 * Parent level

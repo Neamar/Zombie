@@ -7,6 +7,7 @@ package entity
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import levels.Heatmap;
 	import levels.Level;
 	
 	/**

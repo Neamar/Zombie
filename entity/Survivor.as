@@ -1,5 +1,6 @@
 package entity 
 {
+	import levels.Heatmap;
 	import levels.Level;
 	/**
 	 * ...

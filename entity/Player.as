@@ -81,7 +81,18 @@ package entity
 		/**
 		 * Key-binding for moving.
 		 */
-		public var bindings:Object = { /*up	key */38: UP,  /*down	key */40: DOWN,  /*z		key */90: UP,  /*q		key */81: DOWN,  /*s		key */83: DOWN,  /*j		key */74: DOWN,  /*k		key */75: UP,  /*t		key */84: DEBUG,  /*w		key */87: FORCE_WIN,  /*r		key */82: RELOAD,  /*space	key */32: RELOAD};
+		public var bindings:Object = {
+			/*up	key */38: UP, 
+			/*down	key */40: DOWN,
+			/*z		key */90: UP,
+			/*q		key */81: DOWN,
+			/*s		key */83: DOWN,
+			/*j		key */74: DOWN,
+			/*k		key */75: UP,
+			/*t		key */84: DEBUG,
+			/*w		key */87: FORCE_WIN,
+			/*r		key */82: RELOAD,
+			/*space	key */32: RELOAD};
 		
 		/**
 		 * Which keys are currently pressed ?

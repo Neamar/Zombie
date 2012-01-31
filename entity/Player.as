@@ -145,6 +145,11 @@ package entity
 		public var frameNumber:int = 0;
 		
 		/**
+		 * Number of magazines available for each type of weapon
+		 */
+		public var defaultMagazines:Object;
+		
+		/**
 		 * Enlight stage when a weapon is shot, to show deflagration.
 		 * When 0, no deflagration.
 		 * 20 : max deflagration.
@@ -206,8 +211,9 @@ package entity
 			
 			x = params.playerStartX;
 			y = params.playerStartY;
-			level = parent;
 			resolution = params.playerStartResolution;
+			defaultMagazines = params.playerMagazines;
+			level = parent;
 			
 			//Player graphics
 			this.graphics.lineStyle(2);

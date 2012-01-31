@@ -10,7 +10,10 @@ package achievements.weapon
 	{
 		public override function apply():void
 		{
+			var deltaCapacity:int = value - weapon.magazineCapacity;
+			
 			weapon.magazineCapacity = value;
+			weapon.ammoInCurrentMagazine += deltaCapacity;
 		}
 	}
 

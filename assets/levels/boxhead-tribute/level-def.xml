@@ -36,7 +36,7 @@
 		</success>
 		
 		<hitmap>hitmap.png</hitmap>
-		<player x="60" y="430" handgun-magazines="10" shotgun-magazines="5" railgun-magazines="1" uzi-magazines="12" />
+		<player x="60" y="430" handgun-magazines="10" shotgun-magazines="5" uzi-magazines="12" />
 		<zombies>
 		</zombies>
 		<sounds>

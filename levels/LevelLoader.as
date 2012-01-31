@@ -139,6 +139,10 @@ package levels
 			var playerXML:XML = xml.technical.player[0];
 			params.playerStartX = playerXML.@x;
 			params.playerStartY = playerXML.@y;
+			params.playerMagazines.handgun = playerXML["@handgun-magazines"];
+			params.playerMagazines.shotgun = playerXML["@shotgun-magazines"];
+			params.playerMagazines.uzi = playerXML["@uzi-magazines"];
+			
 			if (playerXML.@resolution.toXMLString() != "")
 				params.playerStartResolution = playerXML.@resolution;
 			

@@ -4,7 +4,9 @@ package weapon
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * Shotgun weapon
+	 * "Slow but effective"
+	 * 
 	 * @author Neamar
 	 */
 	public final class Shotgun extends Weapon
@@ -20,7 +22,7 @@ package weapon
 		{
 			cooldown = 40;
 			magazineCapacity = 1;
-			magazineNumber = 4;
+			magazineNumber = player.defaultMagazines.shotgun;
 			reloadTime = 60;
 			halfAmplitude = 10;
 			

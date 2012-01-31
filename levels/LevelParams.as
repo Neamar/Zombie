@@ -72,6 +72,11 @@ package levels
 		public var playerStartResolution:int = 12;
 		
 		/**
+		 * Number of magazines for each weapon
+		 */
+		public var playerMagazines:Object = { handgun:0, shotgun:0, uzi:0 };
+		
+		/**
 		 * Name of the level following this one (to be loaded once this one is completed)
 		 */
 		public var nextLevelName:String;

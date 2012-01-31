@@ -4,7 +4,9 @@ package weapon
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * Handgun weapon
+	 * "You always need reliable fallback"
+	 * 
 	 * @author Neamar
 	 */
 	public final class Handgun extends JungleStyleWeapon
@@ -13,7 +15,7 @@ package weapon
 		{
 			cooldown = 30;
 			magazineCapacity = 3;
-			magazineNumber = 10;
+			magazineNumber = player.defaultMagazines.handgun;
 			super(level, player);
 		}
 		

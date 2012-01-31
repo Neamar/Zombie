@@ -5,7 +5,9 @@ package weapon
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * Railgun weapon
+	 * "Dispatch them"
+	 * 
 	 * @author Neamar
 	 */
 	public final class Railgun extends Weapon

@@ -1,6 +1,7 @@
 package
 {
 	import achievements.AchievementsHandler;
+	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -15,11 +16,25 @@ package
 	 */
 	public final class Game extends Sprite
 	{
+		/**
+		 * Level to load first
+		 */
 		public static const FIRST_LEVEL:String = "boxhead-tribute";
 		
+		/**
+		 * Current level
+		 */
 		public var level:Level;
 		
+		/**
+		 * Class handling the achievement / unlocking system.
+		 */
 		public var achievementHandler:AchievementsHandler;
+		
+		/**
+		 * The player. It stays the same for all the game to keep achievements unlocked
+		 */
+		public var player:Player;
 		
 		public function Game()
 		{
@@ -27,6 +42,8 @@ package
 			prepareLevel(FIRST_LEVEL);
 			
 			achievementHandler = new AchievementsHandler(this);
+			
+			player = new Player();
 		}
 		
 		/**
@@ -49,7 +66,7 @@ package
 		protected function prepareLevel(levelName:String):void
 		{
 			//Load current level
-			var loader:LevelLoader = new LevelLoader(levelName);
+			var loader:LevelLoader = new LevelLoader(levelName, player);
 			loader.addEventListener(Event.COMPLETE, addLevel);
 		}
 		

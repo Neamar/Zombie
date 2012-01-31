@@ -1,5 +1,6 @@
 package levels
 {
+	import entity.Player;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
@@ -49,11 +50,20 @@ package levels
 		 */
 		private var level:Level = null;
 		
-		public function LevelLoader(levelName:String)
+		/**
+		 * Loads the specified level
+		 * 
+		 * @param	levelName
+		 * @param	player the player to be used for the level
+		 */
+		public function LevelLoader(levelName:String, player:Player)
 		{
 			//Load associated XML :
 			var loader:URLLoader = new URLLoader(new URLRequest(buildUrl(levelName) + '/level-def.xml'));
 			loader.addEventListener(Event.COMPLETE, loadLevelData);
+			
+			//Save player
+			params.player = player;
 		}
 		
 		/**
@@ -164,6 +174,9 @@ package levels
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onResourceLoaded);
 		}
 		
+		/**
+		 * Creates the level
+		 */
 		private function buildLevel():void
 		{
 			level = new params.LevelClass(params);

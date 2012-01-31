@@ -197,17 +197,13 @@ package entity
 		
 		/**
 		 * Create the player
-		 * @param	parent
-		 * @param	params needed to get start information
+		 * The same player is used throughout the game (in order to keep unlocked achievements), so this constructor is really bare bone.
+		 * 
+		 * The binding to a specific level happens in onAddedToLevel();
 		 */
-		public function Player(parent:Level, params:LevelParams)
+		public function Player()
 		{
-			super(parent);
-			
-			x = params.playerStartX;
-			y = params.playerStartY;
-			level = parent;
-			resolution = params.playerStartResolution;
+			super();
 			
 			//Player graphics
 			this.graphics.lineStyle(2);
@@ -229,20 +225,27 @@ package entity
 			bloodRush.x = bloodRush.y = -Main.WIDTH2;
 			drawBloodrush();
 			
-			//Various initialisations
-			addEventListener(Event.ADDED_TO_STAGE, function():void
-				{
-					stage.addEventListener(Event.ENTER_FRAME, onFrame);
-					stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-					stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-					stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-					stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-				});
+			//To add key listeners, we need to wait for the player to be displayed on stage
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			//Populate weapons
-			this.availableWeapons.push(new Handgun(parent, this));
-			this.currentWeapon = this.availableWeapons[0];
+			availableWeapons.push(new Handgun(parent, this));
+			currentWeapon = this.availableWeapons[0];
+		}
+		
+		/**
+		 * Init the player on a specific level.
+		 * @param	parent
+		 * @param	params needed to get start information
+		 */
+		public function onAddedToLevel(parent:Level, params:LevelParams):void
+		{
+			init(parent);
+			
+			x = params.playerStartX;
+			y = params.playerStartY;
+			level = parent;
+			resolution = params.playerStartResolution;
 		}
 		
 		public function destroy():void
@@ -528,6 +531,19 @@ package entity
 				mask.graphics.endFill();
 				bd.draw(mask, new Matrix(1, 0, 0, 1, bd.width / 2, bd.height / 2), null, BlendMode.ALPHA);
 			}
+		}
+		
+		protected function onAddedToStage(e:Event):void
+		{
+			stage.addEventListener(Event.ENTER_FRAME, onFrame);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			
+			//Do not fire this more than once
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 	}
 }

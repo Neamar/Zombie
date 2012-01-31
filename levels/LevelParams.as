@@ -1,5 +1,6 @@
 package levels
 {
+	import entity.Player;
 	import flash.display.Bitmap;
 	import flash.geom.Rectangle;
 	
@@ -70,6 +71,13 @@ package levels
 		 * Redefined for tight levels.
 		 */
 		public var playerStartResolution:int = 12;
+		
+		/**
+		 * Player to be used by the level.
+		 * This variable is not defined by the XML. Instead, is is set by the Game component before creating the level,
+		 * populating it with the player to use for all the game.
+		 */
+		public var player:Player;
 		
 		/**
 		 * Name of the level following this one (to be loaded once this one is completed)

@@ -99,7 +99,9 @@ package levels
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
 			
-			player = new Player(this, params);
+			//Get the player, add it to this level :
+			player = params.player;
+			player.onAddedToLevel(this, params);
 			
 			heatmap = new Heatmap(this);
 			

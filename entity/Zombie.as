@@ -174,11 +174,14 @@ package entity
 		
 		public function Zombie(parent:Level, x:int, y:int)
 		{
+			super();
+			
 			this.x = x;
 			this.y = y;
 			this.level = parent;
 			maxInfluence = Heatmap.MAX_INFLUENCE
-			super(parent);
+			
+			init(parent);
 			influenceMap = heatmap.bitmapData;
 			
 			//Zombie graphics

@@ -15,10 +15,19 @@ package
 	 */
 	public final class Game extends Sprite
 	{
+		/**
+		 * Name of the first level to load
+		 */
 		public static const FIRST_LEVEL:String = "boxhead-tribute";
 		
+		/**
+		 * Level currently displayed
+		 */
 		public var level:Level;
 		
+		/**
+		 * Handler for the achievements
+		 */
 		public var achievementHandler:AchievementsHandler;
 		
 		public function Game()
@@ -34,11 +43,13 @@ package
 		 */
 		protected function gotoNextLevel(e:Event):void
 		{
+			//Render the level eligible for GC :
 			level.destroy();
 			removeChild(level);
 			level.removeEventListener(Level.WIN, gotoNextLevel);
 			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
+			//Load next level
 			prepareLevel(level.nextLevelName);
 		}
 		

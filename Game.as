@@ -53,6 +53,7 @@ package
 			removeChild(level);
 			level.removeEventListener(Level.WIN, gotoNextLevel);
 			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
+			level = null;
 			
 			//Load next level
 			prepareLevel(nextLevelName);

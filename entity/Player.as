@@ -531,7 +531,7 @@ package entity
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
-		protected function addListeners()
+		protected function addListeners():void
 		{
 			stage.addEventListener(Event.ENTER_FRAME, onFrame);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
@@ -541,7 +541,7 @@ package entity
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 		
-		protected function removeListeners()
+		protected function removeListeners():void
 		{
 			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);

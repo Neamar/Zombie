@@ -42,7 +42,7 @@ package levels
 		/**
 		 * Parameters to use for the level
 		 */
-		private var params:LevelParams = new LevelParams();
+		public var params:LevelParams = new LevelParams();
 		
 		/**
 		 * The level, once built.

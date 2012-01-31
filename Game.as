@@ -30,6 +30,11 @@ package
 		 */
 		public var achievementHandler:AchievementsHandler;
 		
+		/**
+		 * Name of the next level to load
+		 */
+		public var nextLevelName:String;
+		
 		public function Game()
 		{
 			//Load first level
@@ -50,7 +55,7 @@ package
 			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
 			//Load next level
-			prepareLevel(level.nextLevelName);
+			prepareLevel(nextLevelName);
 		}
 		
 		/**
@@ -73,6 +78,10 @@ package
 			var loader:LevelLoader = e.target as LevelLoader;
 			loader.removeEventListener(Event.COMPLETE, addLevel);
 			
+			//Store next level name
+			nextLevelName = loader.params.nextLevelName;
+			
+			//Add the level
 			level = loader.getLevel()
 			level.addEventListener(Level.WIN, gotoNextLevel);
 			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);

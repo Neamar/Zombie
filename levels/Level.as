@@ -103,7 +103,7 @@ package levels
 			addChild(bitmap);
 			
 			//Generate Zombies
-			generateZombies(params.zombiesLocation, params.zombiesDensity, params.behemothProbability, params.satanusProbability);
+			generateZombies(params.initialSpawns);
 			
 			/**
 			 * Blending and masking
@@ -221,22 +221,22 @@ package levels
 		 * @param	satanusProbabilityVector
 		 * @param	avoidPlayer whether to add zombies right in front of the player
 		 */
-		protected function generateZombies(zombiesLocation:Vector.<Rectangle>, zombiesDensity:Vector.<int>, behemothProbabilityVector:Vector.<int>, satanusProbabilityVector:Vector.<int>, avoidPlayer:Boolean = false):void
+		protected function generateZombies(spawns:Vector.<LevelSpawn>):void
 		{
-			//Generate Zombies
-			while (zombiesLocation.length > 0)
+			//Generate Zombies based on the s
+			for each(var spawn:LevelSpawn in spawns)
 			{
-				var spawnArea:Rectangle = zombiesLocation.pop();
-				var spawnQuantity:int = zombiesDensity.pop();
-				var behemothProbability:Number = 1 / behemothProbabilityVector.pop();
-				var satanusProbability:Number = 1 / satanusProbabilityVector.pop();
+				var spawnArea:Rectangle = spawn.location;
+				var spawnQuantity:int = spawn.number;
+				var behemothProbability:Number = 1 / spawn.behemothProbability;
+				var satanusProbability:Number = 1 / spawn.satanusProbability;
 				
 				for (var i:int = 0; i < spawnQuantity; i++)
 				{
 					var x:int = spawnArea.x + spawnArea.width * Math.random();
 					var y:int = spawnArea.y + spawnArea.height * Math.random();
 					
-					if (hitmap.bitmapData.getPixel32(x, y) != 0 || (avoidPlayer && (Math.abs(x - player.x) < 200 && Math.abs(y - player.y) < 200)))
+					if (hitmap.bitmapData.getPixel32(x, y) != 0 || (spawn.avoidPlayer && (Math.abs(x - player.x) < 200 && Math.abs(y - player.y) < 200)))
 					{
 						i--;
 					}

@@ -53,7 +53,7 @@ package levels
 		{
 			trace("new wave !");
 			//Add the zombies
-			generateZombies(wavesZombiesLocation.shift(), wavesZombiesDensity.shift(), wavesBehemothProbability.shift(), wavesSatanusProbability.shift(), true);
+			/*generateZombies(wavesZombiesLocation.shift(), wavesZombiesDensity.shift(), wavesBehemothProbability.shift(), wavesSatanusProbability.shift(), true);
 			
 			if (wavesDelay.length == 0)
 			{
@@ -72,6 +72,7 @@ package levels
 			{
 				dispatchEvent(new Event(Level.LOST));
 			}
+			*/
 		}
 		
 		protected override function onTimer(e:TimerEvent):void

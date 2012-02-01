@@ -9,8 +9,8 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<name>3</name>
-		<followed-by>4</followed-by>
+		<name>3-tight</name>
+		<followed-by>4-boxhead-tribute</followed-by>
 		<success on="killing_all" />
 		
 		<hitmap>hitmap.png</hitmap>

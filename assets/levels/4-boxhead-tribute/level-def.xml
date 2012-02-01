@@ -9,7 +9,7 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<name>boxhead-tribute</name>
+		<name>4-boxhead-tribute</name>
 		<followed-by>0-intro</followed-by>
 		<success on="surviving_waves">
 			<wave number="0" delay="1000">

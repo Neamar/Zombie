@@ -15,7 +15,7 @@ package
 	 */
 	public final class Game extends Sprite
 	{
-		public static const FIRST_LEVEL:String = "boxhead-tribute";
+		public static const FIRST_LEVEL:String = "0-intro";
 		
 		public var level:Level;
 		

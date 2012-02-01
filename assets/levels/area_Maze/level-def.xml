@@ -9,8 +9,7 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<name>2-test</name>
-		<followed-by>3-tight</followed-by>
+		<followed-by>killAll_small</followed-by>
 		<success on="accessing_area">
 			<area x="420" y="180" width="30" height="60" />
 		</success>

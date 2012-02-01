@@ -9,8 +9,7 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<name>4-boxhead-tribute</name>
-		<followed-by>0-intro</followed-by>
+		<followed-by>area_Intro</followed-by>
 		<success on="surviving_waves" max-zombies="100">
 			<wave number="0" delay="1000">
 				<spawn-zone x="0" y="0" width="800" height="800" number="3" avoid-player="1" />
@@ -38,6 +37,7 @@
 		<hitmap>hitmap.png</hitmap>
 		<player x="60" y="430" handgun-magazines="10" shotgun-magazines="5" uzi-magazines="12" />
 		<zombies>
+			<!-- No zombies at startup. -->
 		</zombies>
 		<sounds>
 			<ambient>ambient.mp3</ambient>

@@ -92,9 +92,9 @@ package levels
 			}
 			frameNumber = 0;
 			
-			//Register parameters
+			//Register parameters. Clone the bitmpa to avoid drawing on the original dead zombies.
 			this.hitmap = params.hitmap;
-			this.bitmap = params.bitmap;
+			this.bitmap = new Bitmap(params.bitmap.bitmapData.clone());
 			this.nextLevelName = params.nextLevelName
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
@@ -141,11 +141,8 @@ package levels
 				frameWaker[frameNumber].length = 0;
 			}
 			
-			//Clean up proprieties :
+			//Clean up properties
 			zombies.length = 0;
-			
-			hitmap.loaderInfo.loader.unloadAndStop();
-			bitmap.loaderInfo.loader.unloadAndStop();
 			
 			//Remove listener
 			removeEventListener(Event.ENTER_FRAME, onFrame);

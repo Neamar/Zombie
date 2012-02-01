@@ -1,5 +1,6 @@
 package levels
 {
+	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
@@ -64,10 +65,11 @@ package levels
 				spawner.delay = wavesDelay.shift();
 			}
 			
+			// Zombie limit exceeded
+			// TODO : implement in the XML ?
 			if (zombies.length > 100)
 			{
-				player.hit(null, 5000);
-				trace("YOU DIE. MISERABLY.");
+				dispatchEvent(new Event(Level.LOST));
 			}
 		}
 		

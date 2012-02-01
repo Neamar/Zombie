@@ -58,6 +58,7 @@ package
 		 */
 		protected function onSuccess(e:Event):void
 		{
+			trace("Success");
 			destroyCurrentLevel();
 			
 			prepareLevel(level.nextLevelName);
@@ -72,6 +73,7 @@ package
 			level.destroy();
 			removeChild(level);
 			level.removeEventListener(Level.WIN, onSuccess);
+			level.removeEventListener(Level.LOST, onFailure);
 			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
 		}

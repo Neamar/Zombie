@@ -13,6 +13,7 @@ package levels
 	/**
 	 * Load a level.
 	 * Dispatch Event.COMPLETE when every assets has been loaded
+	 * 
 	 * @author Neamar
 	 */
 	public final class LevelLoader extends EventDispatcher
@@ -41,8 +42,12 @@ package levels
 		/**
 		 * Parameters to use for the level
 		 */
-		private var params:LevelParams = new LevelParams();
+		public var params:LevelParams = new LevelParams();
 		
+		/**
+		 * Loads specified level
+		 * @param	levelName
+		 */
 		public function LevelLoader(levelName:String)
 		{
 			//Load associated XML :

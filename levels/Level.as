@@ -73,11 +73,6 @@ package levels
 		 */
 		public var heatmap:Heatmap;
 		
-		/**
-		 * Name of the next level to load
-		 */
-		public var nextLevelName:String;
-		
 		public function Level(params:LevelParams)
 		{
 			//Optimise display
@@ -95,7 +90,7 @@ package levels
 			//Register parameters. Clone the bitmpa to avoid drawing on the original dead zombies.
 			this.hitmap = params.hitmap;
 			this.bitmap = new Bitmap(params.bitmap.bitmapData.clone());
-			this.nextLevelName = params.nextLevelName
+
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
 			

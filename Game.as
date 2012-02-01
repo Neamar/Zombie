@@ -16,6 +16,9 @@ package
 	 */
 	public final class Game extends Sprite
 	{
+		/**
+		 * Name of the first level to load
+		 */
 		public static const FIRST_LEVEL:String = "boxhead-tribute";
 		
 		/**
@@ -32,6 +35,11 @@ package
 		 * Handler for the achievements of the level.
 		 */
 		public var achievementHandler:AchievementsHandler;
+		
+		/**
+		 * Name of the next level to load
+		 */
+		public var nextLevelName:String;
 		
 		public function Game()
 		{
@@ -61,7 +69,7 @@ package
 			trace("Success");
 			destroyCurrentLevel();
 			
-			prepareLevel(level.nextLevelName);
+			prepareLevel(nextLevelName);
 		}
 		
 		/**
@@ -70,12 +78,13 @@ package
 		 */
 		protected function destroyCurrentLevel():void
 		{
+			//Render the level eligible for GC :
 			level.destroy();
 			removeChild(level);
 			level.removeEventListener(Level.WIN, onSuccess);
 			level.removeEventListener(Level.LOST, onFailure);
 			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
-			
+			level = null;
 		}
 		
 		/**
@@ -97,14 +106,18 @@ package
 		{
 			loader.removeEventListener(Event.COMPLETE, addLevel);
 			
+			//Store next level name
+			nextLevelName = loader.params.nextLevelName;
+			
+			//Add the level
 			level = loader.getLevel()
 			level.addEventListener(Level.WIN, onSuccess);
 			level.addEventListener(Level.LOST, onFailure);
 			
 			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
-			
 			achievementHandler.applyDefaultsAchievements();
+			
 			addChild(level);
 		}
 	}

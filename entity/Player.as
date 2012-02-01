@@ -241,15 +241,7 @@ package entity
 			drawBloodrush();
 			
 			//Various initialisations
-			addEventListener(Event.ADDED_TO_STAGE, function():void
-				{
-					stage.addEventListener(Event.ENTER_FRAME, onFrame);
-					stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-					stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-					stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-					stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-				});
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			//Populate weapons
 			this.availableWeapons.push(new Handgun(parent, this));
@@ -263,12 +255,7 @@ package entity
 			lightMask.filters = [];
 			
 			bloodRush.bitmapData.dispose();
-			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			removeListeners();
 			
 			this.availableWeapons.length = 0;
 			this.currentWeapon = null;
@@ -539,6 +526,40 @@ package entity
 				mask.graphics.endFill();
 				bd.draw(mask, new Matrix(1, 0, 0, 1, bd.width / 2, bd.height / 2), null, BlendMode.ALPHA);
 			}
+		}
+		
+		/**
+		 * Called as soon as we get a reference to the stage
+		 * 
+		 * @param	e
+		 */
+		protected function onAddedToStage(e:Event):void
+		{
+			//Add all the listeners (key, mouse...)
+			addListeners();
+			
+			//Clean the event
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		protected function addListeners():void
+		{
+			stage.addEventListener(Event.ENTER_FRAME, onFrame);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		}
+		
+		protected function removeListeners():void
+		{
+			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 	}
 }

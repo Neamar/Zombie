@@ -19,7 +19,7 @@ package
 		/**
 		 * Name of the first level to load
 		 */
-		public static const FIRST_LEVEL:String = "0-intro";
+		public static const FIRST_LEVEL:String = "boxhead-tribute";
 		
 		/**
 		 * Level currently displayed

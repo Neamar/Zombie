@@ -22,13 +22,13 @@ package levels
 		 * One zombie in behemothProbability will be a behemoth.
 		 * This is a probability, and therefore you may have a few surprises
 		 */
-		public var behemothProbability:int;
+		public var behemothProbability:int = 50;
 		
 		/**
 		 * One zombie in satanusProbability will be a satanus
 		 * This is a probability, and therefore you may have a few surprises
 		 */
-		public var satanusProbability:int;
+		public var satanusProbability:int = 50;
 		
 		/**
 		 * Whether or not to avoid spawning zombies right in front of the zombies.
@@ -49,13 +49,12 @@ package levels
 
 			if (xml["@behemoth-probability"].toXMLString() != "")
 				behemothProbability = xml["@behemoth-probability"];
-			else
-				behemothProbability = 50; //Default : one in 50 zombie is a behemoth
 			
 			if (xml["@satanus-probability"].toXMLString() != "")
 				satanusProbability = xml["@satanus-probability"];
-			else
-				satanusProbability = 50; //Default : one in 50 zombie is a satanus
+				
+			if (xml["@avoid-player"].toXMLString() != "")
+				avoidPlayer = true;
 		}
 	}
 

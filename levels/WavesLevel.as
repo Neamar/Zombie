@@ -15,24 +15,18 @@ package levels
 	{
 		private var spawner:Timer;
 		
+		private var currentWave:int = 0;
 		private var wavesDelay:Vector.<int>;
-		private var wavesZombiesLocation:Vector.<Vector.<Rectangle>>;
-		private var wavesZombiesDensity:Vector.<Vector.<int>>;
-		private var wavesBehemothProbability:Vector.<Vector.<int>>;
-		private var wavesSatanusProbability:Vector.<Vector.<int>>;
+		private var wavesData:Vector.<Vector.<LevelSpawn>>;
 		
 		public function WavesLevel(params:LevelParams)
 		{
 			super(params);
 			
 			wavesDelay = params.wavesDelay;
-			wavesZombiesLocation = params.wavesZombiesLocation.concat();
-			wavesZombiesDensity = params.wavesZombiesDensity.concat();
+			wavesData = params.wavesDatas;
 			
-			wavesBehemothProbability = params.wavesBehemothProbability.concat();
-			wavesSatanusProbability = params.wavesSatanusProbability.concat();
-			
-			spawner = new Timer(params.wavesDelay.shift());
+			spawner = new Timer(wavesDelay[currentWave]);
 			spawner.addEventListener(TimerEvent.TIMER, onSpawner);
 			spawner.start();
 		}
@@ -51,11 +45,11 @@ package levels
 		 */
 		protected function onSpawner(e:TimerEvent):void
 		{
-			trace("new wave !");
 			//Add the zombies
-			/*generateZombies(wavesZombiesLocation.shift(), wavesZombiesDensity.shift(), wavesBehemothProbability.shift(), wavesSatanusProbability.shift(), true);
+			generateZombies(wavesData[currentWave]);
 			
-			if (wavesDelay.length == 0)
+			currentWave++;
+			if (wavesDelay.length == currentWave)
 			{
 				trace("end of waves");
 				spawner.removeEventListener(TimerEvent.TIMER, onSpawner);
@@ -63,7 +57,7 @@ package levels
 			}
 			else
 			{
-				spawner.delay = wavesDelay.shift();
+				spawner.delay = wavesDelay[currentWave];
 			}
 			
 			// Zombie limit exceeded
@@ -72,7 +66,7 @@ package levels
 			{
 				dispatchEvent(new Event(Level.LOST));
 			}
-			*/
+
 		}
 		
 		protected override function onTimer(e:TimerEvent):void

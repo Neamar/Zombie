@@ -71,10 +71,7 @@ package levels
 		// SPECIAL PARAMETERS : WavesLevel
 		/////////////////////////////////////
 		public var wavesDelay:Vector.<int> = new Vector.<int>();
-		public var wavesZombiesLocation:Vector.<Vector.<Rectangle>> = new Vector.<Vector.<Rectangle>>();
-		public var wavesZombiesDensity:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
-		public var wavesBehemothProbability:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
-		public var wavesSatanusProbability:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
+		public var wavesDatas:Vector.<Vector.<LevelSpawn>> = new Vector.<Vector.<LevelSpawn>>();
 	}
 
 }

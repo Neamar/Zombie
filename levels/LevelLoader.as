@@ -90,7 +90,29 @@ package levels
 					params.hitmap = e.target.content
 				});
 			
-			// Read other parameters and parse them into LevelParams
+			/**
+			 * Read other parameters and parse them into LevelParams
+			 */
+			//Meta-parameters
+			params.nextLevelName = xml.technical["followed-by"][0];
+			
+			//Load player info
+			var playerXML:XML = xml.technical.player[0];
+			params.playerStartX = playerXML.@x;
+			params.playerStartY = playerXML.@y;
+			params.playerMagazines.handgun = playerXML["@handgun-magazines"];
+			params.playerMagazines.shotgun = playerXML["@shotgun-magazines"];
+			params.playerMagazines.uzi = playerXML["@uzi-magazines"];
+			if (playerXML.@resolution.toXMLString() != "")
+				params.playerStartResolution = playerXML.@resolution;
+			
+			//Number of zombies per area at startup
+			var spawnZonesXML:XMLList = xml.technical.zombies[0].elements('spawn-zone');
+			for each (var spawnZoneXML:XML in spawnZonesXML)
+			{
+				params.initialSpawns.push(new LevelSpawn(spawnZoneXML));
+			}
+			
 			//Load success type
 			var successXML:XML = xml.technical.success[0];
 			if (successXML.@on == 'accessing_area')
@@ -106,47 +128,21 @@ package levels
 			else if (successXML.@on == 'surviving_waves')
 			{
 				params.LevelClass = WavesLevel;
-				/*
 				for each (var wave:XML in successXML.wave)
 				{
 					params.wavesDelay.push(int(wave.@delay.toString()));
-					var zombiesLocation:Vector.<Rectangle> = new Vector.<Rectangle>();
-					var zombiesDensity:Vector.<int> = new Vector.<int>();
-					var behemothProbability:Vector.<int> = new Vector.<int>();
-					var satanusProbability:Vector.<int> = new Vector.<int>();
 					
-					buildSpawnZone(wave.children(), zombiesLocation, zombiesDensity, behemothProbability, satanusProbability);
-					
-					params.wavesZombiesLocation.push(zombiesLocation);
-					params.wavesZombiesDensity.push(zombiesDensity);
-					params.wavesBehemothProbability.push(behemothProbability);
-					params.wavesSatanusProbability.push(satanusProbability);
+					var spawnZones:Vector.<LevelSpawn> = new Vector.<LevelSpawn>();
+					for each(spawnZoneXML in wave.children())
+					{
+						spawnZones.push(new LevelSpawn(spawnZoneXML));
+					}
+					params.wavesDatas.push(spawnZones);
 				}
-				*/
 			}
 			else
 			{
 				throw new Error("Success type for the level is unknown.");
-			}
-			
-			//Level specific info
-			params.nextLevelName = xml.technical["followed-by"][0];
-			//Load player info
-			var playerXML:XML = xml.technical.player[0];
-			params.playerStartX = playerXML.@x;
-			params.playerStartY = playerXML.@y;
-			params.playerMagazines.handgun = playerXML["@handgun-magazines"];
-			params.playerMagazines.shotgun = playerXML["@shotgun-magazines"];
-			params.playerMagazines.uzi = playerXML["@uzi-magazines"];
-			
-			if (playerXML.@resolution.toXMLString() != "")
-				params.playerStartResolution = playerXML.@resolution;
-			
-			//Number of zombies per area
-			var spawnZonesXML:XMLList = xml.technical.zombies[0].elements('spawn-zone');
-			for each (var spawnZoneXML:XML in spawnZonesXML)
-			{
-				params.initialSpawns.push(new LevelSpawn(spawnZoneXML));
 			}
 		}
 		

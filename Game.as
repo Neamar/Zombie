@@ -41,12 +41,20 @@ package
 		 */
 		public var nextLevelName:String;
 		
-		public function Game()
+		/**
+		 * Hud to be displayed
+		 */
+		public var hud:Hud;
+		
+		public function Game() 
 		{
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
 			
 			achievementHandler = new AchievementsHandler(this);
+			
+			hud = new Hud();
+			addChild(hud);
 		}
 		
 		/**
@@ -66,7 +74,6 @@ package
 		 */
 		protected function onSuccess(e:Event):void
 		{
-			trace("Success");
 			destroyCurrentLevel();
 			
 			prepareLevel(nextLevelName);
@@ -117,8 +124,9 @@ package
 			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
 			achievementHandler.applyDefaultsAchievements();
-			
+
 			addChild(level);
+			setChildIndex(hud, numChildren - 1);
 		}
 	}
 }

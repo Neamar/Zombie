@@ -100,6 +100,7 @@ package levels
 			hitmap.bitmapData.lock();
 			
 			player = new Player(this, params);
+			addEventListener(Player.PLAYER_DEAD, onPlayerDead);
 			
 			heatmap = new Heatmap(this);
 			
@@ -147,7 +148,8 @@ package levels
 			bitmap.loaderInfo.loader.unloadAndStop();
 			
 			//Remove listener
-			this.removeEventListener(Event.ENTER_FRAME, onFrame);
+			removeEventListener(Event.ENTER_FRAME, onFrame);
+			removeEventListener(Player.PLAYER_DEAD, onPlayerDead);
 		}
 		
 		/**
@@ -172,11 +174,19 @@ package levels
 		}
 		
 		/**
-		 * This function dispatch the WIN event.
+		 * This function force the dispatch of the WIN event.
 		 */
 		public function dispatchWin():void
 		{
 			dispatchEvent(new Event(Level.WIN));
+		}
+		
+		/**
+		 * When the player dies, the level is lost.
+		 */
+		protected function onPlayerDead(e:Event):void
+		{
+			dispatchEvent(new Event(Level.LOST));
 		}
 		
 		/**
@@ -211,7 +221,8 @@ package levels
 		
 		/**
 		 * Add some zombies according to the specified parameters.
-		 *
+		 * TODO : factorize in common class
+		 * 
 		 * @param	zombiesLocation
 		 * @param	zombiesDensity
 		 * @param	behemothProbabilityVector

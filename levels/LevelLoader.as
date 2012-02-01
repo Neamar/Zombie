@@ -43,12 +43,6 @@ package levels
 		 */
 		private var params:LevelParams = new LevelParams();
 		
-		/**
-		 * The level, once built.
-		 * If called before the COMPLETE event, will be null.
-		 */
-		private var level:Level = null;
-		
 		public function LevelLoader(levelName:String)
 		{
 			//Load associated XML :
@@ -57,20 +51,15 @@ package levels
 		}
 		
 		/**
-		 * This function should be called after the Event.COMPLET has been dispatched.
-		 * Else, it returns null.
-		 *
-		 * After it is called, the levelLoader is cleaned up, ready to be disposed.
+		 * This function should be called after the Event.COMPLETE has been dispatched.
+		 * Else, the behavior is undefined.
 		 *
 		 * @return the level
 		 */
 		public function getLevel():Level
 		{
-			var l:Level = level;
-			level = null;
-			params = null;
-			System.disposeXML(xml);
-			return l;
+			var level:Level = new params.LevelClass(params);;
+			return level;
 		}
 		
 		/**
@@ -168,13 +157,6 @@ package levels
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onResourceLoaded);
 		}
 		
-		private function buildLevel():void
-		{
-			level = new params.LevelClass(params);
-			
-			dispatchEvent(new Event(Event.COMPLETE));
-		}
-		
 		/**
 		 * Called when a resource finishes loading.
 		 * Dispatch the COMPLETE event if it was the last.
@@ -195,7 +177,12 @@ package levels
 			//Are we finished yet ?
 			if (remainingResourcesToLoad == 0)
 			{
-				buildLevel();
+				//Cleanup
+				System.disposeXML(xml);
+				dict = null;
+				
+				//Dispatch event
+				dispatchEvent(new Event(Event.COMPLETE));
 			}
 		}
 		

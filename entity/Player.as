@@ -24,6 +24,11 @@ package entity
 	public final class Player extends Entity
 	{
 		/**
+		 * Event.
+		 */
+		public static const PLAYER_DEAD:String = "playerDead";
+		
+		/**
 		 * For debug : the player is never hurt.
 		 */
 		public static const INVINCIBLE:Boolean = false;
@@ -282,8 +287,8 @@ package entity
 			}
 			if (damagesTaken > maxHealthPoints)
 			{
-				trace('You die : ', damagesTaken - maxHealthPoints);
-				damagesTaken = maxHealthPoints;
+				//Die, miserable wretch. This instance will most probably be destroyed soon, along with the level
+				parent.dispatchEvent(new Event(PLAYER_DEAD));
 			}
 		}
 		

@@ -1,6 +1,7 @@
 package
 {
 	import achievements.AchievementsHandler;
+	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -17,8 +18,19 @@ package
 	{
 		public static const FIRST_LEVEL:String = "boxhead-tribute";
 		
+		/**
+		 * Level currently displayed
+		 */
 		public var level:Level;
 		
+		/**
+		 * Loader used to generate current level.
+		 */
+		public var loader:LevelLoader;
+		
+		/**
+		 * Handler for the achievements of the level.
+		 */
 		public var achievementHandler:AchievementsHandler;
 		
 		public function Game()
@@ -30,16 +42,38 @@ package
 		}
 		
 		/**
-		 * Call when the WIN event is dispatched
+		 * The level says it failed, retry.
+		 * @param	e
 		 */
-		protected function gotoNextLevel(e:Event):void
+		protected function onFailure(e:Event):void
+		{
+			destroyCurrentLevel();
+			
+			addLevel();
+		}
+		
+		/**
+		 * Call when the WIN event is dispatched.
+		 * Load the next level
+		 */
+		protected function onSuccess(e:Event):void
+		{
+			destroyCurrentLevel();
+			
+			prepareLevel(level.nextLevelName);
+		}
+		
+		/**
+		 * Clean up the level currently displayed.
+		 * It should be eligible for GC.
+		 */
+		protected function destroyCurrentLevel():void
 		{
 			level.destroy();
 			removeChild(level);
-			level.removeEventListener(Level.WIN, gotoNextLevel);
+			level.removeEventListener(Level.WIN, onSuccess);
 			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
-			prepareLevel(level.nextLevelName);
 		}
 		
 		/**
@@ -49,7 +83,7 @@ package
 		protected function prepareLevel(levelName:String):void
 		{
 			//Load current level
-			var loader:LevelLoader = new LevelLoader(levelName);
+			loader = new LevelLoader(levelName);
 			loader.addEventListener(Event.COMPLETE, addLevel);
 		}
 		
@@ -57,14 +91,16 @@ package
 		 * Call when a new level is ready for play
 		 * @param	e
 		 */
-		protected function addLevel(e:Event):void
+		protected function addLevel(e:Event = null):void
 		{
-			var loader:LevelLoader = e.target as LevelLoader;
 			loader.removeEventListener(Event.COMPLETE, addLevel);
 			
 			level = loader.getLevel()
-			level.addEventListener(Level.WIN, gotoNextLevel);
+			level.addEventListener(Level.WIN, onSuccess);
+			level.addEventListener(Level.LOST, onFailure);
+			
 			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
+			
 			
 			achievementHandler.applyDefaultsAchievements();
 			addChild(level);

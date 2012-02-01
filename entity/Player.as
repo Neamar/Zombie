@@ -24,6 +24,11 @@ package entity
 	public final class Player extends Entity
 	{
 		/**
+		 * Event.
+		 */
+		public static const PLAYER_DEAD:String = "playerDead";
+		
+		/**
 		 * For debug : the player is never hurt.
 		 */
 		public static const INVINCIBLE:Boolean = false;
@@ -145,6 +150,11 @@ package entity
 		public var frameNumber:int = 0;
 		
 		/**
+		 * Number of magazines available for each type of weapon
+		 */
+		public var defaultMagazines:Object;
+		
+		/**
 		 * Enlight stage when a weapon is shot, to show deflagration.
 		 * When 0, no deflagration.
 		 * 20 : max deflagration.
@@ -206,8 +216,9 @@ package entity
 			
 			x = params.playerStartX;
 			y = params.playerStartY;
-			level = parent;
 			resolution = params.playerStartResolution;
+			defaultMagazines = params.playerMagazines;
+			level = parent;
 			
 			//Player graphics
 			this.graphics.lineStyle(2);
@@ -230,15 +241,7 @@ package entity
 			drawBloodrush();
 			
 			//Various initialisations
-			addEventListener(Event.ADDED_TO_STAGE, function():void
-				{
-					stage.addEventListener(Event.ENTER_FRAME, onFrame);
-					stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-					stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-					stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-					stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-					stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-				});
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			//Populate weapons
 			this.availableWeapons.push(new Handgun(parent, this));
@@ -252,12 +255,7 @@ package entity
 			lightMask.filters = [];
 			
 			bloodRush.bitmapData.dispose();
-			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			removeListeners();
 			
 			this.availableWeapons.length = 0;
 			this.currentWeapon = null;
@@ -276,8 +274,8 @@ package entity
 			}
 			if (damagesTaken > maxHealthPoints)
 			{
-				trace('You die : ', damagesTaken - maxHealthPoints);
-				damagesTaken = maxHealthPoints;
+				//Die, miserable wretch. This instance will most probably be destroyed soon, along with the level
+				parent.dispatchEvent(new Event(PLAYER_DEAD));
 			}
 		}
 		
@@ -528,6 +526,40 @@ package entity
 				mask.graphics.endFill();
 				bd.draw(mask, new Matrix(1, 0, 0, 1, bd.width / 2, bd.height / 2), null, BlendMode.ALPHA);
 			}
+		}
+		
+		/**
+		 * Called as soon as we get a reference to the stage
+		 * 
+		 * @param	e
+		 */
+		protected function onAddedToStage(e:Event):void
+		{
+			//Add all the listeners (key, mouse...)
+			addListeners();
+			
+			//Clean the event
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		protected function addListeners():void
+		{
+			stage.addEventListener(Event.ENTER_FRAME, onFrame);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		}
+		
+		protected function removeListeners():void
+		{
+			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 	}
 }

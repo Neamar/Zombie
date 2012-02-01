@@ -1,5 +1,6 @@
 package levels
 {
+	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
@@ -14,23 +15,37 @@ package levels
 	{
 		private var spawner:Timer;
 		
+		/**
+		 * Current wave number
+		 */
+		private var currentWave:int = 0;
+		
+		/**
+		 * Delay between two consecutives waves.
+		 * The first value is the delay between level start and first wave, second value between first and second wave, ad lib.
+		 */
 		private var wavesDelay:Vector.<int>;
-		private var wavesZombiesLocation:Vector.<Vector.<Rectangle>>;
-		private var wavesZombiesDensity:Vector.<Vector.<int>>;
-		private var wavesBehemothProbability:Vector.<Vector.<int>>;
-		private var wavesSatanusProbability:Vector.<Vector.<int>>;
+		
+		/**
+		 * Datas. Respects the same structure as initialSpawns
+		 * @see initialSpawns
+		 */
+		private var wavesData:Vector.<Vector.<LevelSpawn>>;
+		
+		/**
+		 * Maximum number of zimbies before the level is lost.
+		 */
+		private var maxNumberOfZombies:int;
 		
 		public function WavesLevel(params:LevelParams)
 		{
 			super(params);
 			
 			wavesDelay = params.wavesDelay;
-			wavesZombiesLocation = params.wavesZombiesLocation;
-			wavesZombiesDensity = params.wavesZombiesDensity;
-			wavesBehemothProbability = params.wavesBehemothProbability;
-			wavesSatanusProbability = params.wavesSatanusProbability;
+			wavesData = params.wavesDatas;
+			maxNumberOfZombies = params.wavesMaxNumberOfZombies;
 			
-			spawner = new Timer(params.wavesDelay.shift());
+			spawner = new Timer(wavesDelay[currentWave]);
 			spawner.addEventListener(TimerEvent.TIMER, onSpawner);
 			spawner.start();
 		}
@@ -49,11 +64,11 @@ package levels
 		 */
 		protected function onSpawner(e:TimerEvent):void
 		{
-			trace("new wave !");
 			//Add the zombies
-			generateZombies(wavesZombiesLocation.shift(), wavesZombiesDensity.shift(), wavesBehemothProbability.shift(), wavesSatanusProbability.shift(), true);
+			generateZombies(wavesData[currentWave]);
 			
-			if (wavesDelay.length == 0)
+			currentWave++;
+			if (wavesDelay.length == currentWave)
 			{
 				trace("end of waves");
 				spawner.removeEventListener(TimerEvent.TIMER, onSpawner);
@@ -61,14 +76,16 @@ package levels
 			}
 			else
 			{
-				spawner.delay = wavesDelay.shift();
+				spawner.delay = wavesDelay[currentWave];
 			}
 			
-			if (zombies.length > 100)
+			// Zombie limit exceeded
+			// TODO : implement in the XML ?
+			if (zombies.length > maxNumberOfZombies)
 			{
-				player.hit(null, 5000);
-				trace("YOU DIE. MISERABLY.");
+				dispatchEvent(new Event(Level.LOST));
 			}
+
 		}
 		
 		protected override function onTimer(e:TimerEvent):void

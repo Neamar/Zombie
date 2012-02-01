@@ -22,16 +22,16 @@ package achievements
 		 */
 		public var achievementsList:Array = new Array(
 		/* 1 - 10*/
-			[RangeAchievement, Handgun, 250],
-			[UnlockAchievement, Shotgun],
-			[CapacityAchievement, Handgun, 2],
-			[SubconcsiousVisionAchievement, 5],
-			[JungleAchievement, Handgun, true],
-			[RangeAchievement, Shotgun, 200],
-			[RangeAchievement, Handgun, 3000],
-			[LifeAchievement, 75],
-			[RangeAchievement, Shotgun, 300],
-			[ConvalescenceAchievement, 2],
+			["First blood ! Handgun range increased", RangeAchievement, Handgun, 250],
+			["Shotgun unlocked. Now default weapon", UnlockAchievement, Shotgun],
+			["New handgun capacity : 2 bullets", CapacityAchievement, Handgun, 6],
+			["Increased subconscious vision", SubconcsiousVisionAchievement, 5],
+			["Jungle-style reload for the handgun", JungleAchievement, Handgun, true],
+			["Shotgun range increased", RangeAchievement, Shotgun, 200],
+			["Handgun range increased", RangeAchievement, Handgun, 3000],
+			["Player got more life", LifeAchievement, 75],
+			["Shotgun range increased", RangeAchievement, Shotgun, 300],
+			["Player healing faster", ConvalescenceAchievement, 2],
 		/* 11 - 20 */
 			[CooldownAchievement, Handgun, 20],
 			[CapacityAchievement, Handgun, 10],
@@ -72,7 +72,7 @@ package achievements
 			[SubconcsiousVisionAchievement, 15],
 			[AutomaticAchievement, Uzi, true],
 		/* 50+ */
-			[Infinity, Achievement, 0] /* final achievement, unreachable. */
+			["You'll never unlock this one", Infinity, Achievement, 0] /* final achievement, unreachable. */
 		);
 		
 		/**
@@ -83,10 +83,9 @@ package achievements
 		public var achievementsDelta:Vector.<int> = Vector.<int>([1,2,3,4,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,14,14,15,16,17,18,19,20,21,22,23,25,30,35,40,50,60,80,100,120,140,160,200,Infinity]);
 		
 		/**
-		 * Achievement to start at
-		 * (for test or going back to a saved game)
+		 * Number of achievement unlocked.
 		 */
-		public var startAtAchievement:int = 40;
+		public var achievementsUnlocked:int;
 		
 		/**
 		 * Game associated with those achievements
@@ -103,21 +102,25 @@ package achievements
 		 */
 		public var zombiesKilledSinceLastAchievement:int = 0;
 		
-		public function AchievementsHandler(game:Game) 
+		/**
+		 * Creates the handler.
+		 * @param	game to operate on
+		 * @param	startAtAchievement whether or not to directly unlock some achievement (to restore previous session for instance)
+		 */
+		public function AchievementsHandler(game:Game, startAtAchievement:int = 0) 
 		{
 			this.game = game;
+			achievementsUnlocked = startAtAchievement;
 		}
 		
 		/**
-		 * Apply achievement precedenlty recorded (another game, or to cheat)
+		 * Apply achievement precedently recorded (from another game, or another level)
 		 */
 		public function applyDefaultsAchievements():void
 		{
-			while(startAtAchievement > 0)
+			for (var i:int = 0; i < achievementsUnlocked; i++)
 			{
-				startAtAchievement--;
-				achievementsDelta.shift();
-				applyAchievement(achievementsList.shift());
+				applyAchievement(achievementsList[i]);
 			}
 		}
 		
@@ -131,27 +134,33 @@ package achievements
 			zombiesKilledSinceLastAchievement++;
 			
 			//While loop is required for "0 based" achievements (unlocking multiple achievement at the same time)
-			while (achievementsDelta[0] <= zombiesKilledSinceLastAchievement)
+			while (achievementsDelta[achievementsUnlocked] <= zombiesKilledSinceLastAchievement)
 			{
-				achievementsDelta.shift();
 				//Apply current achievement
-				applyAchievement(achievementsList.shift());
+				var msg:String = applyAchievement(achievementsList[achievementsUnlocked]);
+				game.hud.displayMessage(msg);
 				
-				//Back to zero.
+				//Get ready for next turn !
+				achievementsUnlocked++;
 				zombiesKilledSinceLastAchievement = 0;
 			}
 		}
 		
+		/**
+		 * Apply the achievement.
+		 * 
+		 * @param	datas an array, respecting the row-structure of achievementsList
+		 * @return achievement string (to be displayed)
+		 */
 		protected function applyAchievement(datas:Array):String
 		{
-			var currentAchievement:Achievement = new datas[0]();
+			var currentAchievement:Achievement = new datas[1]();
 			currentAchievement.setGame(game);
-			currentAchievement.setParams(datas.slice(1));
+			currentAchievement.setParams(datas.slice(2));
 
 			currentAchievement.apply();
-			trace(currentAchievement, datas.slice(1), achievementsDelta[0]);
 			
-			return 'Applied';
+			return datas[0];
 		}
 	}
 

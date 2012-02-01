@@ -1,6 +1,7 @@
 package
 {
 	import achievements.AchievementsHandler;
+	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -15,31 +16,82 @@ package
 	 */
 	public final class Game extends Sprite
 	{
+		/**
+		 * Name of the first level to load
+		 */
 		public static const FIRST_LEVEL:String = "0-intro";
 		
+		/**
+		 * Level currently displayed
+		 */
 		public var level:Level;
 		
+		/**
+		 * Loader used to generate current level.
+		 */
+		public var loader:LevelLoader;
+		
+		/**
+		 * Handler for the achievements of the level.
+		 */
 		public var achievementHandler:AchievementsHandler;
 		
-		public function Game()
+		/**
+		 * Name of the next level to load
+		 */
+		public var nextLevelName:String;
+		
+		/**
+		 * Hud to be displayed
+		 */
+		public var hud:Hud;
+		
+		public function Game() 
 		{
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
 			
 			achievementHandler = new AchievementsHandler(this);
+			
+			hud = new Hud();
+			addChild(hud);
 		}
 		
 		/**
-		 * Call when the WIN event is dispatched
+		 * The level says it failed, retry.
+		 * @param	e
 		 */
-		protected function gotoNextLevel(e:Event):void
+		protected function onFailure(e:Event):void
 		{
+			destroyCurrentLevel();
+			
+			addLevel();
+		}
+		
+		/**
+		 * Call when the WIN event is dispatched.
+		 * Load the next level
+		 */
+		protected function onSuccess(e:Event):void
+		{
+			destroyCurrentLevel();
+			
+			prepareLevel(nextLevelName);
+		}
+		
+		/**
+		 * Clean up the level currently displayed.
+		 * It should be eligible for GC.
+		 */
+		protected function destroyCurrentLevel():void
+		{
+			//Render the level eligible for GC :
 			level.destroy();
 			removeChild(level);
-			level.removeEventListener(Level.WIN, gotoNextLevel);
+			level.removeEventListener(Level.WIN, onSuccess);
+			level.removeEventListener(Level.LOST, onFailure);
 			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
-			
-			prepareLevel(level.nextLevelName);
+			level = null;
 		}
 		
 		/**
@@ -49,7 +101,7 @@ package
 		protected function prepareLevel(levelName:String):void
 		{
 			//Load current level
-			var loader:LevelLoader = new LevelLoader(levelName);
+			loader = new LevelLoader(levelName);
 			loader.addEventListener(Event.COMPLETE, addLevel);
 		}
 		
@@ -57,17 +109,24 @@ package
 		 * Call when a new level is ready for play
 		 * @param	e
 		 */
-		protected function addLevel(e:Event):void
+		protected function addLevel(e:Event = null):void
 		{
-			var loader:LevelLoader = e.target as LevelLoader;
 			loader.removeEventListener(Event.COMPLETE, addLevel);
 			
+			//Store next level name
+			nextLevelName = loader.params.nextLevelName;
+			
+			//Add the level
 			level = loader.getLevel()
-			level.addEventListener(Level.WIN, gotoNextLevel);
+			level.addEventListener(Level.WIN, onSuccess);
+			level.addEventListener(Level.LOST, onFailure);
+			
 			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			
 			achievementHandler.applyDefaultsAchievements();
+
 			addChild(level);
+			setChildIndex(hud, numChildren - 1);
 		}
 	}
 }

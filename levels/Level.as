@@ -73,11 +73,6 @@ package levels
 		 */
 		public var heatmap:Heatmap;
 		
-		/**
-		 * Name of the next level to load
-		 */
-		public var nextLevelName:String;
-		
 		public function Level(params:LevelParams)
 		{
 			//Optimise display
@@ -92,14 +87,15 @@ package levels
 			}
 			frameNumber = 0;
 			
-			//Register parameters
+			//Register parameters. Clone the bitmpa to avoid drawing on the original dead zombies.
 			this.hitmap = params.hitmap;
-			this.bitmap = params.bitmap;
-			this.nextLevelName = params.nextLevelName
+			this.bitmap = new Bitmap(params.bitmap.bitmapData.clone());
+
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
 			
 			player = new Player(this, params);
+			addEventListener(Player.PLAYER_DEAD, onPlayerDead);
 			
 			heatmap = new Heatmap(this);
 			
@@ -107,7 +103,7 @@ package levels
 			addChild(bitmap);
 			
 			//Generate Zombies
-			generateZombies(params.zombiesLocation, params.zombiesDensity, params.behemothProbability, params.satanusProbability);
+			generateZombies(params.initialSpawns);
 			
 			/**
 			 * Blending and masking
@@ -140,14 +136,12 @@ package levels
 				frameWaker[frameNumber].length = 0;
 			}
 			
-			//Clean up proprieties :
+			//Clean up properties
 			zombies.length = 0;
 			
-			hitmap.loaderInfo.loader.unloadAndStop();
-			bitmap.loaderInfo.loader.unloadAndStop();
-			
 			//Remove listener
-			this.removeEventListener(Event.ENTER_FRAME, onFrame);
+			removeEventListener(Event.ENTER_FRAME, onFrame);
+			removeEventListener(Player.PLAYER_DEAD, onPlayerDead);
 		}
 		
 		/**
@@ -172,11 +166,19 @@ package levels
 		}
 		
 		/**
-		 * This function dispatch the WIN event.
+		 * This function force the dispatch of the WIN event.
 		 */
 		public function dispatchWin():void
 		{
 			dispatchEvent(new Event(Level.WIN));
+		}
+		
+		/**
+		 * When the player dies, the level is lost.
+		 */
+		protected function onPlayerDead(e:Event):void
+		{
+			dispatchEvent(new Event(Level.LOST));
 		}
 		
 		/**
@@ -211,29 +213,30 @@ package levels
 		
 		/**
 		 * Add some zombies according to the specified parameters.
-		 *
+		 * TODO : factorize in common class
+		 * 
 		 * @param	zombiesLocation
 		 * @param	zombiesDensity
 		 * @param	behemothProbabilityVector
 		 * @param	satanusProbabilityVector
 		 * @param	avoidPlayer whether to add zombies right in front of the player
 		 */
-		protected function generateZombies(zombiesLocation:Vector.<Rectangle>, zombiesDensity:Vector.<int>, behemothProbabilityVector:Vector.<int>, satanusProbabilityVector:Vector.<int>, avoidPlayer:Boolean = false):void
+		protected function generateZombies(spawns:Vector.<LevelSpawn>):void
 		{
-			//Generate Zombies
-			while (zombiesLocation.length > 0)
+			//Generate Zombies based on the s
+			for each(var spawn:LevelSpawn in spawns)
 			{
-				var spawnArea:Rectangle = zombiesLocation.pop();
-				var spawnQuantity:int = zombiesDensity.pop();
-				var behemothProbability:Number = 1 / behemothProbabilityVector.pop();
-				var satanusProbability:Number = 1 / satanusProbabilityVector.pop();
+				var spawnArea:Rectangle = spawn.location;
+				var spawnQuantity:int = spawn.number;
+				var behemothProbability:Number = 1 / spawn.behemothProbability;
+				var satanusProbability:Number = 1 / spawn.satanusProbability;
 				
 				for (var i:int = 0; i < spawnQuantity; i++)
 				{
 					var x:int = spawnArea.x + spawnArea.width * Math.random();
 					var y:int = spawnArea.y + spawnArea.height * Math.random();
 					
-					if (hitmap.bitmapData.getPixel32(x, y) != 0 || (avoidPlayer && (Math.abs(x - player.x) < 200 && Math.abs(y - player.y) < 200)))
+					if (hitmap.bitmapData.getPixel32(x, y) != 0 || (spawn.avoidPlayer && (Math.abs(x - player.x) < 200 && Math.abs(y - player.y) < 200)))
 					{
 						i--;
 					}

@@ -4,7 +4,9 @@ package weapon
 	import levels.Level;
 	
 	/**
-	 * ...
+	 * Uzi weapon
+	 * "Fast and powerful"
+	 * 
 	 * @author Neamar
 	 */
 	public final class Uzi extends JungleStyleWeapon
@@ -12,7 +14,7 @@ package weapon
 		public function Uzi(level:Level, player:Player)
 		{
 			magazineCapacity = 15;
-			magazineNumber = 15;
+			magazineNumber = player.defaultMagazines.uzi;
 			cooldown = 4;
 			reloadTime = 30;
 			

@@ -1,14 +1,16 @@
-package entity 
+package entity
 {
+	import levels.Heatmap;
 	import levels.Level;
+	
 	/**
 	 * ...
 	 * @author Neamar
 	 */
-	public class Survivor extends Zombie 
+	public class Survivor extends Zombie
 	{
 		
-		public function Survivor(parent:Level, x:int, y:int) 
+		public function Survivor(parent:Level, x:int, y:int)
 		{
 			super(parent, x, y);
 			maxInfluence = Heatmap.MAX_INFLUENCE - 5 * Heatmap.DECAY
@@ -17,7 +19,7 @@ package entity
 			this.graphics.clear();
 			this.graphics.lineStyle(1, 0x0000FF);
 			this.graphics.beginFill(0x0000F0);
-			this.graphics.drawCircle(0, 0, RADIUS);
+			this.graphics.drawCircle(0, 0, radius);
 			this.graphics.lineStyle(1, 0);
 			this.graphics.lineTo(0, 0);
 		}

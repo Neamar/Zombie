@@ -1,12 +1,13 @@
-package weapon 
+package weapon
 {
 	import entity.Player;
 	import levels.Level;
+	
 	/**
 	 * Jungle style : each even reload is faster
 	 * @author Neamar
 	 */
-	public class JungleStyleWeapon extends Weapon 
+	public class JungleStyleWeapon extends Weapon
 	{
 		/**
 		 * Is jungle style enabled ?
@@ -29,7 +30,7 @@ package weapon
 		 */
 		public var defaultReload:int;
 		
-		public function JungleStyleWeapon(level:Level, player:Player) 
+		public function JungleStyleWeapon(level:Level, player:Player)
 		{
 			super(level, player);
 		}
@@ -41,7 +42,6 @@ package weapon
 				super.reload();
 				return;
 			}
-			
 			
 			//Check if the reloadTime has changed externally
 			if (reloadTime != reloadTime && fastReload != reloadTime)

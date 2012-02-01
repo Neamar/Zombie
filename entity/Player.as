@@ -7,21 +7,16 @@ package entity
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
 	import levels.Level;
 	import levels.LevelParams;
 	import weapon.Handgun;
-	import weapon.Railgun;
-	import weapon.Shotgun;
-	import weapon.Uzi;
 	import weapon.Weapon;
-
+	
 	/**
 	 * The current player.
 	 * @author Neamar
@@ -29,15 +24,20 @@ package entity
 	public final class Player extends Entity
 	{
 		/**
+		 * Event.
+		 */
+		public static const PLAYER_DEAD:String = "playerDead";
+		
+		/**
 		 * For debug : the player is never hurt.
 		 */
-		public static const INVINCIBLE:Boolean = true;
+		public static const INVINCIBLE:Boolean = false;
 		
 		/**
 		 * Player radius (he's a fatty!)
 		 */
 		public const RADIUS:int = 10;
-
+		
 		/**
 		 * Player speed when moving
 		 */
@@ -47,29 +47,29 @@ package entity
 		 * Max player life
 		 */
 		public const MAX_HEALTHPOINTS:int = 100;
-
+		
 		/**
 		 * Half-angular visiblity. Full value should be 180° in realistic game, however 100 gives more fun.
 		 */
 		public const ANGULAR_VISIBILITY2:int = 50;
-
+		
 		/**
 		 * Max width one may see if no obstacles in front.
 		 */
 		public const DEPTH_VISIBILITY:int = Main.WIDTH2;
-
+		
 		/**
 		 * Mathematic constant = Math.PI / 180
 		 * rad = deg * TO_RADIANS
 		 */
 		public static const TO_RADIANS:Number = 0.0174532925;
-
+		
 		/**
 		 * Mathematic constant = 180 / Math.PI
 		 * deg = rad * TO_DEGREE;
 		 */
 		public static const TO_DEGREE:Number = 57.2957795;
-
+		
 		/**
 		 * Action related constants
 		 */
@@ -87,19 +87,18 @@ package entity
 		 * Key-binding for moving.
 		 */
 		public var bindings:Object = {
-			/*up	key */38:UP,
-			/*down	key */40:DOWN,
-			/*z		key */90:UP,
-			/*q		key */81:DOWN,
-			/*s		key */83:DOWN,
-			/*j		key */74:DOWN,
-			/*k		key */75:UP,
-			/*t		key */84:DEBUG,
-			/*w		key */87:FORCE_WIN,
-			/*r		key */82:RELOAD,
-			/*space	key */32:RELOAD
-		};
-
+			/*up	key */38: UP, 
+			/*down	key */40: DOWN,
+			/*z		key */90: UP,
+			/*q		key */81: DOWN,
+			/*s		key */83: DOWN,
+			/*j		key */74: DOWN,
+			/*k		key */75: UP,
+			/*t		key */84: DEBUG,
+			/*w		key */87: FORCE_WIN,
+			/*r		key */82: RELOAD,
+			/*space	key */32: RELOAD};
+		
 		/**
 		 * Which keys are currently pressed ?
 		 */
@@ -111,7 +110,7 @@ package entity
 		 * Number of rays to throw for raycasting
 		 */
 		public var resolution:int;
-
+		
 		/**
 		 * Mask for the level, depending on the direction player is facing.
 		 * Although this Shape belongs to the player, it is displayed on the Level.
@@ -128,7 +127,6 @@ package entity
 		 * Shape for the weapon deflagration when shooting
 		 */
 		public var weaponDeflagration:Shape = new Shape();
-		
 		
 		/**
 		 * Matrix to use to draw lamp torch.
@@ -150,12 +148,17 @@ package entity
 		 * Useful for weapon cooldown.
 		 */
 		public var frameNumber:int = 0;
-
+		
+		/**
+		 * Number of magazines available for each type of weapon
+		 */
+		public var defaultMagazines:Object;
+		
 		/**
 		 * Enlight stage when a weapon is shot, to show deflagration.
 		 * When 0, no deflagration.
 		 * 20 : max deflagration.
-		 * 
+		 *
 		 * Initial value is 10, for fun ;)
 		 */
 		public var hasShot:int = 10;
@@ -181,7 +184,7 @@ package entity
 		 * If damagesTaken > maxHealthPoints, you die.
 		 */
 		public var damagesTaken:int = 0;
-
+		
 		/**
 		 * Get back one healthpoint every recuperationSpeed frame
 		 */
@@ -196,15 +199,27 @@ package entity
 		 * Will zombie flee from the light to outflank the player ?
 		 */
 		public var isLamplightRepulsive:Boolean = false;
-
+		
+		/**
+		 * Current level we're on
+		 */
+		public var level:Level;
+		
+		/**
+		 * Create the player
+		 * @param	parent
+		 * @param	params needed to get start information
+		 */
 		public function Player(parent:Level, params:LevelParams)
 		{
 			super(parent);
-
+			
 			x = params.playerStartX;
 			y = params.playerStartY;
 			resolution = params.playerStartResolution;
-
+			defaultMagazines = params.playerMagazines;
+			level = parent;
+			
 			//Player graphics
 			this.graphics.lineStyle(2);
 			this.graphics.beginFill(0xAAAAAA, 1);
@@ -226,13 +241,8 @@ package entity
 			drawBloodrush();
 			
 			//Various initialisations
-			addEventListener(Event.ENTER_FRAME, onFrame);
-			Main.stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			Main.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			Main.stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			Main.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			Main.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
 			//Populate weapons
 			this.availableWeapons.push(new Handgun(parent, this));
 			this.currentWeapon = this.availableWeapons[0];
@@ -245,16 +255,12 @@ package entity
 			lightMask.filters = [];
 			
 			bloodRush.bitmapData.dispose();
-			removeEventListener(Event.ENTER_FRAME, onFrame);
-			Main.stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			Main.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			Main.stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			Main.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			Main.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			removeListeners();
 			
 			this.availableWeapons.length = 0;
 			this.currentWeapon = null;
 		}
+		
 		/**
 		 * Hit the player
 		 * @param	foe the foe who hit him
@@ -268,11 +274,11 @@ package entity
 			}
 			if (damagesTaken > maxHealthPoints)
 			{
-				trace('You die : ', damagesTaken - maxHealthPoints);
-				damagesTaken = maxHealthPoints;
+				//Die, miserable wretch. This instance will most probably be destroyed soon, along with the level
+				parent.dispatchEvent(new Event(PLAYER_DEAD));
 			}
 		}
-
+		
 		protected function onKeyDown(e:KeyboardEvent):void
 		{
 			if (e.keyCode in bindings)
@@ -303,7 +309,7 @@ package entity
 				trace('Unknown key : ', e.keyCode);
 			}
 		}
-
+		
 		protected function onKeyUp(e:KeyboardEvent):void
 		{
 			var indexOf:int = downKeys.indexOf(bindings[e.keyCode]);
@@ -312,7 +318,7 @@ package entity
 				downKeys.splice(indexOf, 1);
 			}
 		}
-
+		
 		protected function onMouseDown(e:MouseEvent):void
 		{
 			isClicked = true;
@@ -323,7 +329,11 @@ package entity
 				hasShot = currentWeapon.fire();
 			}
 		}
-		protected function onMouseUp(e:MouseEvent):void { isClicked = false; }
+		
+		protected function onMouseUp(e:MouseEvent):void
+		{
+			isClicked = false;
+		}
 		
 		protected function onMouseWheel(e:MouseEvent):void
 		{
@@ -336,7 +346,7 @@ package entity
 			
 			currentWeapon = availableWeapons[offset];
 		}
-
+		
 		/**
 		 * Move & turn the player
 		 * Compute the lightmask
@@ -355,7 +365,7 @@ package entity
 			
 			//When this var is true, we need to recompute masks.
 			var hasMoved:Boolean = false;
-
+			
 			//Shall we turn the player ?
 			var angle:Number = Math.atan2(y - parent.mouseY, x - parent.mouseX);
 			var newRotation:Number = (Math.PI + angle) * TO_DEGREE;
@@ -364,22 +374,22 @@ package entity
 				rotation = newRotation;
 				hasMoved = true;
 			}
-
+			
 			//Shall we move the player ?
 			if (downKeys.length > 0)
 			{
 				//Precomputing
 				var cos:Number = Math.cos(rotation * TO_RADIANS);
 				var sin:Number = Math.sin(rotation * TO_RADIANS);
-				var realSpeed:int = SPEED;// damagesTaken > 5 ? Zombie.SPEED:SPEED;
-
+				var realSpeed:int = SPEED; // damagesTaken > 5 ? Zombie.SPEED:SPEED;
+				
 				//Application
-				for each(var action:int in downKeys)
+				for each (var action:int in downKeys)
 				{
 					var destX:int;
 					var destY:int;
 					var move:Boolean = false;
-
+					
 					//Does hitmap allows move ?
 					if (action == UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) == 0)
 					{
@@ -394,20 +404,19 @@ package entity
 						move = true;
 					}
 				}
-
+				
 				//Is a zombie blocking move ?
 				if (move)
-				{/*
-					TODO : restore!
-					var potentialZombies:Vector.<Zombie> = Zombie.frameWaker[(Zombie.frameNumber + 1) % Zombie.MAX_DURATION].concat(Zombie.frameWaker[(Zombie.frameNumber + 9) % Zombie.MAX_DURATION]);
-					for each(var zombie:Zombie in potentialZombies)
+				{
+					var potentialZombies:Vector.<Zombie> = level.frameWaker[(level.frameNumber + 1) % level.FRAME_WAKER_LENGTH].concat(level.frameWaker[(level.frameNumber + 9) % level.FRAME_WAKER_LENGTH]);
+					for each (var zombie:Zombie in potentialZombies)
 					{
-						if (zombie.x - Zombie.RADIUS < destX && zombie.x + Zombie.RADIUS > destX && zombie.y - Zombie.RADIUS < destY && zombie.y + Zombie.RADIUS > destY)
+						if (zombie.x - zombie.radius < destX && zombie.x + zombie.radius > destX && zombie.y - zombie.radius < destY && zombie.y + zombie.radius > destY)
 						{
 							move = false;
 							break;
 						}
-					}*/
+					}
 					
 					// No zombie + no wall : ok.
 					if (move)
@@ -418,28 +427,28 @@ package entity
 					}
 				}
 			}
-
+			
 			//Recompute mask only if needed.
 			if (hasMoved || hasShot > 0)
 			{
 				parent.x = Main.WIDTH2 - x;
 				parent.y = Main.WIDTH2 - y;
-
+				
 				//Torch & masking
 				var startAngle:Number = ((rotation - halfAngularVisibility) % 360) * TO_RADIANS;
 				var endAngle:Number = ((rotation + halfAngularVisibility) % 360) * TO_RADIANS;
-
+				
 				var maskGraphics:Graphics = lightMask.graphics;
 				var theta:Number;
 				var radius:int;
 				var step:Number;
-
+				
 				maskGraphics.clear();
-
+				
 				//Everything is gray-dark, except when a weapon was just fired or when you're hurt
 				maskGraphics.beginFill(0, subconsciousVision + 0.05 * (hasShot));
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.WIDTH2, Main.WIDTH, Main.WIDTH);
-
+				
 				//And his line of sight
 				maskGraphics.moveTo(x + (RADIUS + 2) * Math.cos(startAngle), y + (RADIUS + 2) * Math.sin(startAngle));
 				transformationMatrix.tx = x;
@@ -476,7 +485,7 @@ package entity
 						weaponDeflagration.graphics.drawCircle(RADIUS + hasShot, 0, hasShot << 1);
 						weaponDeflagration.graphics.endFill();
 						weaponDeflagration.graphics.beginFill(0xFFFF00, .3);
-						weaponDeflagration.graphics.drawEllipse(RADIUS + hasShot, - hasShot >> 1, hasShot*4, hasShot);
+						weaponDeflagration.graphics.drawEllipse(RADIUS + hasShot, -hasShot >> 1, hasShot * 4, hasShot);
 					}
 				}
 			}
@@ -490,7 +499,7 @@ package entity
 				bloodRush.y = y - Main.WIDTH2;
 				
 				//Heal damages every recuperationSpeed frame
-				if(frameNumber % recuperationSpeed == 0)
+				if (frameNumber % recuperationSpeed == 0)
 					damagesTaken--;
 				
 				if (damagesTaken == 0)
@@ -510,13 +519,47 @@ package entity
 				//Disminish intensity of the red around the player.
 				var mask:Shape = new Shape();
 				var matrix:Matrix = new Matrix();
-				matrix.createGradientBox(bd.width, bd.height, 0, -bd.width /2, -bd.height / 2);
+				matrix.createGradientBox(bd.width, bd.height, 0, -bd.width / 2, -bd.height / 2);
 				
 				mask.graphics.beginGradientFill(GradientType.RADIAL, [0xFFFFFF, 0], [0.2, 1], [0, 255], matrix);
 				mask.graphics.drawCircle(0, 0, 200);
 				mask.graphics.endFill();
 				bd.draw(mask, new Matrix(1, 0, 0, 1, bd.width / 2, bd.height / 2), null, BlendMode.ALPHA);
 			}
+		}
+		
+		/**
+		 * Called as soon as we get a reference to the stage
+		 * 
+		 * @param	e
+		 */
+		protected function onAddedToStage(e:Event):void
+		{
+			//Add all the listeners (key, mouse...)
+			addListeners();
+			
+			//Clean the event
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		protected function addListeners():void
+		{
+			stage.addEventListener(Event.ENTER_FRAME, onFrame);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		}
+		
+		protected function removeListeners():void
+		{
+			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 	}
 }

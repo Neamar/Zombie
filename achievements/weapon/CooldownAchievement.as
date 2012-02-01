@@ -1,8 +1,9 @@
-package achievements.weapon 
-{	
+package achievements.weapon
+{
+	
 	/**
 	 * Improve the coolodown for a given weapon
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public class CooldownAchievement extends WeaponAchievement

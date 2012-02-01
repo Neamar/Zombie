@@ -9,12 +9,11 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<name>3</name>
-		<followed-by>4</followed-by>
+		<followed-by>waves_boxheadTribute</followed-by>
 		<success on="killing_all" />
 		
 		<hitmap>hitmap.png</hitmap>
-		<player x="230" y="780" />
+		<player x="230" y="780" handgun-magazines="30" shotgun-magazines="5" uzi-magazines="5" />
 		<zombies>
 			<spawn-zone x="0" y="0" width="400" height="760" number="75" />
 		</zombies>

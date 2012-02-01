@@ -1,20 +1,16 @@
-package 
+package levels
 {
 	import entity.Player;
-	import entity.Survivor;
-	import entity.Zombie;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
-	import levels.Level;
 	
 	/**
 	 * Heatmap (other names : influence map, potential fields)
-	 * TODO : move to package levels
-	 * 
+	 *
 	 * @see http://aigamedev.com/open/tutorials/potential-fields/
 	 * @author Neamar
 	 */
@@ -75,7 +71,7 @@ package
 		
 		/**
 		 * Current value computation. Not in bitmapdata for now to improve performance.
-		 * 
+		 *
 		 * @see fromXY()
 		 * @see fromOffset()
 		 */
@@ -99,12 +95,12 @@ package
 		/**
 		 * List of offsets to compute before drawing heatmap.
 		 */
-		protected var offsetToCompute:Vector.<int> = new Vector.<int>();;
+		protected var offsetToCompute:Vector.<int> = new Vector.<int>();
 		
 		/**
 		 * Associated values.
 		 */
-		protected var valueToCompute:Vector.<int> = new Vector.<int>();;
+		protected var valueToCompute:Vector.<int> = new Vector.<int>();
 		
 		/**
 		 * Parent level
@@ -118,7 +114,7 @@ package
 		public var currentRect:Rectangle = new Rectangle(0, 0, MAX_INFLUENCE_WIDTH, MAX_INFLUENCE_WIDTH);
 		
 		public function Heatmap(level:Level)
-		{			
+		{
 			this.level = level;
 			
 			influenceWidth = level.hitmap.width / RESOLUTION;
@@ -138,12 +134,12 @@ package
 					rect.y = j * RESOLUTION;
 					var pixels:Vector.<uint> = level.hitmap.bitmapData.getVector(rect);
 					var thresholdCount:int = 0;
-					for each(var pixel:uint in pixels)
+					for each (var pixel:uint in pixels)
 					{
 						if (pixel != 0)
 							thresholdCount++;
 					}
-
+					
 					if (thresholdCount > pixels.length * THRESHOLD)
 					{
 						baseInfluence.setPixel32(i, j, 0);
@@ -167,6 +163,7 @@ package
 		{
 			if (nextInfluence)
 			{
+				bitmapData.lock();
 				//Draw last pass result.
 				bitmapData.setVector(currentRect, nextInfluence);
 				//Add lamplight repulsion
@@ -174,21 +171,21 @@ package
 				if (player.isLamplightRepulsive)
 				{
 					var lightMask:Shape = player.lightMask;
-					bitmapData.draw(lightMask, new Matrix(1 / 5, 0, 0, 1 / 5, -player.x / RESOLUTION, -player.y / RESOLUTION), null, null );
+					bitmapData.draw(lightMask, new Matrix(1 / 5, 0, 0, 1 / 5, -player.x / RESOLUTION, -player.y / RESOLUTION), null, null);
 					//Force the central pixel color value
 					bitmapData.setPixel(player.x / RESOLUTION, player.y / RESOLUTION, BASE_ALPHA + MAX_INFLUENCE + 31);
 				}
-				//TODO : what for ?
-				bitmapData.unlock();
+				
+				bitmapData.unlock(currentRect);
 				hasJustRedrawn = true;
 			}
-
+			
 			//Update currentRect for new computation
 			currentRect.x = Math.round(Math.min(influenceWidth - currentRect.width, Math.max(0, level.player.x / RESOLUTION - MAX_INFLUENCE_WIDTH2)));
 			currentRect.y = Math.round(Math.max(0, level.player.y / RESOLUTION - MAX_INFLUENCE_WIDTH2));
 			nextInfluence = baseInfluence.getVector(currentRect);
 			nextInfluence.fixed = true;
-
+			
 			//Empty everything
 			offsetToCompute.length = 0;
 			valueToCompute.length = 0;
@@ -200,7 +197,7 @@ package
 			
 			var startInfluence:int = BASE_ALPHA + MAX_INFLUENCE;
 			valueToCompute.push(startInfluence);
-
+			
 			nextInfluence[startOffset] = startInfluence + 31; // Avoid blinking when zombie reach destination and is alone.
 		}
 		
@@ -224,7 +221,7 @@ package
 				var currentOffset:int = offsetToCompute.shift();
 				var currentX:int = xFromOffset(currentOffset);
 				var currentY:int = yFromOffset(currentOffset);
-					
+				
 				var currentValue:uint = valueToCompute.shift() - DECAY;
 				
 				var absI:int, absJ:int;
@@ -233,13 +230,13 @@ package
 					for (var j:int = -1; j <= 1; j++)
 					{
 						//Faster than using Math.abs
-						absI = i < 0 ? -i:i;
-						absJ = j < 0 ? -j:j;
+						absI = i < 0 ? -i : i;
+						absJ = j < 0 ? -j : j;
 						if (i == 0 && j == 0 || (absI == absJ && absI == 1))
 							continue;
 						
 						var newOffset:int = fromXY(currentX + i, currentY + j);
-
+						
 						var v:uint = currentValue - absI - absJ;
 						
 						//Do we have a better path than the previous one ?
@@ -279,7 +276,7 @@ package
 		
 		/**
 		 * nextInfluence manipulation function.
-		 * 
+		 *
 		 * @param	offset
 		 * @return y
 		 */

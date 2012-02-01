@@ -83,10 +83,9 @@ package achievements
 		public var achievementsDelta:Vector.<int> = Vector.<int>([1,2,3,4,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,14,14,15,16,17,18,19,20,21,22,23,25,30,35,40,50,60,80,100,120,140,160,200,Infinity]);
 		
 		/**
-		 * Achievement to start at
-		 * (for test or going back to a saved game)
+		 * Number of achievement unlocked.
 		 */
-		public var startAtAchievement:int = 0;
+		public var achievementsUnlocked:int;
 		
 		/**
 		 * Game associated with those achievements
@@ -103,21 +102,25 @@ package achievements
 		 */
 		public var zombiesKilledSinceLastAchievement:int = 0;
 		
-		public function AchievementsHandler(game:Game) 
+		/**
+		 * Creates the handler.
+		 * @param	game to operate on
+		 * @param	startAtAchievement whether or not to directly unlock some achievement (to restore previous session for instance)
+		 */
+		public function AchievementsHandler(game:Game, startAtAchievement:int = 0) 
 		{
 			this.game = game;
+			achievementsUnlocked = startAtAchievement;
 		}
 		
 		/**
-		 * Apply achievement precedenlty recorded (another game, or to cheat)
+		 * Apply achievement precedently recorded (from another game, or another level)
 		 */
 		public function applyDefaultsAchievements():void
 		{
-			while(startAtAchievement > 0)
+			for (var i:int = 0; i < achievementsUnlocked; i++)
 			{
-				startAtAchievement--;
-				achievementsDelta.shift();
-				applyAchievement(achievementsList.shift());
+				applyAchievement(achievementsList[i]);
 			}
 		}
 		
@@ -131,14 +134,14 @@ package achievements
 			zombiesKilledSinceLastAchievement++;
 			
 			//While loop is required for "0 based" achievements (unlocking multiple achievement at the same time)
-			while (achievementsDelta[0] <= zombiesKilledSinceLastAchievement)
+			while (achievementsDelta[achievementsUnlocked] <= zombiesKilledSinceLastAchievement)
 			{
-				achievementsDelta.shift();
 				//Apply current achievement
-				var msg:String = applyAchievement(achievementsList.shift());
+				var msg:String = applyAchievement(achievementsList[achievementsUnlocked]);
 				game.hud.displayMessage(msg);
 				
-				//Back to zero.
+				//Get ready for next turn !
+				achievementsUnlocked++;
 				zombiesKilledSinceLastAchievement = 0;
 			}
 		}

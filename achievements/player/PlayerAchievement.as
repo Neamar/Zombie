@@ -1,9 +1,10 @@
-package achievements.player 
+package achievements.player
 {
 	import achievements.Achievement;
+	
 	/**
 	 * Base class for all player-based achievements
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public class PlayerAchievement extends Achievement

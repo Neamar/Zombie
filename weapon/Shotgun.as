@@ -1,9 +1,12 @@
-package weapon 
+package weapon
 {
 	import entity.Player;
 	import levels.Level;
+	
 	/**
-	 * ...
+	 * Shotgun weapon
+	 * "Slow but effective"
+	 * 
 	 * @author Neamar
 	 */
 	public final class Shotgun extends Weapon
@@ -15,18 +18,19 @@ package weapon
 		 */
 		public var halfAmplitude:int;
 		
-		public function Shotgun(level:Level, player:Player) 
+		public function Shotgun(level:Level, player:Player)
 		{
 			cooldown = 40;
 			magazineCapacity = 1;
-			magazineNumber = 4;
+			magazineNumber = player.defaultMagazines.shotgun;
 			reloadTime = 60;
 			halfAmplitude = 10;
 			
 			super(level, player);
 		}
 		
-		public override function fire():int		{
+		public override function fire():int
+		{
 			if (beforeFiring())
 			{
 				for (var i:int = -halfAmplitude; i <= halfAmplitude; i += 4)

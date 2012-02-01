@@ -4,41 +4,40 @@ package entity
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.filters.BevelFilter;
-	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import levels.Heatmap;
 	import levels.Level;
 	
 	/**
 	 * A simple zombie
-	 * 
+	 *
 	 * "One I can manage, a thousand..."
 	 * @author Neamar
 	 */
-	public class Zombie extends Entity 
+	public class Zombie extends Entity
 	{
 		/**
 		 * Embed objects
 		 */
-		[Embed(source = "../assets/sprite/zombie/zombie_0.png")]
+		[Embed(source="../assets/sprite/zombie/zombie_0.png")]
 		public static const spritesClass:Class;
 		public static const spritesData:BitmapData = (new Zombie.spritesClass()).bitmapData;
 		
-		[Embed(source = "../assets/sprite/zombie/splatter.png")]
+		[Embed(source="../assets/sprite/zombie/splatter.png")]
 		public static const splatterClass:Class;
 		public static const splatter:Bitmap = new Zombie.splatterClass();
-
+		
 		/**
 		 * Events
 		 */
 		public static const ZOMBIE_DEAD:String = "zombieDead";
-
 		
 		/**
 		 * Zombie radius.
 		 * For drawing, block, and shoot.
 		 */
-		public static const RADIUS:int = 5;
+		public var radius:int = 5;
 		
 		/**
 		 * When a zombie is asked to sleep, how long it should be. (in frames)
@@ -64,20 +63,16 @@ package entity
 		 * Angles depending on deltaX.
 		 * Given deltaX and deltaY, compute (deltaX + 1) * 4 + (delatY + 1) to get the index.
 		 * At this index, you'll find the angle.
-		 * 
+		 *
 		 * @note The 4 was chosen to improve compution since it is a power of 2, however it forces the vector to integrate "jump values", never used.
 		 * @note deltaX = 0 && deltaY == 0 does not exists (can't compute an angle if no moves are made)
 		 */
-		public const ANGLES:Vector.<int> = Vector.<int>([
-			/*dX = -1*/ 2,  1, 0, /*jump*/-1,
-			/*dX =  0*/ 3, -1, 7, /*jump*/-1,
-			/*dX =  1*/ 4, 5, 6
-		]);
+		public const ANGLES:Vector.<int> = Vector.<int>([ /*dX = -1*/2, 1, 0, /*jump*/ -1,  /*dX =  0*/3, -1, 7, /*jump*/ -1,  /*dX =  1*/4, 5, 6]);
 		
 		/**
 		 * To speed everything, we should not access static vars from another class.
 		 * Hence, we just duplicate them.
-		 * 
+		 *
 		 * @see http://blog.controul.com/2009/04/how-slow-is-static-access-in-as3avm2-exactly/
 		 * @see Heatmap
 		 */
@@ -101,13 +96,13 @@ package entity
 		 * Influence the zombie try to reach
 		 */
 		public var maxInfluence:int;
-
+		
 		/**
 		 * The first time the zombie meets the player, we store the current frameNumber in this variable.
 		 * The next time we're near the player, we check this value.
 		 * - If too much time passed since last encounter, he should "prepare" himself again (and thus not strike for this frame)
 		 * - If the last encounter was in our last waking phase, the player forgot (or was unable) to move : hit him.
-		 * 
+		 *
 		 * In other words, this variable allos for a "prepare before strike" time.
 		 */
 		public var lastEncounter:int = -1;
@@ -135,8 +130,8 @@ package entity
 		 * Length is the length of the states
 		 * Index corresponds to the associated STATE_ value, e.g. index 2 is STATE_HITTING.
 		 */
-		public static const statesOffset:Vector.<int> = Vector.<int>([0, 4,	12, 16,	20,	22,	28]);
-		public static const statesLength:Vector.<int> = Vector.<int>([4, 8,	 4,  4,  2,  6,  8]);
+		public static const statesOffset:Vector.<int> = Vector.<int>([0, 4, 12, 16, 20, 22, 28]);
+		public static const statesLength:Vector.<int> = Vector.<int>([4, 8, 4, 4, 2, 6, 8]);
 		
 		/**
 		 * Store zombie current rotation (from 0 to 7)
@@ -168,7 +163,7 @@ package entity
 		/**
 		 * Rectangle to use for scrollRect (to clip the sprite)
 		 */
-		protected var spritesRect:Rectangle = new Rectangle( 0, 0, 64, 64);
+		protected var spritesRect:Rectangle = new Rectangle(0, 0, 64, 64);
 		
 		/**
 		 * Determine which animation to use : hit or bite ?
@@ -202,14 +197,14 @@ package entity
 		{
 			//Remove current zombie from global zombies list
 			(parent as Level).zombies.splice((parent as Level).zombies.indexOf(this), 1);
-
+			
 			//Add splatters
 			var matrix:Matrix = new Matrix(1, 0, 0, 1, x - splatter.width / 2, y - splatter.height / 2);
-			(parent as Level).bitmapLevel.bitmapData.draw(splatter, matrix, null, null, null, true);
+			(parent as Level).bitmap.bitmapData.draw(splatter, matrix, null, null, null, true);
 			
 			//Start death animation. When the animation completes, the zombie will be removed from everywhere
 			move = onMoveDead;
-
+			
 			//Inform the level we're dead :
 			parent.dispatchEvent(new Event(ZOMBIE_DEAD));
 		}
@@ -221,7 +216,7 @@ package entity
 			
 			var maxI:int = 0;
 			var maxJ:int = 0;
-			var maxValue:int = influenceMap.getPixel(xScaled , yScaled);
+			var maxValue:int = influenceMap.getPixel(xScaled, yScaled);
 			
 			//Are we on the heatmap ? If not, just sleep.
 			if (maxValue == DEFAULT_COLOR)
@@ -229,7 +224,7 @@ package entity
 				//Animation
 				if (currentState != STATE_IDLE)
 					setState(STATE_IDLE);
-					
+				
 				//Player ain't near. We may as well go to sleep to save some CPU.
 				return 25;
 			}
@@ -250,7 +245,7 @@ package entity
 				{
 					lastEncounter = level.frameNumber;
 				}
-
+				
 				//Animation
 				if (currentState != STATE_HITTING + isBiter)
 				{
@@ -265,7 +260,6 @@ package entity
 				return 10;
 			}
 			
-			
 			//We're on the heatmap, and we can't hit the player ? Move toward him
 			//Find the highest potential around the zombie
 			for (var i:int = -1; i <= 1; i++)
@@ -273,7 +267,7 @@ package entity
 				for (var j:int = -1; j <= 1; j++)
 				{
 					//Identity move is not interesting ;)
-					if ( i == 0 && j == 0)
+					if (i == 0 && j == 0)
 						continue;
 					
 					if (influenceMap.getPixel(xScaled + i, yScaled + j) > maxValue)
@@ -290,7 +284,7 @@ package entity
 				if (!heatmap.hasJustRedrawn)
 				{
 					//Do not undo-repulsion if a redraw has just occured, else we get flickering behavior.
-					influenceMap.setPixel(xScaled, yScaled, influenceMap.getPixel(xScaled , yScaled) + REPULSION);
+					influenceMap.setPixel(xScaled, yScaled, influenceMap.getPixel(xScaled, yScaled) + REPULSION);
 				}
 				
 				//Move toward higher potential
@@ -314,14 +308,13 @@ package entity
 				
 				return 1;
 			}
-
+			
 			//No move available : some zombies are probably blocking us.
 			//Wait a little to let everything boil down.
 			return 10 + SLEEP_DURATION * Math.random();
 		}
 		
 		/**
-<<<<<<< HEAD
 		 * Animation for dying
 		 * @return 8 (number of frames before next part of the animation)
 		 */
@@ -338,7 +331,7 @@ package entity
 				this.filters = [new BevelFilter(.5)];
 				this.graphics.beginFill(0xFF0000);
 				this.graphics.drawCircle(0, 0, 5);
-				(parent as Level).bitmapLevel.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
+				(parent as Level).bitmap.bitmapData.draw(this, new Matrix(1, 0, 0, 1, x, y));
 				parent.removeChild(this);
 				
 				return 0;
@@ -346,14 +339,14 @@ package entity
 			
 			spritesRect.x = 64 * (currentStateOffsetPosition + currentStateOffset);
 			sprites.scrollRect = spritesRect;
-
+			
 			return 4;
 		}
 		
 		/**
 		 * Define the state to use
 		 * Must be a STATE_ constant.
-		 * 
+		 *
 		 * @param	newState the state to enter
 		 */
 		public function setState(newState:int):void

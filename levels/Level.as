@@ -14,19 +14,13 @@ package levels
 	/**
 	 * [abstract]
 	 * Basis for a level.
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public class Level extends Sprite
 	{
 		public static const WIN:String = 'win';
 		public static const LOST:String = 'lost';
-		
-		//TODO : remove (access via main.game.level)
-		/**
-		 * For the monitor.
-		 */
-		public static var current:Level = null;
 		
 		/**
 		 * The player on the map
@@ -40,13 +34,14 @@ package levels
 		
 		/**
 		 * Texture for the game
-		 * @todo Rename to bitmap ? I used to had problems with that, can't remember why.
 		 */
-		public var bitmapLevel:Bitmap;
+		public var bitmap:Bitmap;
 		
 		/**
-		 * Zombies
-		 * TODO : is it really useful ?
+		 * Zombies.
+		 * We need to keep a complete list, to count ombies and to shoot them
+		 *
+		 * @see Weapon
 		 */
 		public var zombies:Vector.<Zombie> = new Vector.<Zombie>();
 		
@@ -57,7 +52,7 @@ package levels
 		
 		/**
 		 * Which zombie should awake in which frame ?
-		 * 
+		 *
 		 */
 		public var frameWaker:Vector.<Vector.<Zombie>> = new Vector.<Vector.<Zombie>>(FRAME_WAKER_LENGTH, true);
 		
@@ -65,7 +60,7 @@ package levels
 		 * Current frame number % MAX_DURATION
 		 */
 		public var frameNumber:int = 0;
-
+		
 		/*
 		 * Survivors (if any)
 		 */
@@ -73,15 +68,10 @@ package levels
 		
 		/**
 		 * Influence map, to compute easily multiples pathfindings without burying CPU
-		 * 
+		 *
 		 * @see http://aigamedev.com/open/tutorials/potential-fields/
 		 */
 		public var heatmap:Heatmap;
-		
-		/**
-		 * Name of the next level to load
-		 */
-		public var nextLevelName:String;
 		
 		public function Level(params:LevelParams)
 		{
@@ -97,62 +87,24 @@ package levels
 			}
 			frameNumber = 0;
 			
-			//Register parameters
+			//Register parameters. Clone the bitmpa to avoid drawing on the original dead zombies.
 			this.hitmap = params.hitmap;
-			this.bitmapLevel = params.bitmap;
-			this.nextLevelName = params.nextLevelName
+			this.bitmap = new Bitmap(params.bitmap.bitmapData.clone());
+
 			//Small optimisation, possible since we never update the hitmap
 			hitmap.bitmapData.lock();
 			
-			//For debug, store current instance (used by monitor)
-			Level.current = this;
-			
 			player = new Player(this, params);
+			addEventListener(Player.PLAYER_DEAD, onPlayerDead);
 			
 			heatmap = new Heatmap(this);
-
+			
 			//Layouting everything on the display list
-			addChild(bitmapLevel);
+			addChild(bitmap);
 			
 			//Generate Zombies
-			while (params.zombiesLocation.length > 0)
-			{
-				var spawnArea:Rectangle = params.zombiesLocation.pop();
-				var spawnQuantity:int = params.zombiesDensity.pop();
-				var behemothProbability:Number = 1 / params.behemothProbability.pop();
-				var satanusProbability:Number = 1 / params.satanusProbability.pop();
-				
-				for (var i:int = 0; i < spawnQuantity; i++)
-				{
-					var x:int = spawnArea.x + spawnArea.width * Math.random();
-					var y:int = spawnArea.y + spawnArea.height * Math.random();
-					
-					if (hitmap.bitmapData.getPixel32(x, y) != 0)
-					{
-						i--;
-					}
-					else
-					{
-						var foe:Zombie;
-						if (Math.random() > behemothProbability)
-						{
-							if (Math.random() > satanusProbability)
-								foe = new Zombie(this, x, y);
-							else
-								foe = new Satanus(this, x, y);
-						}
-						else
-							foe = new Behemoth(this, x, y);
-							
-						zombies.push(foe);
-						//Set time for first awakening :
-						var firstWake:int = 30 + 30 * Math.random()
-						frameWaker[firstWake].push(foe);
-						addChild(foe);
-					}
-				}
-			}
-
+			generateZombies(params.initialSpawns);
+			
 			/**
 			 * Blending and masking
 			 * @see http://active.tutsplus.com/tutorials/games/introducing-blend-modes-in-flash/
@@ -172,6 +124,8 @@ package levels
 		
 		public function destroy():void
 		{
+			player.destroy();
+			
 			//Remove all children for faster GC
 			while (numChildren > 0)
 				removeChildAt(0);
@@ -182,15 +136,12 @@ package levels
 				frameWaker[frameNumber].length = 0;
 			}
 			
-			//Clean up proprieties :
+			//Clean up properties
 			zombies.length = 0;
-			player.destroy();
-			
-			hitmap.loaderInfo.loader.unloadAndStop();
-			bitmapLevel.loaderInfo.loader.unloadAndStop();
 			
 			//Remove listener
-			this.removeEventListener(Event.ENTER_FRAME, onFrame);
+			removeEventListener(Event.ENTER_FRAME, onFrame);
+			removeEventListener(Player.PLAYER_DEAD, onPlayerDead);
 		}
 		
 		/**
@@ -202,28 +153,34 @@ package levels
 			frameNumber = (frameNumber + 1) % FRAME_WAKER_LENGTH;
 			
 			var currentFrame:Vector.<Zombie> = frameWaker[frameNumber];
-			while(currentFrame.length > 0)
+			while (currentFrame.length > 0)
 			{
 				//Move the zombies.
 				var zombie:Zombie = currentFrame.pop();
 				//The function returns the number of frames before moving the same zombie again
 				var duration:int = zombie.move();
 				
-				if(duration != 0)
+				if (duration != 0)
 					frameWaker[(frameNumber + duration) % FRAME_WAKER_LENGTH].push(zombie);
 			}
 		}
 		
-		
 		/**
-		 * This function dispatch the WIN event.
+		 * This function force the dispatch of the WIN event.
 		 */
 		public function dispatchWin():void
 		{
 			dispatchEvent(new Event(Level.WIN));
 		}
 		
-	
+		/**
+		 * When the player dies, the level is lost.
+		 */
+		protected function onPlayerDead(e:Event):void
+		{
+			dispatchEvent(new Event(Level.LOST));
+		}
+		
 		/**
 		 * Toggle debug mode and view the influence map.
 		 * @param	e
@@ -232,14 +189,14 @@ package levels
 		{
 			if (player.lightMask.parent == this)
 			{
-				removeChild(bitmapLevel);
+				removeChild(bitmap);
 				removeChild(player.lightMask);
 				addChild(heatmap);
 			}
-			else if(heatmap.parent == this)
+			else if (heatmap.parent == this)
 			{
 				removeChild(heatmap);
-				addChild(bitmapLevel);
+				addChild(bitmap);
 			}
 			else
 			{
@@ -248,11 +205,64 @@ package levels
 			
 			//Player and zombies ought to be visible at any time
 			setChildIndex(player, numChildren - 1);
-			for each(var zombie:Zombie in zombies)
+			for each (var zombie:Zombie in zombies)
 			{
 				setChildIndex(zombie, numChildren - 2);
 			}
 		}
+		
+		/**
+		 * Add some zombies according to the specified parameters.
+		 * TODO : factorize in common class
+		 * 
+		 * @param	zombiesLocation
+		 * @param	zombiesDensity
+		 * @param	behemothProbabilityVector
+		 * @param	satanusProbabilityVector
+		 * @param	avoidPlayer whether to add zombies right in front of the player
+		 */
+		protected function generateZombies(spawns:Vector.<LevelSpawn>):void
+		{
+			//Generate Zombies based on the s
+			for each(var spawn:LevelSpawn in spawns)
+			{
+				var spawnArea:Rectangle = spawn.location;
+				var spawnQuantity:int = spawn.number;
+				var behemothProbability:Number = 1 / spawn.behemothProbability;
+				var satanusProbability:Number = 1 / spawn.satanusProbability;
+				
+				for (var i:int = 0; i < spawnQuantity; i++)
+				{
+					var x:int = spawnArea.x + spawnArea.width * Math.random();
+					var y:int = spawnArea.y + spawnArea.height * Math.random();
+					
+					if (hitmap.bitmapData.getPixel32(x, y) != 0 || (spawn.avoidPlayer && (Math.abs(x - player.x) < 200 && Math.abs(y - player.y) < 200)))
+					{
+						i--;
+					}
+					else
+					{
+						var foe:Zombie;
+						if (Math.random() > behemothProbability)
+						{
+							if (Math.random() > satanusProbability)
+								foe = new Zombie(this, x, y);
+							else
+								foe = new Satanus(this, x, y);
+						}
+						else
+							foe = new Behemoth(this, x, y);
+						
+						zombies.push(foe);
+						//Set time for first awakening :
+						var firstWake:int = 30 + 30 * Math.random()
+						frameWaker[(frameNumber + firstWake) % FRAME_WAKER_LENGTH].push(foe);
+						addChild(foe);
+						setChildIndex(foe, 1);
+					}
+				}
+			}
+		}
 	}
-	
+
 }

@@ -1,14 +1,17 @@
-package weapon 
+package weapon
 {
 	import entity.Player;
 	import entity.Zombie;
 	import levels.Level;
+	
 	/**
 	 * ...
 	 * @author Neamar
 	 */
 	public class Weapon
 	{
+		public const ZOMBIE_RADIUS:int = 5;
+		
 		public var parent:Level;
 		
 		public var player:Player;
@@ -53,20 +56,20 @@ package weapon
 		 */
 		public var automaticReload:Boolean = false;
 		
-		public function Weapon(level:Level, player:Player) 
+		public function Weapon(level:Level, player:Player)
 		{
 			this.parent = level;
 			this.player = player;
 			
 			range = 150;
-			if(reloadTime == -1)
+			if (reloadTime == -1)
 				reloadTime = 2 * cooldown;
 			
 			reload();
 		}
 		
 		/**
-		 * 
+		 *
 		 * @return true if cooldown ok.
 		 */
 		public function isAbleToFire():Boolean
@@ -77,7 +80,7 @@ package weapon
 		/**
 		 * Use the weapon.
 		 * You need to check isAbleToFire() before using this method.
-		 * 
+		 *
 		 * @return brightness of the deflagration, from 0 to 20.
 		 */
 		public function fire():int
@@ -87,7 +90,7 @@ package weapon
 		
 		/**
 		 * Remove one bullet from current magazine.
-		 * 
+		 *
 		 * @return false if the magazine is empty.
 		 */
 		protected function beforeFiring():Boolean
@@ -124,7 +127,7 @@ package weapon
 		
 		/**
 		 * Throw a bullet in the direction asked for.
-		 * 
+		 *
 		 * @param	deltaAngle (rad) offset current rotation with this angle.
 		 * @param	limit max px before giving up and considering bullet lost.
 		 * @return radius to the last casualty
@@ -144,9 +147,9 @@ package weapon
 				var curX:int = x + radius * cos;
 				var curY:int = y + radius * sin;
 				
-				for each(var zombie:Zombie in parent.zombies)
+				for each (var zombie:Zombie in parent.zombies)
 				{
-					if (zombie.x - Zombie.RADIUS < curX && zombie.x + Zombie.RADIUS > curX && zombie.y - Zombie.RADIUS < curY && zombie.y + Zombie.RADIUS > curY)
+					if (zombie.x - ZOMBIE_RADIUS < curX && zombie.x + ZOMBIE_RADIUS > curX && zombie.y - ZOMBIE_RADIUS < curY && zombie.y + ZOMBIE_RADIUS > curY)
 					{
 						if (shoot(zombie) == false)
 						{
@@ -156,13 +159,12 @@ package weapon
 					}
 				}
 				
-				radius += Zombie.RADIUS;
+				radius += ZOMBIE_RADIUS;
 				if (radius >= range)
 				{
 					break;
 				}
-			}
-			while (hitmapTest(curX, curY) == 0)
+			} while (hitmapTest(curX, curY) == 0)
 			
 			return radius;
 		}

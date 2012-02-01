@@ -1,13 +1,14 @@
-package achievements 
+package achievements
 {
 	import entity.Player;
 	import levels.Level;
+	
 	/**
 	 * Base class for all achievements.
-	 * 
+	 *
 	 * @author Neamar
 	 */
-	public class Achievement 
+	public class Achievement
 	{
 		protected var game:Game;
 		protected var level:Level;
@@ -36,7 +37,7 @@ package achievements
 		{
 			throw new Error("Call to an abstract method.");
 		}
-		
+	
 	}
 
 }

@@ -1,8 +1,9 @@
-package achievements.player 
+package achievements.player
 {
+	
 	/**
 	 * Improve player life
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public final class LifeAchievement extends PlayerAchievement

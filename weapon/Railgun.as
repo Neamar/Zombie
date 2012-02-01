@@ -1,15 +1,18 @@
-package weapon 
+package weapon
 {
 	import entity.Player;
 	import entity.Zombie;
 	import levels.Level;
+	
 	/**
-	 * ...
+	 * Railgun weapon
+	 * "Dispatch them"
+	 * 
 	 * @author Neamar
 	 */
 	public final class Railgun extends Weapon
 	{
-		public function Railgun(level:Level, player:Player) 
+		public function Railgun(level:Level, player:Player)
 		{
 			cooldown = 45;
 			magazineCapacity = Infinity;
@@ -18,11 +21,12 @@ package weapon
 			super(level, player);
 		}
 		
-		public override function fire():int		{
+		public override function fire():int
+		{
 			if (beforeFiring())
 			{
 				raycast(0);
-			
+				
 				return 15;
 			}
 			return 0;

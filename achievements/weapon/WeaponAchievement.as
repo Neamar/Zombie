@@ -1,10 +1,11 @@
-package achievements.weapon 
+package achievements.weapon
 {
 	import achievements.Achievement;
 	import weapon.Weapon;
+	
 	/**
 	 * Base class for all weapon-based achievements
-	 * 
+	 *
 	 * @author Neamar
 	 */
 	public class WeaponAchievement extends Achievement
@@ -26,7 +27,7 @@ package achievements.weapon
 		 */
 		protected function getWeaponByClass(weapon:Class):Weapon
 		{
-			for each(var w:weapon.Weapon in player.availableWeapons)
+			for each (var w:weapon.Weapon in player.availableWeapons)
 			{
 				if (w is weapon)
 					return w;

@@ -57,7 +57,7 @@ package levels
 		{
 			this.levelName = levelName;
 			//Load associated XML :
-			var loader:URLLoader = new URLLoader(new URLRequest(buildUrl(levelName) + '/level-def.xml'));
+			var loader:URLLoader = new URLLoader(new URLRequest(buildUrl("level-def.xml")));
 			loader.addEventListener(Event.COMPLETE, loadLevelData);
 		}
 		
@@ -85,8 +85,8 @@ package levels
 			xml = new XML(e.target.data);
 			
 			// Load external assets asap
-			var bitmapUrl:String = buildUrl(levelName) + '/' + xml.visible.bitmap;
-			var hitmapUrl:String = buildUrl(levelName) + '/' + xml.technical.hitmap;
+			var bitmapUrl:String = buildUrl(xml.visible.bitmap);
+			var hitmapUrl:String = buildUrl(xml.technical.hitmap);
 			loadAssets(bitmapUrl, function(e:Event):void
 				{
 					params.bitmap = e.target.content
@@ -203,12 +203,12 @@ package levels
 		
 		/**
 		 * Helper to build URL
-		 * @param	level
-		 * @return path to level
+		 * @param	name name of the assets to load
+		 * @return absolute path to level
 		 */
-		private function buildUrl(level:String):String
+		private function buildUrl(name:String):String
 		{
-			return BASE_URL + '/' + level;
+			return BASE_URL + '/' + levelName + '/' + name;
 		}
 	}
 

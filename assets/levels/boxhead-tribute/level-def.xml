@@ -11,7 +11,7 @@
 	<technical>
 		<name>boxhead-tribute</name>
 		<followed-by>0-intro</followed-by>
-		<success on="surviving_waves">
+		<success on="surviving_waves" max-zombies="100">
 			<wave number="0" delay="1000">
 				<spawn-zone x="0" y="0" width="800" height="800" number="3" avoid-player="1" />
 			</wave>

@@ -70,7 +70,21 @@ package levels
 		/////////////////////////////////////
 		// SPECIAL PARAMETERS : WavesLevel
 		/////////////////////////////////////
+		/**
+		 * Maximum number of zombies displayed on the stage.
+		 * If a wave spawns more zombies than this limit, the level is lost.
+		 */
+		public var wavesMaxNumberOfZombies:int;
+		
+		/**
+		 * Delay between each wave.
+		 * The first value is the delay between the level start and the first wave
+		 */
 		public var wavesDelay:Vector.<int> = new Vector.<int>();
+		
+		/**
+		 * Datas for the waves.
+		 */
 		public var wavesDatas:Vector.<Vector.<LevelSpawn>> = new Vector.<Vector.<LevelSpawn>>();
 	}
 

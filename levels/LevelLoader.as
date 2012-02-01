@@ -128,6 +128,7 @@ package levels
 			else if (successXML.@on == 'surviving_waves')
 			{
 				params.LevelClass = WavesLevel;
+				params.wavesMaxNumberOfZombies = successXML["@max-zombies"];
 				for each (var wave:XML in successXML.wave)
 				{
 					params.wavesDelay.push(int(wave.@delay.toString()));

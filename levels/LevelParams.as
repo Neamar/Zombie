@@ -23,6 +23,7 @@ package levels
 		public var bitmap:Bitmap;
 		
 		/**
+		 * TODO : factorize all this data in a spawn class
 		 * Spawn area for the zombies
 		 * @see zombieDensity
 		 * @see BehemothProbability

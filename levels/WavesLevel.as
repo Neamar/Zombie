@@ -26,10 +26,11 @@ package levels
 			super(params);
 			
 			wavesDelay = params.wavesDelay;
-			wavesZombiesLocation = params.wavesZombiesLocation;
-			wavesZombiesDensity = params.wavesZombiesDensity;
-			wavesBehemothProbability = params.wavesBehemothProbability;
-			wavesSatanusProbability = params.wavesSatanusProbability;
+			wavesZombiesLocation = params.wavesZombiesLocation.concat();
+			wavesZombiesDensity = params.wavesZombiesDensity.concat();
+			
+			wavesBehemothProbability = params.wavesBehemothProbability.concat();
+			wavesSatanusProbability = params.wavesSatanusProbability.concat();
 			
 			spawner = new Timer(params.wavesDelay.shift());
 			spawner.addEventListener(TimerEvent.TIMER, onSpawner);

@@ -85,7 +85,7 @@ package achievements
 		/**
 		 * Number of achievement unlocked.
 		 */
-		public var achievementsUnlocked:int = 40;
+		public var achievementsUnlocked:int;
 		
 		/**
 		 * Game associated with those achievements
@@ -110,6 +110,7 @@ package achievements
 		public function AchievementsHandler(game:Game, startAtAchievement:int = 0) 
 		{
 			this.game = game;
+			achievementsUnlocked = startAtAchievement;
 		}
 		
 		/**

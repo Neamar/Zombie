@@ -391,13 +391,13 @@ package entity
 					var move:Boolean = false;
 					
 					//Does hitmap allows move ?
-					if (action == UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) == 0)
+					if (action == UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) != 0xFF000000)
 					{
 						destX = x + realSpeed * cos;
 						destY = y + realSpeed * sin;
 						move = true;
 					}
-					else if (action == DOWN && hitmapTest(x - RADIUS * cos, y - RADIUS * sin) == 0)
+					else if (action == DOWN && hitmapTest(x - RADIUS * cos, y - RADIUS * sin) != 0xFF000000)
 					{
 						destX = x - realSpeed * cos;
 						destY = y - realSpeed * sin;
@@ -460,7 +460,7 @@ package entity
 				for (theta = startAngle; theta <= endAngle + .01; theta += step)
 				{
 					radius = 0;
-					while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) == 0)
+					while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) != 0xFF000000)
 					{
 						radius += 2;
 						if (radius > DEPTH_VISIBILITY)

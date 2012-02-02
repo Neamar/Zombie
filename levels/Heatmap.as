@@ -136,7 +136,7 @@ package levels
 					var thresholdCount:int = 0;
 					for each (var pixel:uint in pixels)
 					{
-						if (pixel != 0)
+						if (pixel == 0xFF000000)
 							thresholdCount++;
 					}
 					

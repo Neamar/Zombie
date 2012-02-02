@@ -118,8 +118,8 @@ package levels
 			//Is is incredibly faster than using a real as3-mask, since we don't have to cacheAsBitmap the level.
 			player.lightMask.blendMode = BlendMode.ALPHA;
 			
-			addChild(hitmap);
 			addChild(player);
+			addChild(hitmap);
 			addChild(player.bloodRush);
 		}
 		
@@ -206,6 +206,7 @@ package levels
 			
 			//Player and zombies ought to be visible at any time
 			setChildIndex(player, numChildren - 1);
+			setChildIndex(hitmap, numChildren - 1);
 			for each (var zombie:Zombie in zombies)
 			{
 				setChildIndex(zombie, numChildren - 3);

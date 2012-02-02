@@ -171,7 +171,7 @@ package entity
 		/**
 		 * Opacity of invisible parts
 		 */
-		public var subconsciousVision:Number = .02;
+		public var subconsciousVision:Number = .05;
 		
 		/**
 		 * Max player life

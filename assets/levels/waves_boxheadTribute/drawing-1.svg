@@ -33,7 +33,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="485.28735"
+     inkscape:cx="316.0868"
      inkscape:cy="392.52496"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -61,7 +61,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -71,21 +71,21 @@
      id="layer1"
      transform="translate(0,-252.36218)">
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.52450980000000003;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3045"
        width="10"
        height="800"
        x="0"
        y="252.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.52450980000000003;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3045-7"
        width="10"
        height="800"
        x="790"
        y="252.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.52450980000000003;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3072"
        width="800"
        height="10"
@@ -93,77 +93,77 @@
        y="790"
        transform="translate(0,252.36218)" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.52450980000000003;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3072-4"
        width="800"
        height="10"
        x="0"
        y="252.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113"
        width="40"
        height="40"
        x="60"
        y="322.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-2"
        width="40"
        height="40"
        x="150"
        y="322.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-5"
        width="40"
        height="40"
        x="240"
        y="322.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-2-7"
        width="40"
        height="40"
        x="330"
        y="322.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-9"
        width="40"
        height="40"
        x="420"
        y="512.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-2-4"
        width="40"
        height="40"
        x="510"
        y="512.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-5-5"
        width="40"
        height="40"
        x="600"
        y="512.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-2-7-9"
        width="40"
        height="40"
        x="690"
        y="512.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-2-7-3"
        width="40"
        height="40"
        x="330"
        y="512.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-2-7-3-5"
        width="40"
        height="150"
@@ -171,7 +171,7 @@
        y="446.77518"
        transform="matrix(0.89158126,-0.45286074,0.45286074,0.89158126,0,0)" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-2-7-3-5-7"
        width="40"
        height="150"
@@ -179,7 +179,7 @@
        y="418.99176"
        transform="matrix(-0.00311916,-0.99999514,0.99999514,-0.00311916,0,0)" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3113-2-7-3-1"
        width="150"
        height="150"
@@ -187,7 +187,7 @@
        y="322.36218" />
     <path
        sodipodi:type="arc"
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="path3275"
        sodipodi:cx="455"
        sodipodi:cy="565"
@@ -208,28 +208,28 @@
            y="268.69965"
            style="font-size:430px;fill:#ffd42a" /></flowRegion><flowPara
          id="flowPara3285">☢</flowPara></flowRoot>    <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3287"
        width="20"
        height="220"
        x="30"
        y="582.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3289"
        width="140"
        height="30"
        x="50"
        y="582.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3291"
        width="20"
        height="220"
        x="80"
        y="642.36218" />
     <rect
-       style="color:#000000;fill:#000000;fill-opacity:0.5245098;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3293"
        width="90"
        height="20"

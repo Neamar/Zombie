@@ -25,7 +25,7 @@ package achievements
 			["First blood ! Handgun range increased", RangeAchievement, Handgun, 250],
 			["Shotgun unlocked. Now default weapon", UnlockAchievement, Shotgun],
 			["New handgun capacity : 2 bullets", CapacityAchievement, Handgun, 6],
-			["Increased subconscious vision", SubconcsiousVisionAchievement, 5],
+			["Increased subconscious vision", SubconcsiousVisionAchievement, 10],
 			["Jungle-style reload for the handgun", JungleAchievement, Handgun, true],
 			["Shotgun range increased", RangeAchievement, Shotgun, 200],
 			["Handgun range increased", RangeAchievement, Handgun, 3000],
@@ -50,7 +50,7 @@ package achievements
 			[CapacityAchievement, Shotgun, 6],
 			[CooldownAchievement, Railgun, 30],
 			[UnlockAchievement, Uzi],
-			[SubconcsiousVisionAchievement, 10],
+			[SubconcsiousVisionAchievement, 15],
 			[ReloadAchievement, Shotgun, 40],
 			[CooldownAchievement, Shotgun, 20],
 			[RangeAchievement, Uzi, 150],
@@ -69,7 +69,7 @@ package achievements
 			[ReloadAchievement, Uzi, 15],
 			[AmplitudeAchievement, Shotgun, 16],
 			[RangeAchievement, Uzi, 3000],
-			[SubconcsiousVisionAchievement, 15],
+			[SubconcsiousVisionAchievement, 20],
 			[AutomaticAchievement, Uzi, true],
 		/* 50+ */
 			["You'll never unlock this one", Infinity, Achievement, 0] /* final achievement, unreachable. */

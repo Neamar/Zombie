@@ -35,6 +35,8 @@ package
 		{
 			var message:TextField = new TextField();
 			message.defaultTextFormat = textFormat;
+			message.selectable = false;
+			message.mouseEnabled = false;
 			message.textColor = color;
 			message.width = Main.WIDTH;
 			message.y = int(Main.WIDTH + 5 + 15 * Math.random());

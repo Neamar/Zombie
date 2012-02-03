@@ -1,5 +1,6 @@
 package entity
 {
+	import flash.geom.Matrix;
 	import levels.Level;
 	
 	/**
@@ -49,6 +50,12 @@ package entity
 			if (damagesTaken >= MAX_HEALTHPOINTS)
 			{
 				super.kill();
+			}
+			else
+			{
+				//Add splatters
+				var matrix:Matrix = new Matrix(1.5*Math.random(), 0, 0, 1.5*Math.random(), x - splatter.width / 2, y - splatter.height / 2);
+				(parent as Level).bitmap.bitmapData.draw(splatter, matrix, null, null, null, true);
 			}
 		}
 	

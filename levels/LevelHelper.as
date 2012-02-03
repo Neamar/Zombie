@@ -41,6 +41,7 @@ package levels
 		{
 			level.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			level.stage.removeEventListener(MouseEvent.CLICK, onClick);
+			level.stage.removeEventListener(Event.ENTER_FRAME, onFrame);
 			level.removeEventListener(Level.LOST, onLost);
 			level = null;
 			player = null;

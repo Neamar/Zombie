@@ -18,6 +18,11 @@ package levels
 		public var LevelClass:Class = Level;
 		
 		/**
+		 * Shall we display help messages along the way ?
+		 */
+		public var displayHelp:Boolean = false;
+		
+		/**
 		 * Texture for the level
 		 */
 		public var bitmap:Bitmap;

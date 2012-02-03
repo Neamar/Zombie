@@ -19,7 +19,7 @@ package
 		/**
 		 * Name of the first level to load
 		 */
-		public static const FIRST_LEVEL:String = "killAll_Intro";
+		public static const FIRST_LEVEL:String = "area_Intro";
 		
 		/**
 		 * Level currently displayed

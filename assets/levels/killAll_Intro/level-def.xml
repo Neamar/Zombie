@@ -15,7 +15,9 @@
 		<hitmap>hitmap.png</hitmap>
 		<player x="950" y="50" handgun-magazines="20" shotgun-magazines="5" uzi-magazines="10" />
 		<zombies>
-			<spawn-zone x="900" y="0" width="100" height="100" number="1" behemoth-probability="1" />
+			<spawn-zone x="0" y="100" width="1000" height="300" number="5" behemoth-probability="100000" />
+			<spawn-zone x="0" y="400" width="1000" height="300" number="7" behemoth-probability="100000" />
+			<spawn-zone x="0" y="700" width="1000" height="300" number="20" behemoth-probability="100000" />
 			
 			<!-- Force two behemoths at the bottom -->
 			<spawn-zone x="50" y="950" width="0" height="0" number="1" behemoth-probability="1" />

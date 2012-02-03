@@ -19,7 +19,7 @@ package
 		/**
 		 * Name of the first level to load
 		 */
-		public static const FIRST_LEVEL:String = "area_Intro";
+		public static const FIRST_LEVEL:String = "waves_boxheadTribute";
 		
 		/**
 		 * Level currently displayed
@@ -51,7 +51,7 @@ package
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
 			
-			achievementHandler = new AchievementsHandler(this);
+			achievementHandler = new AchievementsHandler(this, 20);
 			
 			hud = new Hud();
 			addChild(hud);

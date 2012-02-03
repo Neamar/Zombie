@@ -9,7 +9,7 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<followed-by>area_Maze</followed-by>
+		<followed-by>killAll_Intro</followed-by>
 		<success on="accessing_area">
 			<area x="0" y="400" width="200" height="320" />
 		</success>

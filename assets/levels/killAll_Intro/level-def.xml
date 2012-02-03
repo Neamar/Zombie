@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<level>
+	<!-- Interface and graphical settings -->
+	<visible>
+		<bitmap>bitmap.png</bitmap>
+		<lights>
+		</lights>
+	</visible>
+	
+	<!-- Technical details -->
+	<technical>
+		<followed-by>killAll_small</followed-by>
+		<success on="killing_all" />
+		
+		<hitmap>hitmap.png</hitmap>
+		<player x="950" y="20" resolution="48" handgun-magazines="20" shotgun-magazines="5" uzi-magazines="10" />
+		<zombies>
+			<spawn-zone x="0" y="100" width="1000" height="100" number="3" behemoth-probability="10000000" satanus-probability="10000000" />
+			<spawn-zone x="0" y="200" width="1000" height="800" number="5" behemoth-probability="10000000" satanus-probability="10000000" />
+			<spawn-zone x="50" y="950" width="0" height="0" number="1" behemoth-probability="1" />
+			<spawn-zone x="950" y="950" width="0" height="0" number="1" behemoth-probability="1" />
+		</zombies>
+		<sounds>
+			<ambient>ambient.mp3</ambient>
+		</sounds>
+	</technical>
+</level>

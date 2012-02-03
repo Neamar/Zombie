@@ -6,9 +6,13 @@ package levels
 	import entity.Survivor;
 	import entity.Zombie;
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.filters.BlurFilter;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	/**
@@ -73,6 +77,8 @@ package levels
 		 */
 		public var heatmap:Heatmap;
 		
+		public var smoke:Bitmap;
+		
 		public function Level(params:LevelParams)
 		{
 			//Optimise display
@@ -119,8 +125,13 @@ package levels
 			player.lightMask.blendMode = BlendMode.ALPHA;
 			
 			addChild(player);
+			
+			smoke = new Bitmap(new BitmapData(400, 400, true, 0x00FFFFFF));
+			addChild(smoke);
+			
 			addChild(hitmap);
 			addChild(player.bloodRush);
+			
 		}
 		
 		public function destroy():void
@@ -151,7 +162,11 @@ package levels
 		 */
 		public function onFrame(e:Event = null):void
 		{
-			frameNumber = (frameNumber + 1) % FRAME_WAKER_LENGTH;
+			smoke.bitmapData.perlinNoise(32, 32, 2, 5, true, true, BitmapDataChannel.ALPHA, true, [new Point(frameNumber, 0)]);
+			smoke.bitmapData.threshold(smoke.bitmapData, smoke.bitmapData.rect, new Point(), "<", 0x99000000);
+			smoke.bitmapData.applyFilter(smoke.bitmapData, smoke.bitmapData.rect, new Point(), new BlurFilter());
+			
+			frameNumber = (frameNumber + 1) % FRAME_WAKER_LENGTH;0
 			
 			var currentFrame:Vector.<Zombie> = frameWaker[frameNumber];
 			while (currentFrame.length > 0)

@@ -15,7 +15,7 @@
 		</success>
 		
 		<hitmap>hitmap.png</hitmap>
-		<player x="150" y="200" resolution="40" handgun-magazines="20" shotgun-magazines="35" uzi-magazines="20" />
+		<player x="150" y="200" handgun-magazines="20" shotgun-magazines="35" uzi-magazines="20" />
 		<zombies>
 			<!-- First zombie ! -->
 			<spawn-zone x="1240" y="0" width="160" height="200" number="1" behemoth-probability="10000000" satanus-probability="10000000" />

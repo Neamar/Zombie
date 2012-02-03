@@ -23,6 +23,13 @@ package
 		 * Y-coordinate where a message should disappear
 		 */
 		protected var finalMessagePosition:int = Main.WIDTH - 120;
+		
+		/**
+		 * Last displayed textfield
+		 * Stored to avoid overlapping messages
+		 */
+		protected var lastMessage:TextField = null;
+		
 		public function Hud() 
 		{
 		}
@@ -39,7 +46,7 @@ package
 			message.mouseEnabled = false;
 			message.textColor = color;
 			message.width = Main.WIDTH;
-			message.y = int(Main.WIDTH + 5 + 15 * Math.random());
+			message.y = Math.max(Main.WIDTH + 15, (lastMessage == null)?0:lastMessage.y + 25);
 			message.autoSize = TextFieldAutoSize.CENTER;
 			message.multiline = false;
 			message.filters = [new BlurFilter(0, 0)];
@@ -48,6 +55,8 @@ package
 			message.text = msg;
 			
 			message.addEventListener(Event.ENTER_FRAME, moveMessage);
+			
+			lastMessage = message;
 		}
 		
 		protected function moveMessage(e:Event):void
@@ -60,6 +69,12 @@ package
 			 */
 			if (message.y <= finalMessagePosition + 90)
 			{
+				if (message.y <= finalMessagePosition + 50)
+				{
+					//Slow down the message
+					message.y++;
+				}
+					
 				if (message.y <= finalMessagePosition + 30)
 				{
 					message.alpha = (message.y - finalMessagePosition) / 60;
@@ -81,6 +96,9 @@ package
 				message.filters = [];
 				message.removeEventListener(Event.ENTER_FRAME, moveMessage);
 				removeChild(message);
+				
+				if (message == lastMessage)
+					lastMessage = null;
 			}
 		}
 	}

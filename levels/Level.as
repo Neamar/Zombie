@@ -73,8 +73,13 @@ package levels
 		 */
 		public var heatmap:Heatmap;
 		
+		/**
+		 * Is Help needed ?
+		 */
+		protected var levelHelper:LevelHelper = null;
+		
 		public function Level(params:LevelParams)
-		{
+		{		
 			//Optimise display
 			mouseChildren = false;
 			mouseEnabled = false;
@@ -121,10 +126,17 @@ package levels
 			addChild(player);
 			addChild(hitmap);
 			addChild(player.bloodRush);
+			
+			//Shall-we display help ?
+			if (params.displayHelp)
+				levelHelper = new LevelHelper(this);
 		}
 		
 		public function destroy():void
 		{
+			if (levelHelper != null)
+				levelHelper.destroy();
+				
 			player.destroy();
 			
 			//Remove all children for faster GC

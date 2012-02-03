@@ -141,7 +141,7 @@ package entity
 		/**
 		 * Store zombie current state
 		 */
-		protected var currentState:int;
+		public var currentState:int;
 		
 		/**
 		 * Store the offset and the length to use for the current state

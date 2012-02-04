@@ -5,6 +5,7 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -16,7 +17,11 @@ package
 	 */
 	public final class Hud extends Sprite 
 	{
-		
+		public function Hud()
+		{
+			addChild(AmmosBitmap);
+			AmmosBitmap.scaleX = AmmosBitmap.scaleY = 1 / 2;
+		}
 /*
  * WEAPONS SECTION
  * 
@@ -41,6 +46,10 @@ package
 		private var weaponsOrder:Vector.<Bitmap> = Vector.<Bitmap>([HandgunBitmap, ShotgunBitmap, RailgunBitmap, UziBitmap]);
 		private var weaponDisplayed:Bitmap = null;
 		
+		[Embed(source = "assets/hud/weapons/ammos.png")]
+		private static const AmmosHud:Class;
+		private static const AmmosBitmap:Bitmap = new AmmosHud();
+		private var ammosScrollRect:Rectangle = new Rectangle(0, 0, Main.WIDTH, 16);
 		/**
 		 * Updates the weapon on the HUD
 		 * Called on the Player.WEAPON_CHANGED event
@@ -61,6 +70,8 @@ package
 			weaponToDisplay.scaleX = weaponToDisplay.scaleY = 1 / 2;
 			weaponToDisplay.x = 5;
 			weaponToDisplay.y = Main.WIDTH - weaponToDisplay.height;
+			AmmosBitmap.y = weaponToDisplay.y + weaponToDisplay.height / 2 - AmmosBitmap.height / 2;
+			AmmosBitmap.x = weaponToDisplay.width + 30;
 			weaponDisplayed = weaponToDisplay;
 			
 			//Update bullets to, since the weapon changed
@@ -78,8 +89,12 @@ package
 		{
 			player = player == null?(e.target as Player):player;
 			
+			ammosScrollRect.width = 16 * player.currentWeapon.ammoInCurrentMagazine;
+			AmmosBitmap.scrollRect = ammosScrollRect;
+			
 			trace("Bullets: ", player.currentWeapon.ammoInCurrentMagazine);
 		}
+
 		
 /*
  * MESSAGES SECTION

@@ -1,8 +1,11 @@
 package  
 {
+	import entity.Player;
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -14,6 +17,88 @@ package
 	 */
 	public final class Hud extends Sprite 
 	{
+		public function Hud()
+		{
+			addChild(AmmosBitmap);
+			AmmosBitmap.scaleX = AmmosBitmap.scaleY = 1 / 2;
+		}
+/*
+ * WEAPONS SECTION
+ * 
+ * This section contains informaitons regarding the player's current weapon state.
+ */
+		[Embed(source = "assets/hud/weapons/handgun.png")]
+		private static const HandgunHud:Class;
+		private static const HandgunBitmap:Bitmap = new HandgunHud();
+		
+		[Embed(source = "assets/hud/weapons/shotgun.png")]
+		private static const ShotgunHud:Class;
+		private static const ShotgunBitmap:Bitmap = new ShotgunHud();
+		
+		[Embed(source = "assets/hud/weapons/railgun.png")]
+		private static const RailgunHud:Class;
+		private static const RailgunBitmap:Bitmap = new RailgunHud();
+		
+		[Embed(source = "assets/hud/weapons/uzi.png")]
+		private static const UziHud:Class;
+		private static const UziBitmap:Bitmap = new UziHud();
+		
+		private var weaponsOrder:Vector.<Bitmap> = Vector.<Bitmap>([HandgunBitmap, ShotgunBitmap, RailgunBitmap, UziBitmap]);
+		private var weaponDisplayed:Bitmap = null;
+		
+		[Embed(source = "assets/hud/weapons/ammos.png")]
+		private static const AmmosHud:Class;
+		private static const AmmosBitmap:Bitmap = new AmmosHud();
+		private var ammosScrollRect:Rectangle = new Rectangle(0, 0, Main.WIDTH, 16);
+		/**
+		 * Updates the weapon on the HUD
+		 * Called on the Player.WEAPON_CHANGED event
+		 * 
+		 * @param	e if this function is called by an event
+		 * @param	player if this function is called directly
+		 */
+		public function updateWeapon(e:Event = null, player:Player = null):void
+		{
+			player = player == null?(e.target as Player):player;
+			
+			var weaponToDisplay:Bitmap = weaponsOrder[player.availableWeapons.indexOf(player.currentWeapon)];
+			
+			if (weaponDisplayed != null && weaponDisplayed != weaponToDisplay)
+				removeChild(weaponDisplayed);
+				
+			addChild(weaponToDisplay);
+			weaponToDisplay.scaleX = weaponToDisplay.scaleY = 1 / 2;
+			weaponToDisplay.x = 5;
+			weaponToDisplay.y = Main.WIDTH - weaponToDisplay.height;
+			AmmosBitmap.y = weaponToDisplay.y + weaponToDisplay.height / 2 - AmmosBitmap.height / 2;
+			AmmosBitmap.x = weaponToDisplay.width + 30;
+			weaponDisplayed = weaponToDisplay;
+			
+			//Update bullets to, since the weapon changed
+			updateBullets(null, player);
+		}
+		
+		/**
+		 * Update the numbers of bullets displayed
+		 * Called on the Player.WEAPON_SHOT event
+		 * 
+		 * @param	e if this function is called by an event
+		 * @param	player if this function is called directly
+		 */
+		public function updateBullets(e:Event = null, player:Player = null):void
+		{
+			player = player == null?(e.target as Player):player;
+			
+			ammosScrollRect.width = 16 * player.currentWeapon.ammoInCurrentMagazine;
+			AmmosBitmap.scrollRect = ammosScrollRect;
+		}
+
+		
+/*
+ * MESSAGES SECTION
+ * 
+ * This section contains the properties and methods to display floating messages to the player.
+ */
 		/**
 		 * Text format for the style to use when displaying message
 		 */
@@ -29,11 +114,6 @@ package
 		 * Stored to avoid overlapping messages
 		 */
 		protected var lastMessage:TextField = null;
-		
-		public function Hud() 
-		{
-		}
-		
 		/**
 		 * Display a message
 		 * @param	msg

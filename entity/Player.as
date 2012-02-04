@@ -25,9 +25,11 @@ package entity
 	public final class Player extends Entity
 	{
 		/**
-		 * Event.
+		 * Events.
 		 */
 		public static const PLAYER_DEAD:String = "playerDead";
+		public static const WEAPON_CHANGED:String = "weaponChanged";
+		public static const WEAPON_SHOT:String = "weaponShot";
 		
 		/**
 		 * For debug : the player is never hurt.
@@ -293,6 +295,7 @@ package entity
 					if (action == RELOAD)
 					{
 						currentWeapon.reload();
+						dispatchEvent(new Event(WEAPON_SHOT));
 					}
 					else if (action == DEBUG)
 					{
@@ -335,6 +338,7 @@ package entity
 			{
 				//Enlight stage, intensity depends on the weapon's deflagration power.
 				hasShot = currentWeapon.fire();
+				dispatchEvent(new Event(WEAPON_SHOT));
 			}
 		}
 		
@@ -353,6 +357,7 @@ package entity
 			}
 			
 			currentWeapon = availableWeapons[offset];
+			dispatchEvent(new Event(WEAPON_CHANGED));
 		}
 		
 		/**
@@ -369,6 +374,7 @@ package entity
 			if (isClicked && currentWeapon.isAbleToFire())
 			{
 				hasShot = currentWeapon.fire();
+				dispatchEvent(new Event(WEAPON_SHOT));
 			}
 			
 			//When this var is true, we need to recompute masks.

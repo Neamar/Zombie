@@ -88,9 +88,7 @@ package
 			//Render the level eligible for GC :
 			level.destroy();
 			removeChild(level);
-			level.removeEventListener(Level.WIN, onSuccess);
-			level.removeEventListener(Level.LOST, onFailure);
-			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
+			removeListeners(level);
 			level = null;
 		}
 		
@@ -118,15 +116,44 @@ package
 			
 			//Add the level
 			level = loader.getLevel()
-			level.addEventListener(Level.WIN, onSuccess);
-			level.addEventListener(Level.LOST, onFailure);
-			
-			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
+			addListeners(level);
 			
 			achievementHandler.applyDefaultsAchievements();
 
 			addChild(level);
 			setChildIndex(hud, numChildren - 1);
+		}
+		
+		/**
+		 * All all the listeners on the level
+		 * @param	level
+		 */
+		private function addListeners(level:Level):void
+		{
+			//Failure and success
+			level.addEventListener(Level.WIN, onSuccess);
+			level.addEventListener(Level.LOST, onFailure);
+			
+			//Achievements
+			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
+			
+			//HUD
+			level.player.addEventListener(Player.WEAPON_CHANGED, hud.updateWeapon);
+			level.player.addEventListener(Player.WEAPON_SHOT, hud.updateBullets);
+		}
+		
+		/**
+		 * Remove all listeners added by addListeners
+		 * @see addListeners
+		 * @param	level
+		 */
+		private function removeListeners(level:Level):void
+		{
+			level.removeEventListener(Level.WIN, onSuccess);
+			level.removeEventListener(Level.LOST, onFailure);
+			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
+			level.player.removeEventListener(Player.WEAPON_CHANGED, hud.updateWeapon);
+			level.player.removeEventListener(Player.WEAPON_SHOT, hud.updateBullets);
 		}
 	}
 }

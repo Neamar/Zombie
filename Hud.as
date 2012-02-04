@@ -1,5 +1,6 @@
 package  
 {
+	import entity.Player;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
@@ -32,6 +33,16 @@ package
 		
 		public function Hud() 
 		{
+		}
+		
+		public function updateWeapon(e:Event):void
+		{
+			trace("Weapon: ", (e.target as Player).currentWeapon);
+		}
+		
+		public function updateBullets(e:Event):void
+		{
+			trace("Bullets: ", (e.target as Player).currentWeapon.ammoInCurrentMagazine);
 		}
 		
 		/**

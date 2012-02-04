@@ -1,6 +1,7 @@
 package  
 {
 	import entity.Player;
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filters.BlurFilter;
@@ -15,6 +16,25 @@ package
 	 */
 	public final class Hud extends Sprite 
 	{
+		[Embed(source = "assets/hud/weapons/handgun.png")]
+		private static const HandgunHud:Class;
+		private static const HandgunBitmap:Bitmap = new HandgunHud();
+		
+		[Embed(source = "assets/hud/weapons/shotgun.png")]
+		private static const ShotgunHud:Class;
+		private static const ShotgunBitmap:Bitmap = new ShotgunHud();
+		
+		[Embed(source = "assets/hud/weapons/railgun.png")]
+		private static const RailgunHud:Class;
+		private static const RailgunBitmap:Bitmap = new RailgunHud();
+		
+		[Embed(source = "assets/hud/weapons/uzi.png")]
+		private static const UziHud:Class;
+		private static const UziBitmap:Bitmap = new UziHud();
+		
+		private var weaponsOrder:Vector.<Bitmap> = Vector.<Bitmap>([HandgunBitmap, ShotgunBitmap, RailgunBitmap, UziBitmap]);
+		private var weaponDisplayed:Bitmap = null;
+		
 		/**
 		 * Text format for the style to use when displaying message
 		 */
@@ -35,12 +55,21 @@ package
 		{
 		}
 		
-		public function updateWeapon(e:Event):void
+		public function updateWeapon(e:Event = null):void
 		{
-			trace("Weapon: ", (e.target as Player).currentWeapon);
+			var player:Player = (e.target as Player);
+			var weaponToDisplay:Bitmap = weaponsOrder[player.availableWeapons.indexOf(player.currentWeapon)];
+			
+			if (weaponDisplayed != null && weaponDisplayed != weaponToDisplay)
+				removeChild(weaponDisplayed);
+				
+			addChild(weaponToDisplay);
+			weaponToDisplay.x = 5;
+			weaponToDisplay.y = Main.WIDTH - weaponToDisplay.height;
+			weaponDisplayed = weaponToDisplay;
 		}
 		
-		public function updateBullets(e:Event):void
+		public function updateBullets(e:Event = null):void
 		{
 			trace("Bullets: ", (e.target as Player).currentWeapon.ammoInCurrentMagazine);
 		}

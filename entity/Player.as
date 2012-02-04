@@ -7,6 +7,7 @@ package entity
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -79,9 +80,11 @@ package entity
 		
 		/**
 		 * Special constants
+		 * TODO : those ones should not be on the player class.
 		 */
 		public static const DEBUG:int = 10;
 		public static const FORCE_WIN:int = 11;
+		public static const FULLSCREEN:int = 12;
 		
 		/**
 		 * Key-binding for moving.
@@ -94,6 +97,7 @@ package entity
 			/*s		key */83: DOWN,
 			/*j		key */74: DOWN,
 			/*k		key */75: UP,
+			/*f		key */70: FULLSCREEN,
 			/*t		key */84: DEBUG,
 			/*w		key */87: FORCE_WIN,
 			/*r		key */82: RELOAD,
@@ -297,6 +301,10 @@ package entity
 					else if (action == FORCE_WIN)
 					{
 						(parent as Level).dispatchWin();
+					}
+					else if (action == FULLSCREEN)
+					{
+						stage.displayState = StageDisplayState.FULL_SCREEN;
 					}
 					else
 					{

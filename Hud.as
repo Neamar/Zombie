@@ -91,8 +91,6 @@ package
 			
 			ammosScrollRect.width = 16 * player.currentWeapon.ammoInCurrentMagazine;
 			AmmosBitmap.scrollRect = ammosScrollRect;
-			
-			trace("Bullets: ", player.currentWeapon.ammoInCurrentMagazine);
 		}
 
 		

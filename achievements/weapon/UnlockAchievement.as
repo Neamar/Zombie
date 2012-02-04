@@ -1,6 +1,8 @@
 package achievements.weapon
 {
 	import achievements.Achievement;
+	import entity.Player;
+	import flash.events.Event;
 	
 	/**
 	 * Unlock a new weapon by adding it to the player arsenal
@@ -20,6 +22,9 @@ package achievements.weapon
 		{
 			player.availableWeapons.push(new weapon(level, player));
 			player.currentWeapon = player.availableWeapons[player.availableWeapons.length - 1];
+			
+			//Update the HUD
+			player.dispatchEvent(new Event(Player.WEAPON_CHANGED));
 		}
 	}
 

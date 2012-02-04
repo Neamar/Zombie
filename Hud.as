@@ -41,23 +41,44 @@ package
 		private var weaponsOrder:Vector.<Bitmap> = Vector.<Bitmap>([HandgunBitmap, ShotgunBitmap, RailgunBitmap, UziBitmap]);
 		private var weaponDisplayed:Bitmap = null;
 		
-		public function updateWeapon(e:Event = null):void
+		/**
+		 * Updates the weapon on the HUD
+		 * Called on the Player.WEAPON_CHANGED event
+		 * 
+		 * @param	e if this function is called by an event
+		 * @param	player if this function is called directly
+		 */
+		public function updateWeapon(e:Event = null, player:Player = null):void
 		{
-			var player:Player = (e.target as Player);
+			player = player == null?(e.target as Player):player;
+			
 			var weaponToDisplay:Bitmap = weaponsOrder[player.availableWeapons.indexOf(player.currentWeapon)];
 			
 			if (weaponDisplayed != null && weaponDisplayed != weaponToDisplay)
 				removeChild(weaponDisplayed);
 				
 			addChild(weaponToDisplay);
+			weaponToDisplay.scaleX = weaponToDisplay.scaleY = 1 / 2;
 			weaponToDisplay.x = 5;
 			weaponToDisplay.y = Main.WIDTH - weaponToDisplay.height;
 			weaponDisplayed = weaponToDisplay;
+			
+			//Update bullets to, since the weapon changed
+			updateBullets(null, player);
 		}
 		
-		public function updateBullets(e:Event = null):void
+		/**
+		 * Update the numbers of bullets displayed
+		 * Called on the Player.WEAPON_SHOT event
+		 * 
+		 * @param	e if this function is called by an event
+		 * @param	player if this function is called directly
+		 */
+		public function updateBullets(e:Event = null, player:Player = null):void
 		{
-			trace("Bullets: ", (e.target as Player).currentWeapon.ammoInCurrentMagazine);
+			player = player == null?(e.target as Player):player;
+			
+			trace("Bullets: ", player.currentWeapon.ammoInCurrentMagazine);
 		}
 		
 /*

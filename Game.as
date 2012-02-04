@@ -117,11 +117,12 @@ package
 			//Add the level
 			level = loader.getLevel()
 			addListeners(level);
-			
-			achievementHandler.applyDefaultsAchievements();
-
 			addChild(level);
 			setChildIndex(hud, numChildren - 1);
+			
+			//Get ready  to play !
+			achievementHandler.applyDefaultsAchievements();
+			hud.updateWeapon(null, level.player);
 		}
 		
 		/**

@@ -16,6 +16,12 @@ package
 	 */
 	public final class Hud extends Sprite 
 	{
+		
+/*
+ * WEAPONS SECTION
+ * 
+ * This section contains informaitons regarding the player's current weapon state.
+ */
 		[Embed(source = "assets/hud/weapons/handgun.png")]
 		private static const HandgunHud:Class;
 		private static const HandgunBitmap:Bitmap = new HandgunHud();
@@ -34,26 +40,6 @@ package
 		
 		private var weaponsOrder:Vector.<Bitmap> = Vector.<Bitmap>([HandgunBitmap, ShotgunBitmap, RailgunBitmap, UziBitmap]);
 		private var weaponDisplayed:Bitmap = null;
-		
-		/**
-		 * Text format for the style to use when displaying message
-		 */
-		protected var textFormat:TextFormat = new TextFormat(null, null, null, true);
-		
-		/**
-		 * Y-coordinate where a message should disappear
-		 */
-		protected var finalMessagePosition:int = Main.WIDTH - 120;
-		
-		/**
-		 * Last displayed textfield
-		 * Stored to avoid overlapping messages
-		 */
-		protected var lastMessage:TextField = null;
-		
-		public function Hud() 
-		{
-		}
 		
 		public function updateWeapon(e:Event = null):void
 		{
@@ -74,6 +60,26 @@ package
 			trace("Bullets: ", (e.target as Player).currentWeapon.ammoInCurrentMagazine);
 		}
 		
+/*
+ * MESSAGES SECTION
+ * 
+ * This section contains the properties and methods to display floating messages to the player.
+ */
+		/**
+		 * Text format for the style to use when displaying message
+		 */
+		protected var textFormat:TextFormat = new TextFormat(null, null, null, true);
+		
+		/**
+		 * Y-coordinate where a message should disappear
+		 */
+		protected var finalMessagePosition:int = Main.WIDTH - 120;
+		
+		/**
+		 * Last displayed textfield
+		 * Stored to avoid overlapping messages
+		 */
+		protected var lastMessage:TextField = null;
 		/**
 		 * Display a message
 		 * @param	msg

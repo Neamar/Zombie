@@ -9,4 +9,4 @@ Source : http://www.callofdutycentre.com/call-of-duty-black-ops-weapon-hud-icons
 Bullets
 -------
 Temporary placeholder too.
-Generated via `montage ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png -geometry 16x16 -tile 26x1 ammos.png` (ooooh dirty trick).
+Generated via `montage ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png ammo.png plus.png -geometry 16x16 -tile 26x1 -background none ammos.png` (ooooh dirty trick).

@@ -77,6 +77,7 @@ package entity
 		public static const UP:int = 1;
 		public static const DOWN:int = 2;
 		public static const RELOAD:int = 3;
+		public static const SWITCH:int = 4;
 		
 		/**
 		 * Special constants
@@ -97,6 +98,7 @@ package entity
 			/*s		key */83: DOWN,
 			/*j		key */74: DOWN,
 			/*k		key */75: UP,
+			/*tab	key */9	: SWITCH,
 			/*f		key */70: FULLSCREEN,
 			/*t		key */84: DEBUG,
 			/*w		key */87: FORCE_WIN,
@@ -294,6 +296,10 @@ package entity
 					{
 						currentWeapon.reload();
 					}
+					else if (action == SWITCH)
+					{
+						onMouseWheel();
+					}
 					else if (action == DEBUG)
 					{
 						(parent as Level).toggleDebugMode();
@@ -343,10 +349,12 @@ package entity
 			isClicked = false;
 		}
 		
-		protected function onMouseWheel(e:MouseEvent):void
+		protected function onMouseWheel(e:MouseEvent = null):void
 		{
+			var delta:int = (e == null)?1:e.delta / Math.abs(e.delta);
 			//Select next / prev weapon
-			var offset:int = (availableWeapons.indexOf(currentWeapon) + e.delta / Math.abs(e.delta)) % availableWeapons.length;
+			var offset:int = (availableWeapons.indexOf(currentWeapon) + delta) % availableWeapons.length;
+			
 			if (offset < 0)
 			{
 				offset = availableWeapons.length + offset;

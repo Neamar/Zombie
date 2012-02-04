@@ -287,6 +287,24 @@ package entity
 			}
 		}
 		
+		/**
+		 * Switch weapon
+		 * @param	offset
+		 */
+		public function changeWeapon(offset:int):void
+		{
+			//Normalize the value
+			offset = offset % availableWeapons.length;
+			
+			if (offset < 0)
+			{
+				offset = availableWeapons.length + offset;
+			}
+			
+			currentWeapon = availableWeapons[offset];
+			dispatchEvent(new Event(WEAPON_CHANGED));
+		}
+		
 		protected function onKeyDown(e:KeyboardEvent):void
 		{
 			if (e.keyCode in bindings)
@@ -320,6 +338,10 @@ package entity
 						downKeys.push(action);
 					}
 				}
+			}
+			else if (e.keyCode >= 49 && e.keyCode < 49 + availableWeapons.length)
+			{
+				changeWeapon(e.keyCode - 49);
 			}
 			else
 			{
@@ -356,16 +378,7 @@ package entity
 		protected function onMouseWheel(e:MouseEvent = null):void
 		{
 			var delta:int = (e == null)?1:e.delta / Math.abs(e.delta);
-			//Select next / prev weapon
-			var offset:int = (availableWeapons.indexOf(currentWeapon) + delta) % availableWeapons.length;
-			
-			if (offset < 0)
-			{
-				offset = availableWeapons.length + offset;
-			}
-			
-			currentWeapon = availableWeapons[offset];
-			dispatchEvent(new Event(WEAPON_CHANGED));
+			changeWeapon(availableWeapons.indexOf(currentWeapon) + delta);
 		}
 		
 		/**

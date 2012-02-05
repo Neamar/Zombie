@@ -559,7 +559,7 @@ package entity
 		 */
 		protected function canMoveTo(destX:Number, destY:Number):Boolean
 		{
-			if (hitmapTest(destX, destY) == 0xFF000000)
+			if (hitmapTest(destX, destY) == 0xFF000000 || hitmapTest(destX - RADIUS, destY) == 0xFF000000 || hitmapTest(destX + RADIUS, destY) == 0xFF000000 || hitmapTest(destX, destY - RADIUS) == 0xFF000000 || hitmapTest(destX, destY + RADIUS) == 0xFF000000)
 			{
 				return false;
 			}

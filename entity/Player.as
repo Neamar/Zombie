@@ -34,7 +34,7 @@ package entity
 		/**
 		 * For debug : the player is never hurt.
 		 */
-		public static const INVINCIBLE:Boolean = false;
+		public static const INVINCIBLE:Boolean = true;
 		
 		/**
 		 * Player radius (he's a fatty!)
@@ -108,10 +108,13 @@ package entity
 			/*space	key */32: RELOAD};
 		
 		/**
-		 * Which keys are currently pressed ?
+		 * Which key is currently pressed ?
 		 */
-		public var downKeys:Vector.<int> = new Vector.<int>();
+		public var currentAction:int = 0;
 		
+		/**
+		 * Are we clicking to shoot ?
+		 */
 		public var isClicked:Boolean = false;
 		
 		/**
@@ -310,33 +313,30 @@ package entity
 			if (e.keyCode in bindings)
 			{
 				var action:int = bindings[e.keyCode];
-				if (downKeys.indexOf(action) == -1)
+				if (action == RELOAD)
 				{
-					if (action == RELOAD)
-					{
-						currentWeapon.reload();
-						dispatchEvent(new Event(WEAPON_SHOT));
-					}
-					else if (action == SWITCH)
-					{
-						onMouseWheel();
-					}
-					else if (action == DEBUG)
-					{
-						(parent as Level).toggleDebugMode();
-					}
-					else if (action == FORCE_WIN)
-					{
-						(parent as Level).dispatchWin();
-					}
-					else if (action == FULLSCREEN)
-					{
-						stage.displayState = StageDisplayState.FULL_SCREEN;
-					}
-					else
-					{
-						downKeys.push(action);
-					}
+					currentWeapon.reload();
+					dispatchEvent(new Event(WEAPON_SHOT));
+				}
+				else if (action == SWITCH)
+				{
+					onMouseWheel();
+				}
+				else if (action == DEBUG)
+				{
+					(parent as Level).toggleDebugMode();
+				}
+				else if (action == FORCE_WIN)
+				{
+					(parent as Level).dispatchWin();
+				}
+				else if (action == FULLSCREEN)
+				{
+					stage.displayState = StageDisplayState.FULL_SCREEN;
+				}
+				else /* if action == UP || action == DOWN */
+				{
+					currentAction = action;
 				}
 			}
 			else if (e.keyCode >= 49 && e.keyCode < 49 + availableWeapons.length)
@@ -351,11 +351,8 @@ package entity
 		
 		protected function onKeyUp(e:KeyboardEvent):void
 		{
-			var indexOf:int = downKeys.indexOf(bindings[e.keyCode]);
-			if (indexOf != -1)
-			{
-				downKeys.splice(indexOf, 1);
-			}
+			if(bindings[e.keyCode] == currentAction)
+				currentAction = 0;
 		}
 		
 		protected function onMouseDown(e:MouseEvent):void
@@ -411,7 +408,7 @@ package entity
 			}
 			
 			//Shall we move the player ?
-			if (downKeys.length > 0)
+			if (currentAction != 0)
 			{
 				//Precomputing
 				var cos:Number = Math.cos(rotation * TO_RADIANS);
@@ -419,47 +416,26 @@ package entity
 				var realSpeed:int = SPEED; // damagesTaken > 5 ? Zombie.SPEED:SPEED;
 				
 				//Application
-				for each (var action:int in downKeys)
+				var destX:int;
+				var destY:int;
+
+				//Does hitmap allows move ?
+				if (currentAction == UP)
 				{
-					var destX:int;
-					var destY:int;
-					var move:Boolean = false;
-					
-					//Does hitmap allows move ?
-					if (action == UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) != 0xFF000000)
-					{
-						destX = x + realSpeed * cos;
-						destY = y + realSpeed * sin;
-						move = true;
-					}
-					else if (action == DOWN && hitmapTest(x - RADIUS * cos, y - RADIUS * sin) != 0xFF000000)
-					{
-						destX = x - realSpeed * cos;
-						destY = y - realSpeed * sin;
-						move = true;
-					}
+					destX = x + realSpeed * cos;
+					destY = y + realSpeed * sin;
+				}
+				else if (currentAction == DOWN)
+				{
+					destX = x - realSpeed * cos;
+					destY = y - realSpeed * sin;
 				}
 				
-				//Is a zombie blocking move ?
-				if (move)
+				if (canMoveTo(destX, destY))
 				{
-					var potentialZombies:Vector.<Zombie> = level.frameWaker[(level.frameNumber + 1) % level.FRAME_WAKER_LENGTH].concat(level.frameWaker[(level.frameNumber + 9) % level.FRAME_WAKER_LENGTH]);
-					for each (var zombie:Zombie in potentialZombies)
-					{
-						if (zombie.x - zombie.radius < destX && zombie.x + zombie.radius > destX && zombie.y - zombie.radius < destY && zombie.y + zombie.radius > destY)
-						{
-							move = false;
-							break;
-						}
-					}
-					
-					// No zombie + no wall : ok.
-					if (move)
-					{
-						x = destX;
-						y = destY;
-						hasMoved = true;
-					}
+					x = destX;
+					y = destY;
+					hasMoved = true;
 				}
 			}
 			
@@ -563,6 +539,32 @@ package entity
 			}
 		}
 		
+		/**
+		 * Return true if the player is free to move to the position given in parameters
+		 * Take into account the hitmpa and the entity which may block vision
+		 * 
+		 * @param	x
+		 * @param	y
+		 * @return true if player can move there
+		 */
+		protected function canMoveTo(destX:Number, destY:Number):Boolean
+		{
+			if (hitmapTest(destX, destY) == 0xFF000000)
+			{
+				return false;
+			}
+			
+			var potentialZombies:Vector.<Zombie> = level.frameWaker[(level.frameNumber + 1) % level.FRAME_WAKER_LENGTH].concat(level.frameWaker[(level.frameNumber + 9) % level.FRAME_WAKER_LENGTH]);
+			for each (var zombie:Zombie in potentialZombies)
+			{
+				if (zombie.x - zombie.radius < destX && zombie.x + zombie.radius > destX && zombie.y - zombie.radius < destY && zombie.y + zombie.radius > destY)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
 		/**
 		 * Called as soon as we get a reference to the stage
 		 * 

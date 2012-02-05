@@ -437,6 +437,16 @@ package entity
 					y = destY;
 					hasMoved = true;
 				}
+				else if (canMoveTo(destX, y))
+				{
+					x = destX;
+					hasMoved = true;
+				}
+				else if (canMoveTo(x, destY))
+				{
+					y = destY;
+					hasMoved = true;
+				}
 			}
 			
 			//Recompute mask only if needed.

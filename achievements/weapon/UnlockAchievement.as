@@ -1,6 +1,8 @@
 package achievements.weapon
 {
 	import achievements.Achievement;
+	import entity.Player;
+	import flash.events.Event;
 	
 	/**
 	 * Unlock a new weapon by adding it to the player arsenal
@@ -19,7 +21,7 @@ package achievements.weapon
 		public override function apply():void
 		{
 			player.availableWeapons.push(new weapon(level, player));
-			player.currentWeapon = player.availableWeapons[player.availableWeapons.length - 1];
+			player.changeWeapon(- 1); // This value is normalized modulus the number of weapon, thus select the last instered one.
 		}
 	}
 

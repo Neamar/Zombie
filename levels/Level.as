@@ -73,8 +73,13 @@ package levels
 		 */
 		public var heatmap:Heatmap;
 		
+		/**
+		 * Is Help needed ?
+		 */
+		protected var levelHelper:LevelHelper = null;
+		
 		public function Level(params:LevelParams)
-		{
+		{		
 			//Optimise display
 			mouseChildren = false;
 			mouseEnabled = false;
@@ -119,11 +124,19 @@ package levels
 			player.lightMask.blendMode = BlendMode.ALPHA;
 			
 			addChild(player);
+			addChild(hitmap);
 			addChild(player.bloodRush);
+			
+			//Shall-we display help ?
+			if (params.displayHelp)
+				levelHelper = new LevelHelper(this);
 		}
 		
 		public function destroy():void
 		{
+			if (levelHelper != null)
+				levelHelper.destroy();
+				
 			player.destroy();
 			
 			//Remove all children for faster GC
@@ -205,9 +218,10 @@ package levels
 			
 			//Player and zombies ought to be visible at any time
 			setChildIndex(player, numChildren - 1);
+			setChildIndex(hitmap, numChildren - 1);
 			for each (var zombie:Zombie in zombies)
 			{
-				setChildIndex(zombie, numChildren - 2);
+				setChildIndex(zombie, numChildren - 3);
 			}
 		}
 		

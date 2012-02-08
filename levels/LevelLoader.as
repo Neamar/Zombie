@@ -101,6 +101,8 @@ package levels
 			 */
 			//Meta-parameters
 			params.nextLevelName = xml.technical["followed-by"][0];
+			if(xml.technical.success[0]["@display-help"].toXMLString() != "")
+				params.displayHelp = true;
 			
 			//Load player info
 			var playerXML:XML = xml.technical.player[0];

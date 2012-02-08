@@ -7,6 +7,7 @@ package entity
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.display.Shape;
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -24,14 +25,16 @@ package entity
 	public final class Player extends Entity
 	{
 		/**
-		 * Event.
+		 * Events.
 		 */
 		public static const PLAYER_DEAD:String = "playerDead";
+		public static const WEAPON_CHANGED:String = "weaponChanged";
+		public static const WEAPON_SHOT:String = "weaponShot";
 		
 		/**
 		 * For debug : the player is never hurt.
 		 */
-		public static const INVINCIBLE:Boolean = false;
+		public static const INVINCIBLE:Boolean = true;
 		
 		/**
 		 * Player radius (he's a fatty!)
@@ -56,7 +59,7 @@ package entity
 		/**
 		 * Max width one may see if no obstacles in front.
 		 */
-		public const DEPTH_VISIBILITY:int = Main.WIDTH2;
+		public const DEPTH_VISIBILITY:int = 200;
 		
 		/**
 		 * Mathematic constant = Math.PI / 180
@@ -76,12 +79,15 @@ package entity
 		public static const UP:int = 1;
 		public static const DOWN:int = 2;
 		public static const RELOAD:int = 3;
+		public static const SWITCH:int = 4;
 		
 		/**
 		 * Special constants
+		 * TODO : those ones should not be on the player class.
 		 */
 		public static const DEBUG:int = 10;
 		public static const FORCE_WIN:int = 11;
+		public static const FULLSCREEN:int = 12;
 		
 		/**
 		 * Key-binding for moving.
@@ -94,16 +100,21 @@ package entity
 			/*s		key */83: DOWN,
 			/*j		key */74: DOWN,
 			/*k		key */75: UP,
+			/*tab	key */9	: SWITCH,
+			/*f		key */70: FULLSCREEN,
 			/*t		key */84: DEBUG,
 			/*w		key */87: FORCE_WIN,
 			/*r		key */82: RELOAD,
 			/*space	key */32: RELOAD};
 		
 		/**
-		 * Which keys are currently pressed ?
+		 * Which key is currently pressed ?
 		 */
-		public var downKeys:Vector.<int> = new Vector.<int>();
+		public var currentAction:int = 0;
 		
+		/**
+		 * Are we clicking to shoot ?
+		 */
 		public var isClicked:Boolean = false;
 		
 		/**
@@ -171,7 +182,7 @@ package entity
 		/**
 		 * Opacity of invisible parts
 		 */
-		public var subconsciousVision:Number = .02;
+		public var subconsciousVision:Number = .05;
 		
 		/**
 		 * Max player life
@@ -279,30 +290,58 @@ package entity
 			}
 		}
 		
+		/**
+		 * Switch weapon
+		 * @param	offset
+		 */
+		public function changeWeapon(offset:int):void
+		{
+			//Normalize the value
+			offset = offset % availableWeapons.length;
+			
+			if (offset < 0)
+			{
+				offset = availableWeapons.length + offset;
+			}
+			
+			currentWeapon = availableWeapons[offset];
+			dispatchEvent(new Event(WEAPON_CHANGED));
+		}
+		
 		protected function onKeyDown(e:KeyboardEvent):void
 		{
 			if (e.keyCode in bindings)
 			{
 				var action:int = bindings[e.keyCode];
-				if (downKeys.indexOf(action) == -1)
+				if (action == RELOAD)
 				{
-					if (action == RELOAD)
-					{
-						currentWeapon.reload();
-					}
-					else if (action == DEBUG)
-					{
-						(parent as Level).toggleDebugMode();
-					}
-					else if (action == FORCE_WIN)
-					{
-						(parent as Level).dispatchWin();
-					}
-					else
-					{
-						downKeys.push(action);
-					}
+					currentWeapon.reload();
+					dispatchEvent(new Event(WEAPON_SHOT));
 				}
+				else if (action == SWITCH)
+				{
+					onMouseWheel();
+				}
+				else if (action == DEBUG)
+				{
+					(parent as Level).toggleDebugMode();
+				}
+				else if (action == FORCE_WIN)
+				{
+					(parent as Level).dispatchWin();
+				}
+				else if (action == FULLSCREEN)
+				{
+					stage.displayState = StageDisplayState.FULL_SCREEN;
+				}
+				else /* if action == UP || action == DOWN */
+				{
+					currentAction = action;
+				}
+			}
+			else if (e.keyCode >= 49 && e.keyCode < 49 + availableWeapons.length)
+			{
+				changeWeapon(e.keyCode - 49);
 			}
 			else
 			{
@@ -312,11 +351,8 @@ package entity
 		
 		protected function onKeyUp(e:KeyboardEvent):void
 		{
-			var indexOf:int = downKeys.indexOf(bindings[e.keyCode]);
-			if (indexOf != -1)
-			{
-				downKeys.splice(indexOf, 1);
-			}
+			if(bindings[e.keyCode] == currentAction)
+				currentAction = 0;
 		}
 		
 		protected function onMouseDown(e:MouseEvent):void
@@ -327,6 +363,7 @@ package entity
 			{
 				//Enlight stage, intensity depends on the weapon's deflagration power.
 				hasShot = currentWeapon.fire();
+				dispatchEvent(new Event(WEAPON_SHOT));
 			}
 		}
 		
@@ -335,16 +372,10 @@ package entity
 			isClicked = false;
 		}
 		
-		protected function onMouseWheel(e:MouseEvent):void
+		protected function onMouseWheel(e:MouseEvent = null):void
 		{
-			//Select next / prev weapon
-			var offset:int = (availableWeapons.indexOf(currentWeapon) + e.delta / Math.abs(e.delta)) % availableWeapons.length;
-			if (offset < 0)
-			{
-				offset = availableWeapons.length + offset;
-			}
-			
-			currentWeapon = availableWeapons[offset];
+			var delta:int = (e == null)?1:e.delta / Math.abs(e.delta);
+			changeWeapon(availableWeapons.indexOf(currentWeapon) + delta);
 		}
 		
 		/**
@@ -361,6 +392,7 @@ package entity
 			if (isClicked && currentWeapon.isAbleToFire())
 			{
 				hasShot = currentWeapon.fire();
+				dispatchEvent(new Event(WEAPON_SHOT));
 			}
 			
 			//When this var is true, we need to recompute masks.
@@ -376,7 +408,7 @@ package entity
 			}
 			
 			//Shall we move the player ?
-			if (downKeys.length > 0)
+			if (currentAction != 0)
 			{
 				//Precomputing
 				var cos:Number = Math.cos(rotation * TO_RADIANS);
@@ -384,47 +416,36 @@ package entity
 				var realSpeed:int = SPEED; // damagesTaken > 5 ? Zombie.SPEED:SPEED;
 				
 				//Application
-				for each (var action:int in downKeys)
+				var destX:int;
+				var destY:int;
+
+				//Does hitmap allows move ?
+				if (currentAction == UP)
 				{
-					var destX:int;
-					var destY:int;
-					var move:Boolean = false;
-					
-					//Does hitmap allows move ?
-					if (action == UP && hitmapTest(x + RADIUS * cos, y + RADIUS * sin) == 0)
-					{
-						destX = x + realSpeed * cos;
-						destY = y + realSpeed * sin;
-						move = true;
-					}
-					else if (action == DOWN && hitmapTest(x - RADIUS * cos, y - RADIUS * sin) == 0)
-					{
-						destX = x - realSpeed * cos;
-						destY = y - realSpeed * sin;
-						move = true;
-					}
+					destX = x + realSpeed * cos;
+					destY = y + realSpeed * sin;
+				}
+				else if (currentAction == DOWN)
+				{
+					destX = x - realSpeed * cos;
+					destY = y - realSpeed * sin;
 				}
 				
-				//Is a zombie blocking move ?
-				if (move)
+				if (canMoveTo(destX, destY))
 				{
-					var potentialZombies:Vector.<Zombie> = level.frameWaker[(level.frameNumber + 1) % level.FRAME_WAKER_LENGTH].concat(level.frameWaker[(level.frameNumber + 9) % level.FRAME_WAKER_LENGTH]);
-					for each (var zombie:Zombie in potentialZombies)
-					{
-						if (zombie.x - zombie.radius < destX && zombie.x + zombie.radius > destX && zombie.y - zombie.radius < destY && zombie.y + zombie.radius > destY)
-						{
-							move = false;
-							break;
-						}
-					}
-					
-					// No zombie + no wall : ok.
-					if (move)
-					{
-						x = destX;
-						y = destY;
-						hasMoved = true;
-					}
+					x = destX;
+					y = destY;
+					hasMoved = true;
+				}
+				else if (canMoveTo(destX, y))
+				{
+					x = destX;
+					hasMoved = true;
+				}
+				else if (canMoveTo(x, destY))
+				{
+					y = destY;
+					hasMoved = true;
 				}
 			}
 			
@@ -460,7 +481,7 @@ package entity
 				for (theta = startAngle; theta <= endAngle + .01; theta += step)
 				{
 					radius = 0;
-					while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) == 0)
+					while (hitmapTest(x + radius * Math.cos(theta), y + radius * Math.sin(theta)) != 0xFF000000)
 					{
 						radius += 2;
 						if (radius > DEPTH_VISIBILITY)
@@ -512,7 +533,7 @@ package entity
 		public function drawBloodrush():void
 		{
 			var bd:BitmapData = bloodRush.bitmapData;
-			bd.perlinNoise(Main.WIDTH, Main.WIDTH, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
+			bd.perlinNoise(Main.GAMING_AREA, Main.GAMING_AREA, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
 			
 			if (tamedBloodrush)
 			{
@@ -528,6 +549,32 @@ package entity
 			}
 		}
 		
+		/**
+		 * Return true if the player is free to move to the position given in parameters
+		 * Take into account the hitmpa and the entity which may block vision
+		 * 
+		 * @param	x
+		 * @param	y
+		 * @return true if player can move there
+		 */
+		protected function canMoveTo(destX:Number, destY:Number):Boolean
+		{
+			if (hitmapTest(destX, destY) == 0xFF000000 || hitmapTest(destX - RADIUS, destY) == 0xFF000000 || hitmapTest(destX + RADIUS, destY) == 0xFF000000 || hitmapTest(destX, destY - RADIUS) == 0xFF000000 || hitmapTest(destX, destY + RADIUS) == 0xFF000000)
+			{
+				return false;
+			}
+			
+			var potentialZombies:Vector.<Zombie> = level.frameWaker[(level.frameNumber + 1) % level.FRAME_WAKER_LENGTH].concat(level.frameWaker[(level.frameNumber + 9) % level.FRAME_WAKER_LENGTH]);
+			for each (var zombie:Zombie in potentialZombies)
+			{
+				if (zombie.x - zombie.radius < destX && zombie.x + zombie.radius > destX && zombie.y - zombie.radius < destY && zombie.y + zombie.radius > destY)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
 		/**
 		 * Called as soon as we get a reference to the stage
 		 * 

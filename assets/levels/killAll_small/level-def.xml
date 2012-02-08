@@ -9,7 +9,7 @@
 	
 	<!-- Technical details -->
 	<technical>
-		<followed-by>waves_boxheadTribute</followed-by>
+		<followed-by>area_Maze</followed-by>
 		<success on="killing_all" />
 		
 		<hitmap>hitmap.png</hitmap>

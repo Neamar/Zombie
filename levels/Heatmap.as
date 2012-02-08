@@ -41,7 +41,7 @@ package levels
 		 * Influence under the player.
 		 * @note Should be a multiple of RESOLUTION.
 		 */
-		public static const MAX_INFLUENCE:int = Main.WIDTH + 20;
+		public static const MAX_INFLUENCE:int = Main.GAMING_AREA + 20;
 		
 		/**
 		 * Width and height of the influence bitmap, storing the influence for each pixels around the player up to MAX_INFLUENCE width.
@@ -136,7 +136,7 @@ package levels
 					var thresholdCount:int = 0;
 					for each (var pixel:uint in pixels)
 					{
-						if (pixel != 0)
+						if (pixel == 0xFF000000)
 							thresholdCount++;
 					}
 					
@@ -149,8 +149,12 @@ package levels
 			baseInfluence.unlock();
 			//Don't forget to clone ! Elsewise, we'll be drawing over and over.
 			super(baseInfluence.clone());
-			//For debug purpose. If we display the bitmap, it'll fit nicely with the landscape.
-			this.scaleX = this.scaleY = RESOLUTION;
+			
+			CONFIG::debug
+			{
+				//For debug purpose. If we display the bitmap, it'll fit nicely with the landscape.
+				this.scaleX = this.scaleY = RESOLUTION;
+			}
 			
 			recomputeInfluence();
 			addEventListener(Event.ENTER_FRAME, updateInfluence);

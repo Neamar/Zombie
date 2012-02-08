@@ -11,7 +11,7 @@ package levels
 	 */
 	public class TimedLevel extends Level
 	{
-		protected var delay:int = 2000;
+		protected var delay:int = 500;
 		protected var checker:Timer;
 		
 		public function TimedLevel(params:LevelParams)

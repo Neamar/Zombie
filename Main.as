@@ -14,12 +14,14 @@
 	 *
 	 * @author Neamar
 	 */
-	[SWF(width="600",height="400",backgroundColor="#000000",frameRate="30")]
+	[SWF(width="800", height="500", backgroundColor="#000000", frameRate="30")]
 	
 	public final class Main extends Sprite
 	{
-		public static const WIDTH:int = 400;
+		public static const WIDTH:int = 500;
+		public static const GAMING_AREA:int = 400;
 		public static const WIDTH2:int = WIDTH / 2;
+		public static const GAMING_AREA2:int = GAMING_AREA / 2;
 		
 		/**
 		 * Current game.
@@ -52,9 +54,12 @@
 			game = new Game();
 			addChild(game);
 			
-			//For debug :
-			monitor = new Monitor(game);
-			stage.addChild(monitor);
+			CONFIG::debug
+			{
+				//For debug :
+				monitor = new Monitor(game);
+				stage.addChild(monitor);
+			}
 			
 			//Clip (avoid displaying all the level on fullscreen)
 			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);

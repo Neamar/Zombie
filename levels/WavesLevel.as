@@ -80,7 +80,6 @@ package levels
 			}
 			
 			// Zombie limit exceeded
-			// TODO : implement in the XML ?
 			if (zombies.length > maxNumberOfZombies)
 			{
 				dispatchEvent(new Event(Level.LOST));
@@ -90,7 +89,7 @@ package levels
 		
 		protected override function onTimer(e:TimerEvent):void
 		{
-			if (zombies.length == 0 && wavesDelay.length == 0)
+			if (zombies.length == 0 && currentWave == wavesDelay.length)
 			{
 				dispatchWin();
 			}

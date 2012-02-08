@@ -41,7 +41,7 @@ package levels
 		 * Influence under the player.
 		 * @note Should be a multiple of RESOLUTION.
 		 */
-		public static const MAX_INFLUENCE:int = Main.WIDTH + 20;
+		public static const MAX_INFLUENCE:int = Main.GAMING_AREA + 20;
 		
 		/**
 		 * Width and height of the influence bitmap, storing the influence for each pixels around the player up to MAX_INFLUENCE width.

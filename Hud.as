@@ -107,7 +107,7 @@ package
 		/**
 		 * Y-coordinate where a message should disappear
 		 */
-		protected var finalMessagePosition:int = Main.WIDTH - 120;
+		protected var finalMessagePosition:int = 2 * Main.WIDTH / 3;
 		
 		/**
 		 * Last displayed textfield

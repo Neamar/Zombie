@@ -57,7 +57,7 @@ package levels
 			level.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			level.stage.addEventListener(MouseEvent.CLICK, onClick);
 			level.stage.addEventListener(Event.ENTER_FRAME, onFrame, false, 1);
-			level.addEventListener(Level.LOST, onLost);
+			level.addEventListener(Level.LOST, onLost, false, 1);
 		}
 		
 		protected function onKeyDown(e:KeyboardEvent):void
@@ -89,8 +89,6 @@ package levels
 					displayMessage("A zombie saw you ! Aim with the mouse, then `click` to shoot.", "zombieActive");
 				if (z.currentState == z.STATE_HITTING || z.currentState == z.STATE_HITTING2)
 					displayMessage("He's hitting you! Kill him fast!", "zombieHitting");
-				if (z.currentState == z.STATE_DIE || z.currentState == z.STATE_DIE2)
-					displayMessage("Nice job, you killed him. Keep going.", "zombieDead");
 			}
 		}
 		

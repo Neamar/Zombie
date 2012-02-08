@@ -59,7 +59,7 @@ package entity
 		/**
 		 * Max width one may see if no obstacles in front.
 		 */
-		public const DEPTH_VISIBILITY:int = Main.WIDTH2;
+		public const DEPTH_VISIBILITY:int = 200;
 		
 		/**
 		 * Mathematic constant = Math.PI / 180
@@ -533,7 +533,7 @@ package entity
 		public function drawBloodrush():void
 		{
 			var bd:BitmapData = bloodRush.bitmapData;
-			bd.perlinNoise(Main.WIDTH, Main.WIDTH, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
+			bd.perlinNoise(Main.GAMING_AREA, Main.GAMING_AREA, 3, 1268000 + 1000 * Math.random(), false, false, BitmapDataChannel.RED);
 			
 			if (tamedBloodrush)
 			{

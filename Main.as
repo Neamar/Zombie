@@ -14,7 +14,7 @@
 	 *
 	 * @author Neamar
 	 */
-	[SWF(width="800",height="500",backgroundColor="#000000",frameRate="30")]
+	[SWF(width="800", height="500", backgroundColor="#000000", frameRate="30")]
 	
 	public final class Main extends Sprite
 	{
@@ -54,9 +54,12 @@
 			game = new Game();
 			addChild(game);
 			
-			//For debug :
-			monitor = new Monitor(game);
-			stage.addChild(monitor);
+			CONFIG::debug
+			{
+				//For debug :
+				monitor = new Monitor(game);
+				stage.addChild(monitor);
+			}
 			
 			//Clip (avoid displaying all the level on fullscreen)
 			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);

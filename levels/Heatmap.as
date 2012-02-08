@@ -149,8 +149,12 @@ package levels
 			baseInfluence.unlock();
 			//Don't forget to clone ! Elsewise, we'll be drawing over and over.
 			super(baseInfluence.clone());
-			//For debug purpose. If we display the bitmap, it'll fit nicely with the landscape.
-			this.scaleX = this.scaleY = RESOLUTION;
+			
+			CONFIG::debug
+			{
+				//For debug purpose. If we display the bitmap, it'll fit nicely with the landscape.
+				this.scaleX = this.scaleY = RESOLUTION;
+			}
 			
 			recomputeInfluence();
 			addEventListener(Event.ENTER_FRAME, updateInfluence);

@@ -1,5 +1,6 @@
 package levels
 {
+	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
@@ -16,8 +17,11 @@ package levels
 	 * 
 	 * @author Neamar
 	 */
-	public final class LevelLoader extends EventDispatcher
+	public final class LevelLoader extends Bitmap
 	{
+		[Embed(source = "../assets/blood.jpg")]
+		public static const waitingImage:Class;
+		
 		/**
 		 * On which URL shall we load the resources ?
 		 */
@@ -56,6 +60,8 @@ package levels
 		public function LevelLoader(levelName:String)
 		{
 			this.levelName = levelName;
+			this.bitmapData = (new waitingImage()).bitmapData;
+			
 			//Load associated XML :
 			var loader:URLLoader = new URLLoader(new URLRequest(buildUrl("level-def.xml")));
 			loader.addEventListener(Event.COMPLETE, loadLevelData);

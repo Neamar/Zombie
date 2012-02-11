@@ -12,7 +12,9 @@ package entity
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import levels.Level;
 	import levels.LevelParams;
@@ -30,11 +32,9 @@ package entity
 		 */
 		[Embed(source="../assets/sprite/player/player.png")]
 		public static const spritesClass:Class;
-		public static const spritesPlayerData:BitmapData = (new Player.spritesClass()).bitmapData;
 		
 		[Embed(source="../assets/sprite/player/weapons.png")]
-		public static const weaponsClass:Class;
-		public static const spritesWeaponsData:BitmapData = (new Player.weaponsClass()).bitmapData;
+		public static const weaponSpritesClass:Class;
 		
 		[Embed(source="../assets/sprite/player/deflagration.png")]
 		public static const deflagrationClass:Class;
@@ -279,13 +279,14 @@ package entity
 			level = parent;
 			
 			//Player graphics
-			playerSprites = new Bitmap(Player.spritesPlayerData);
+			playerSprites = new spritesClass();
 			playerSprites.scrollRect = playerSpritesRect;
 			playerSprites.y = -16;
 			playerSprites.x = -32;
 			addChild(playerSprites);
 			
-			weaponSprites = new Bitmap(Player.spritesWeaponsData);
+			weaponSprites = new weaponSpritesClass();
+			weaponSprites.bitmapData.applyFilter(weaponSprites.bitmapData, weaponSprites.bitmapData.rect, new Point(0, 0), new DropShadowFilter());
 			weaponSprites.scrollRect = weaponSpritesRect;
 			weaponSprites.y = -16;
 			weaponSprites.x = -32;

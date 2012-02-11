@@ -51,7 +51,7 @@ package
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
 			
-			achievementHandler = new AchievementsHandler(this);
+			achievementHandler = new AchievementsHandler(this, 40);
 			
 			hud = new Hud();
 			addChild(hud);

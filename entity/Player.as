@@ -30,7 +30,11 @@ package entity
 		 */
 		[Embed(source="../assets/sprite/player/player.png")]
 		public static const spritesClass:Class;
-		public static const spritesData:BitmapData = (new Player.spritesClass()).bitmapData;
+		public static const spritesPlayerData:BitmapData = (new Player.spritesClass()).bitmapData;
+		
+		[Embed(source="../assets/sprite/player/weapons.png")]
+		public static const weaponsClass:Class;
+		public static const spritesWeaponsData:BitmapData = (new Player.weaponsClass()).bitmapData;
 		
 		/**
 		 * Events.
@@ -226,16 +230,35 @@ package entity
 		
 		/**
 		 * Player sprites for his foot
-		 * Will be masked using scrollRect
+		 * Will be masked using playerSpritesRect
 		 */
-		protected var sprites:Bitmap;
+		protected var playerSprites:Bitmap;
 		
 		/**
 		 * Rectangle to use for scrollRect (to clip the sprite)
 		 */
-		protected var spritesRect:Rectangle = new Rectangle(0, 0, 74, 32);
+		protected var playerSpritesRect:Rectangle = new Rectangle(0, 0, 74, 32);
 		
-		protected var currentSpriteOffset:int = 0;
+		/**
+		 * Current animation-index
+		 */
+		protected var currentPlayerSpriteOffset:int = 0;
+		
+		/**
+		 * Player sprites for his weapon
+		 * Will be masked using scrollRect
+		 */
+		protected var weaponSprites:Bitmap;
+		
+		/**
+		 * Rectangle to use for scrollRect (to clip the sprite)
+		 */
+		protected var weaponSpritesRect:Rectangle = new Rectangle(0, 0, 74, 32);
+		
+		/**
+		 * Current animation-index
+		 */
+		protected var currentWeaponSpriteOffset:int = 0;
 		
 		/**
 		 * Create the player
@@ -253,11 +276,17 @@ package entity
 			level = parent;
 			
 			//Player graphics
-			sprites = new Bitmap(Player.spritesData);
-			sprites.scrollRect = spritesRect;
-			sprites.y = -16;
-			sprites.x = -32;
-			addChild(sprites);
+			playerSprites = new Bitmap(Player.spritesPlayerData);
+			playerSprites.scrollRect = playerSpritesRect;
+			playerSprites.y = -16;
+			playerSprites.x = -32;
+			addChild(playerSprites);
+			
+			weaponSprites = new Bitmap(Player.spritesWeaponsData);
+			weaponSprites.scrollRect = weaponSpritesRect;
+			weaponSprites.y = -16;
+			weaponSprites.x = -32;
+			addChild(weaponSprites);
 			
 			//Great effect, but may causes flickering
 			lightMask.filters = [new BlurFilter()];
@@ -326,6 +355,10 @@ package entity
 			
 			currentWeapon = availableWeapons[offset];
 			dispatchEvent(new Event(WEAPON_CHANGED));
+			
+			//Display the player with the correct weapon
+			weaponSpritesRect.y = offset * 32;
+			weaponSprites.scrollRect = weaponSpritesRect;
 		}
 		
 		protected function onKeyDown(e:KeyboardEvent):void
@@ -371,8 +404,14 @@ package entity
 		
 		protected function onKeyUp(e:KeyboardEvent):void
 		{
-			if(bindings[e.keyCode] == currentAction)
+			if (bindings[e.keyCode] == currentAction)
+			{
+				//Display idle sprite :
+				currentPlayerSpriteOffset = 0;
+				playerSpritesRect.y = currentPlayerSpriteOffset * 32;
+				playerSprites.scrollRect = playerSpritesRect;
 				currentAction = 0;
+			}
 		}
 		
 		protected function onMouseDown(e:MouseEvent):void
@@ -471,19 +510,9 @@ package entity
 				//Animate player :
 				if (frameNumber % 2 == 0)
 				{
-					currentSpriteOffset = 1 + (currentSpriteOffset + 1) % 16;
-					spritesRect.y = currentSpriteOffset * 32;
-					sprites.scrollRect = spritesRect;
-				}
-			}
-			else
-			{
-				//Display idle sprite :
-				if (currentSpriteOffset != 0)
-				{
-					currentSpriteOffset = 0;
-					spritesRect.y = currentSpriteOffset * 32;
-					sprites.scrollRect = spritesRect;
+					currentPlayerSpriteOffset = 1 + (currentPlayerSpriteOffset + 1) % 16;
+					playerSpritesRect.y = currentPlayerSpriteOffset * 32;
+					playerSprites.scrollRect = playerSpritesRect;
 				}
 			}
 			

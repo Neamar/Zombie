@@ -15,7 +15,7 @@
    version="1.1"
    inkscape:version="0.48.2 r9819"
    sodipodi:docname="drawing.svg"
-   inkscape:export-filename="/home/neamar/Documents/src/Zombie/assets/levels/waves_boxheadTribute/bitmap.png"
+   inkscape:export-filename="/home/neamar/Documents/src/Zombie/assets/levels/waves_boxheadTribute/hitmap.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -114,9 +114,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="632.24576"
-     inkscape:cy="243.56456"
+     inkscape:zoom="0.7"
+     inkscape:cx="474.76739"
+     inkscape:cy="306.5115"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -143,7 +143,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -302,18 +302,19 @@
        id="rect3287"
        width="20"
        height="220"
-       x="30"
-       y="582.36218" />
+       x="36"
+       y="572.36218" />
     <rect
        style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3289"
        width="140"
        height="30"
-       x="50"
-       y="582.36218" />
+       x="54"
+       y="572.36218" />
     <g
        id="g3009"
-       transform="translate(10,10)">
+       transform="translate(40,9.9999974)"
+       style="fill:#000000">
       <rect
          y="642.36218"
          x="80"

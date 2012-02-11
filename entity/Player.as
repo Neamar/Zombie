@@ -13,6 +13,7 @@ package entity
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	import levels.Level;
 	import levels.LevelParams;
 	import weapon.Handgun;
@@ -24,6 +25,13 @@ package entity
 	 */
 	public final class Player extends Entity
 	{
+		/**
+		 * Embed objects
+		 */
+		[Embed(source="../assets/sprite/player/player.png")]
+		public static const spritesClass:Class;
+		public static const spritesData:BitmapData = (new Player.spritesClass()).bitmapData;
+		
 		/**
 		 * Events.
 		 */
@@ -217,6 +225,19 @@ package entity
 		public var level:Level;
 		
 		/**
+		 * Player sprites for his foot
+		 * Will be masked using scrollRect
+		 */
+		protected var sprites:Bitmap;
+		
+		/**
+		 * Rectangle to use for scrollRect (to clip the sprite)
+		 */
+		protected var spritesRect:Rectangle = new Rectangle(0, 0, 74, 32);
+		
+		protected var currentSpriteOffset:int = 0;
+		
+		/**
 		 * Create the player
 		 * @param	parent
 		 * @param	params needed to get start information
@@ -232,12 +253,11 @@ package entity
 			level = parent;
 			
 			//Player graphics
-			this.graphics.lineStyle(2);
-			this.graphics.beginFill(0xAAAAAA, 1);
-			this.graphics.drawCircle(0, 0, RADIUS);
-			this.graphics.lineTo(0, 0);
-			this.alpha = .7;
-			this.cacheAsBitmap = true;
+			sprites = new Bitmap(Player.spritesData);
+			sprites.scrollRect = spritesRect;
+			sprites.y = -16;
+			sprites.x = -32;
+			addChild(sprites);
 			
 			//Great effect, but may causes flickering
 			lightMask.filters = [new BlurFilter()];
@@ -446,6 +466,24 @@ package entity
 				{
 					y = destY;
 					hasMoved = true;
+				}
+				
+				//Animate player :
+				if (frameNumber % 2 == 0)
+				{
+					currentSpriteOffset = 1 + (currentSpriteOffset + 1) % 16;
+					spritesRect.y = currentSpriteOffset * 32;
+					sprites.scrollRect = spritesRect;
+				}
+			}
+			else
+			{
+				//Display idle sprite :
+				if (currentSpriteOffset != 0)
+				{
+					currentSpriteOffset = 0;
+					spritesRect.y = currentSpriteOffset * 32;
+					sprites.scrollRect = spritesRect;
 				}
 			}
 			

@@ -19,7 +19,7 @@ package
 		/**
 		 * Name of the first level to load
 		 */
-		public static const FIRST_LEVEL:String = "area_Intro";
+		public static const FIRST_LEVEL:String = "waves_boxheadTribute";
 		
 		/**
 		 * Level currently displayed

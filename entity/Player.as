@@ -36,6 +36,9 @@ package entity
 		public static const weaponsClass:Class;
 		public static const spritesWeaponsData:BitmapData = (new Player.weaponsClass()).bitmapData;
 		
+		[Embed(source="../assets/sprite/player/deflagration.png")]
+		public static const deflagrationClass:Class;
+		
 		/**
 		 * Events.
 		 */
@@ -149,7 +152,7 @@ package entity
 		/**
 		 * Shape for the weapon deflagration when shooting
 		 */
-		public var weaponDeflagration:Shape = new Shape();
+		public var weaponDeflagration:Bitmap;
 		
 		/**
 		 * Matrix to use to draw lamp torch.
@@ -288,10 +291,14 @@ package entity
 			weaponSprites.x = -32;
 			addChild(weaponSprites);
 			
-			//Great effect, but may causes flickering
 			lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
+			
+			weaponDeflagration = new deflagrationClass();
 			addChild(weaponDeflagration);
+			weaponDeflagration.y = -15;
+			weaponDeflagration.x = 18;
+			weaponDeflagration.visible = false;
 			
 			//Blood rush
 			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.WIDTH);
@@ -563,17 +570,15 @@ package entity
 				
 				if (hasShot > 0)
 				{
-					weaponDeflagration.graphics.clear();
+					weaponDeflagration.visible = true;
+					weaponDeflagration.alpha = hasShot / 5;
+					
 					//Bit operation <=> /2
 					hasShot = hasShot >> 1;
 					
-					if (hasShot > 0)
+					if (hasShot == 0)
 					{
-						weaponDeflagration.graphics.beginFill(0xFFFF00, .5);
-						weaponDeflagration.graphics.drawCircle(RADIUS + hasShot, 0, hasShot << 1);
-						weaponDeflagration.graphics.endFill();
-						weaponDeflagration.graphics.beginFill(0xFFFF00, .3);
-						weaponDeflagration.graphics.drawEllipse(RADIUS + hasShot, -hasShot >> 1, hasShot * 4, hasShot);
+						weaponDeflagration.visible = false;
 					}
 				}
 			}

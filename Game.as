@@ -101,8 +101,6 @@ package
 			//Load current level
 			loader = new LevelLoader(levelName);
 			addChild(loader);
-			loader.x = Main.WIDTH2 - loader.width / 2;
-			loader.y = Main.WIDTH2 - loader.height / 2;
 			
 			loader.addEventListener(Event.COMPLETE, addLevel);
 		}

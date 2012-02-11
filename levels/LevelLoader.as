@@ -3,8 +3,12 @@ package levels
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
+	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.ProgressEvent;
+	import flash.filters.BevelFilter;
 	import flash.geom.Rectangle;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
@@ -17,7 +21,7 @@ package levels
 	 * 
 	 * @author Neamar
 	 */
-	public final class LevelLoader extends Bitmap
+	public final class LevelLoader extends Sprite
 	{
 		[Embed(source = "../assets/blood.jpg")]
 		public static const waitingImage:Class;
@@ -44,6 +48,17 @@ package levels
 		private var dict:Dictionary = new Dictionary(true);
 		
 		/**
+		 * Store total number of bytes for each asset currently downloaded
+		 */
+		private var totalSize:Dictionary = new Dictionary(true);
+		
+		/**
+		 * Store currently downloaded number of bytes for each asset.
+		 */
+		private var downloadedSize:Dictionary = new Dictionary(true);
+		
+		
+		/**
 		 * Parameters to use for the level
 		 */
 		public var params:LevelParams = new LevelParams();
@@ -60,7 +75,7 @@ package levels
 		public function LevelLoader(levelName:String)
 		{
 			this.levelName = levelName;
-			this.bitmapData = (new waitingImage()).bitmapData;
+			initDisplay();
 			
 			//Load associated XML :
 			var loader:URLLoader = new URLLoader(new URLRequest(buildUrl("level-def.xml")));
@@ -85,6 +100,8 @@ package levels
 		 */
 		private function loadLevelData(e:Event):void
 		{
+			updateDisplay(15);
+			
 			//Clean.
 			(e.target as URLLoader).removeEventListener(Event.COMPLETE, loadLevelData);
 			
@@ -175,8 +192,33 @@ package levels
 			// (weakReference on the addEventListener would simply result in the suppression of our listener...)
 			dict[loader.contentLoaderInfo] = callback;
 			
-			//Shall we wait for anymore assets to load ?
+			//Monitor progress :
+			loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgress);
+			
+			//One this one is loaded, shall we wait for anymore assets to load ?
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onResourceLoaded);
+		}
+		
+		/**
+		 * Monitor progress and updates the progressbar
+		 * @param	e
+		 */
+		private function onProgress(e:ProgressEvent):void
+		{
+			totalSize[e.target] = e.bytesTotal;
+			downloadedSize[e.target] = e.bytesLoaded;
+			
+			//Compute progress :
+			var v:Number;
+			var total:Number = 0;
+			var current:Number = 0;
+			for each(v in totalSize)
+				total += v;
+			for each(v in downloadedSize)
+				current += v;
+			
+			updateDisplay(25 + 75 * (current / total));
+		
 		}
 		
 		/**
@@ -190,6 +232,7 @@ package levels
 		{
 			var loaderInfo:LoaderInfo = e.target as LoaderInfo;
 			loaderInfo.removeEventListener(Event.COMPLETE, onResourceLoaded);
+			loaderInfo.removeEventListener(ProgressEvent.PROGRESS, onProgress);
 			loaderInfo.removeEventListener(Event.COMPLETE, dict[loaderInfo]);
 			loaderInfo.loader.unload();
 			dict[loaderInfo] = null;
@@ -202,6 +245,8 @@ package levels
 				//Cleanup
 				System.disposeXML(xml);
 				dict = null;
+				
+				updateDisplay(100);
 				
 				//Dispatch event
 				dispatchEvent(new Event(Event.COMPLETE));
@@ -217,6 +262,50 @@ package levels
 		private function buildUrl(name:String):String
 		{
 			return BASE_URL + '/' + levelName + '/' + name;
+		}
+		
+		
+		
+		/*
+		 * Graphics handling
+		 */
+		
+		/**
+		 * Initialize this instance to be displayed.
+		 */
+		protected function initDisplay():void
+		{
+			var bitmap:Bitmap = new waitingImage();
+			addChild(bitmap);
+			bitmap.x = Main.WIDTH2 - bitmap.width / 2;
+			bitmap.y = Main.WIDTH2 - bitmap.height / 2;
+			
+			updateDisplay(0);
+			
+			var progressBar:Shape = new Shape();
+			progressBar.x = Main.WIDTH / 4;
+			progressBar.y = 3 * Main.WIDTH / 4;
+			addChild(progressBar);
+		}
+		
+		/**
+		 * Update the display, depending on the percentage of assets loaded
+		 * @param	v Progress, from 0 to 100
+		 */
+		protected function updateDisplay(v:int):void
+		{
+			alpha = .25 + .75 * v / 100;
+			
+			if (v != 0)
+			{
+				var percent:Number = v / 100;
+				
+				var progressBar:Shape = getChildAt(1) as Shape;
+				progressBar.graphics.clear();
+				progressBar.graphics.beginFill(0x0000FF);
+				progressBar.graphics.drawRoundRectComplex(0, 0, percent * Main.WIDTH / 2, 20, 10, Math.max(0, v - 90), 10, Math.max(0, v - 90));
+				progressBar.graphics.endFill();
+			}
 		}
 	}
 

@@ -240,7 +240,7 @@ package entity
 		/**
 		 * Rectangle to use for scrollRect (to clip the sprite)
 		 */
-		protected var playerSpritesRect:Rectangle = new Rectangle(0, 0, 74, 32);
+		protected var playerSpritesRect:Rectangle = new Rectangle(0, 0, 65, 28);
 		
 		/**
 		 * Current animation-index
@@ -256,7 +256,7 @@ package entity
 		/**
 		 * Rectangle to use for scrollRect (to clip the sprite)
 		 */
-		protected var weaponSpritesRect:Rectangle = new Rectangle(0, 0, 74, 32);
+		protected var weaponSpritesRect:Rectangle = new Rectangle(0, 0, 65, 28);
 		
 		/**
 		 * Current animation-index
@@ -281,15 +281,15 @@ package entity
 			//Player graphics
 			playerSprites = new spritesClass();
 			playerSprites.scrollRect = playerSpritesRect;
-			playerSprites.y = -16;
-			playerSprites.x = -32;
+			playerSprites.y = -playerSpritesRect.height / 2;
+			playerSprites.x = -playerSpritesRect.width / 2;
 			addChild(playerSprites);
 			
 			weaponSprites = new weaponSpritesClass();
 			weaponSprites.bitmapData.applyFilter(weaponSprites.bitmapData, weaponSprites.bitmapData.rect, new Point(0, 0), new DropShadowFilter());
 			weaponSprites.scrollRect = weaponSpritesRect;
-			weaponSprites.y = -16;
-			weaponSprites.x = -32;
+			weaponSprites.y = -weaponSpritesRect.height / 2;
+			weaponSprites.x = -weaponSpritesRect.width / 2;
 			addChild(weaponSprites);
 			
 			lightMask.filters = [new BlurFilter()];
@@ -365,7 +365,7 @@ package entity
 			dispatchEvent(new Event(WEAPON_CHANGED));
 			
 			//Display the player with the correct weapon
-			weaponSpritesRect.y = offset * 32;
+			weaponSpritesRect.y = offset * 28;
 			weaponSprites.scrollRect = weaponSpritesRect;
 		}
 		
@@ -416,7 +416,7 @@ package entity
 			{
 				//Display idle sprite :
 				currentPlayerSpriteOffset = 0;
-				playerSpritesRect.y = currentPlayerSpriteOffset * 32;
+				playerSpritesRect.y = currentPlayerSpriteOffset * 28;
 				playerSprites.scrollRect = playerSpritesRect;
 				currentAction = 0;
 			}
@@ -519,7 +519,7 @@ package entity
 				if (frameNumber % 2 == 0)
 				{
 					currentPlayerSpriteOffset = 1 + (currentPlayerSpriteOffset + 1) % 16;
-					playerSpritesRect.y = currentPlayerSpriteOffset * 32;
+					playerSpritesRect.y = currentPlayerSpriteOffset * 28;
 					playerSprites.scrollRect = playerSpritesRect;
 				}
 			}

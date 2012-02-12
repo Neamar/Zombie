@@ -111,8 +111,11 @@ package
 		 */
 		protected function addLevel(e:Event = null):void
 		{
-			loader.removeEventListener(Event.COMPLETE, addLevel);
-			removeChild(loader);
+			if (contains(loader))
+			{
+				loader.removeEventListener(Event.COMPLETE, addLevel);
+				removeChild(loader);
+			}
 			
 			//Store next level name
 			nextLevelName = loader.params.nextLevelName;

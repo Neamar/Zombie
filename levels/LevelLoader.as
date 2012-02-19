@@ -10,6 +10,7 @@ package levels
 	import flash.events.ProgressEvent;
 	import flash.filters.BevelFilter;
 	import flash.geom.Rectangle;
+	import flash.media.Sound;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.system.System;
@@ -110,6 +111,8 @@ package levels
 			// Load external assets asap
 			var bitmapUrl:String = buildUrl(xml.visible.bitmap);
 			var hitmapUrl:String = buildUrl(xml.technical.hitmap);
+			var ambientUrl:String = buildUrl(xml.technical.sounds.ambient);
+			trace(ambientUrl);
 			loadAssets(bitmapUrl, function(e:Event):void
 				{
 					params.bitmap = e.target.content
@@ -118,6 +121,7 @@ package levels
 				{
 					params.hitmap = e.target.content
 				});
+			params.ambientSound = new Sound(new URLRequest(ambientUrl));
 			
 			/**
 			 * Read other parameters and parse them into LevelParams

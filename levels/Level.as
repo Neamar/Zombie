@@ -10,6 +10,8 @@ package levels
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
 	
 	/**
 	 * [abstract]
@@ -74,6 +76,11 @@ package levels
 		public var heatmap:Heatmap;
 		
 		/**
+		 * Ambient sound
+		 */
+		public var ambientSound:SoundChannel;
+		
+		/**
 		 * Is Help needed ?
 		 */
 		protected var levelHelper:LevelHelper = null;
@@ -130,6 +137,8 @@ package levels
 			//Shall-we display help ?
 			if (params.displayHelp)
 				levelHelper = new LevelHelper(this);
+				
+			ambientSound = params.ambientSound.play();
 		}
 		
 		public function destroy():void
@@ -138,6 +147,7 @@ package levels
 				levelHelper.destroy();
 				
 			player.destroy();
+			ambientSound.stop();
 			
 			//Remove all children for faster GC
 			while (numChildren > 0)

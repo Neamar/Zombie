@@ -2,6 +2,7 @@ package levels
 {
 	import flash.display.Bitmap;
 	import flash.geom.Rectangle;
+	import flash.media.Sound;
 	
 	/**
 	 * Parameters for a level
@@ -62,6 +63,11 @@ package levels
 		 * Name of the level following this one (to be loaded once this one is completed)
 		 */
 		public var nextLevelName:String;
+		
+		/**
+		 * Sound to play in the background
+		 */
+		public var ambientSound:Sound;
 		
 		/////////////////////////////////////
 		// SPECIAL PARAMETERS : AccessingAreaLevel

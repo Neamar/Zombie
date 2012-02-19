@@ -518,7 +518,16 @@ package entity
 				//Animate player :
 				if (frameNumber % 2 == 0)
 				{
-					currentPlayerSpriteOffset = 1 + (currentPlayerSpriteOffset + 1) % 16;
+					if(currentAction == UP) //Player is going forward: play animation from left to right
+						currentPlayerSpriteOffset = 1 + (currentPlayerSpriteOffset + 1) % 16;
+					else
+					{
+						//Player is going backward: play animation from right to left, skipping index 0 (still frame).
+						currentPlayerSpriteOffset = (currentPlayerSpriteOffset - 1) % 16;
+						if (currentPlayerSpriteOffset < 1)
+							currentPlayerSpriteOffset += 16;
+					}
+					trace(currentPlayerSpriteOffset);
 					playerSpritesRect.y = currentPlayerSpriteOffset * 28;
 					playerSprites.scrollRect = playerSpritesRect;
 				}

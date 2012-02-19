@@ -340,7 +340,7 @@ package entity
 			spritesRect.x = 64 * (currentStateOffsetPosition + currentStateOffset);
 			sprites.scrollRect = spritesRect;
 			
-			return 4;
+			return 3;
 		}
 		
 		/**

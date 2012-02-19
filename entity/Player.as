@@ -466,8 +466,8 @@ package entity
 			var hasMoved:Boolean = false;
 			
 			//Shall we turn the player ?
-			var angle:Number = Math.atan2(y - parent.mouseY, x - parent.mouseX);
-			var newRotation:Number = (Math.PI + angle) * TO_DEGREE;
+			var angle:Number = Math.PI + Math.atan2(y - parent.mouseY, x - parent.mouseX);
+			var newRotation:Number = angle * TO_DEGREE;
 			if (rotation != newRotation)
 			{
 				rotation = newRotation;
@@ -555,7 +555,7 @@ package entity
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.WIDTH2, Main.WIDTH, Main.WIDTH);
 				
 				//And his line of sight
-				maskGraphics.moveTo(x + (RADIUS + 2) * Math.cos(startAngle), y + (RADIUS + 2) * Math.sin(startAngle));
+				maskGraphics.moveTo(x + RADIUS*Math.cos(angle), y + RADIUS*Math.sin(angle));
 				transformationMatrix.tx = x;
 				transformationMatrix.ty = y;
 				
@@ -575,7 +575,7 @@ package entity
 					}
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
-				maskGraphics.lineTo(x + (RADIUS + 2) * Math.cos(endAngle), y + (RADIUS + 2) * Math.sin(endAngle));
+				maskGraphics.lineTo(x + RADIUS*Math.cos(angle), y + RADIUS*Math.sin(angle));
 				maskGraphics.endFill();
 				
 				if (hasShot > 0)

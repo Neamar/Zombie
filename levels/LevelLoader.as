@@ -7,6 +7,7 @@ package levels
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.filters.BevelFilter;
 	import flash.geom.Rectangle;
@@ -121,7 +122,11 @@ package levels
 				{
 					params.hitmap = e.target.content
 				});
-			params.ambientSound = new Sound(new URLRequest(ambientUrl));
+				
+
+			params.ambientSound = new Sound();
+			params.ambientSound.addEventListener(IOErrorEvent.IO_ERROR, function(e:IOErrorEvent):void { trace(e); e.preventDefault(); } );
+			params.ambientSound.load(new URLRequest(ambientUrl));
 			
 			/**
 			 * Read other parameters and parse them into LevelParams

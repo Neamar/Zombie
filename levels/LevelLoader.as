@@ -31,7 +31,7 @@ package levels
 		/**
 		 * On which URL shall we load the resources ?
 		 */
-		public static const BASE_URL:String = '../src/assets/levels';
+		public static const BASE_URL:String = '../src/assets';
 		
 		/**
 		 * XML raw datas
@@ -80,7 +80,7 @@ package levels
 			initDisplay();
 			
 			//Load associated XML :
-			var loader:URLLoader = new URLLoader(new URLRequest(buildUrl("level-def.xml")));
+			var loader:URLLoader = new URLLoader(new URLRequest(buildLevelUrl("level-def.xml")));
 			loader.addEventListener(Event.COMPLETE, loadLevelData);
 		}
 		
@@ -110,10 +110,9 @@ package levels
 			xml = new XML(e.target.data);
 			
 			// Load external assets asap
-			var bitmapUrl:String = buildUrl(xml.visible.bitmap);
-			var hitmapUrl:String = buildUrl(xml.technical.hitmap);
-			var ambientUrl:String = buildUrl(xml.technical.sounds.ambient);
-			trace(ambientUrl);
+			var bitmapUrl:String = buildLevelUrl(xml.visible.bitmap);
+			var hitmapUrl:String = buildLevelUrl(xml.technical.hitmap);
+			var ambientUrl:String = BASE_URL + "/sounds/ambient/" + xml.technical.sounds.ambient;
 			loadAssets(bitmapUrl, function(e:Event):void
 				{
 					params.bitmap = e.target.content
@@ -125,6 +124,7 @@ package levels
 				
 
 			params.ambientSound = new Sound();
+			//TODO : allow GC
 			params.ambientSound.addEventListener(IOErrorEvent.IO_ERROR, function(e:IOErrorEvent):void { trace(e); e.preventDefault(); } );
 			params.ambientSound.load(new URLRequest(ambientUrl));
 			
@@ -264,13 +264,13 @@ package levels
 
 		
 		/**
-		 * Helper to build URL
+		 * Helper to build an URL to use for access to a level data
 		 * @param	name name of the assets to load
 		 * @return absolute path to level
 		 */
-		private function buildUrl(name:String):String
+		private function buildLevelUrl(name:String):String
 		{
-			return BASE_URL + '/' + levelName + '/' + name;
+			return BASE_URL + '/levels/' + levelName + '/' + name;
 		}
 		
 		

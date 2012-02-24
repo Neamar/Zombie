@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="drawing-1.svg">
+   sodipodi:docname="drawing.svg"
+   inkscape:export-filename="/home/neamar/Documents/src/Zombie/assets/levels/waves_boxheadTribute/hitmap.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -24,6 +27,85 @@
        inkscape:vp_z="1161.6346 : 122.20805 : 1"
        inkscape:persp3d-origin="761.63461 : -11.12528 : 1"
        id="perspective2985" />
+    <filter
+       id="filter3140"
+       inkscape:label="Cracked glass"
+       inkscape:menu="Textures"
+       inkscape:menu-tooltip="Under a cracked glass"
+       color-interpolation-filters="sRGB">
+      <feTurbulence
+         id="feTurbulence3142"
+         baseFrequency="0.1"
+         seed="50"
+         numOctaves="5"
+         result="result1"
+         type="fractalNoise" />
+      <feGaussianBlur
+         id="feGaussianBlur3144"
+         stdDeviation="4"
+         result="result7" />
+      <feDisplacementMap
+         id="feDisplacementMap3146"
+         in2="result7"
+         result="result5"
+         in="SourceGraphic"
+         scale="20"
+         xChannelSelector="G" />
+      <feComposite
+         id="feComposite3148"
+         in2="result1"
+         result="result2"
+         operator="in"
+         in="result5" />
+      <feGaussianBlur
+         id="feGaussianBlur3150"
+         stdDeviation="1"
+         result="result6" />
+      <feSpecularLighting
+         id="feSpecularLighting3152"
+         surfaceScale="-3"
+         result="result4"
+         specularConstant="3.5"
+         specularExponent="35"
+         in="result6">
+        <feDistantLight
+           id="feDistantLight3154"
+           elevation="45"
+           azimuth="225" />
+      </feSpecularLighting>
+      <feComposite
+         id="feComposite3156"
+         in2="result2"
+         k1="1.7"
+         k3="0.7"
+         in="result4"
+         operator="arithmetic"
+         result="result91" />
+      <feBlend
+         id="feBlend3158"
+         in2="result91"
+         result="fbSourceGraphic"
+         mode="multiply" />
+      <feComposite
+         id="feComposite3160"
+         in2="fbSourceGraphic"
+         in="fbSourceGraphic"
+         result="result2"
+         operator="arithmetic" />
+      <feComposite
+         id="feComposite3162"
+         in2="fbSourceGraphic"
+         in="result2"
+         result="result4"
+         operator="arithmetic"
+         k2="2"
+         k3="2" />
+      <feBlend
+         id="feBlend3164"
+         in2="result4"
+         mode="screen"
+         in="result4" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -32,9 +114,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="316.0868"
-     inkscape:cy="392.52496"
+     inkscape:zoom="0.7"
+     inkscape:cx="474.76739"
+     inkscape:cy="306.5115"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -70,6 +152,14 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-252.36218)">
+    <rect
+       style="color:#000000;fill:#aa4400;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:30;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;filter:url(#filter3140)"
+       id="rect3010"
+       width="800"
+       height="800"
+       x="0"
+       y="0"
+       transform="translate(0,252.36218)" />
     <rect
        style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3045"
@@ -193,7 +283,7 @@
        sodipodi:cy="565"
        sodipodi:rx="155"
        sodipodi:ry="155"
-       d="m 610,565 a 155,155 0 1 1 -310,0 155,155 0 1 1 310,0 z"
+       d="m 610,565 c 0,85.60414 -69.39586,155 -155,155 -85.60414,0 -155,-69.39586 -155,-155 0,-85.60414 69.39586,-155 155,-155 85.60414,0 155,69.39586 155,155 z"
        transform="matrix(0.96774194,0,0,0.96774194,-40.32258,255.58798)" />
     <flowRoot
        xml:space="preserve"
@@ -212,29 +302,34 @@
        id="rect3287"
        width="20"
        height="220"
-       x="30"
-       y="582.36218" />
+       x="36"
+       y="572.36218" />
     <rect
        style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3289"
        width="140"
        height="30"
-       x="50"
-       y="582.36218" />
-    <rect
-       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3291"
-       width="20"
-       height="220"
-       x="80"
-       y="642.36218" />
-    <rect
-       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3293"
-       width="90"
-       height="20"
-       x="100"
-       y="390"
-       transform="translate(0,252.36218)" />
+       x="54"
+       y="572.36218" />
+    <g
+       id="g3009"
+       transform="translate(40,9.9999974)"
+       style="fill:#000000">
+      <rect
+         y="642.36218"
+         x="80"
+         height="220"
+         width="20"
+         id="rect3291"
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <rect
+         transform="translate(0,252.36218)"
+         y="390"
+         x="100"
+         height="20"
+         width="90"
+         id="rect3293"
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
   </g>
 </svg>

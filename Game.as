@@ -51,7 +51,7 @@ package
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
 			
-			achievementHandler = new AchievementsHandler(this);
+			achievementHandler = new AchievementsHandler(this, 40);
 			
 			hud = new Hud();
 			addChild(hud);
@@ -100,6 +100,8 @@ package
 		{
 			//Load current level
 			loader = new LevelLoader(levelName);
+			addChild(loader);
+			
 			loader.addEventListener(Event.COMPLETE, addLevel);
 		}
 		
@@ -109,7 +111,11 @@ package
 		 */
 		protected function addLevel(e:Event = null):void
 		{
-			loader.removeEventListener(Event.COMPLETE, addLevel);
+			if (contains(loader))
+			{
+				loader.removeEventListener(Event.COMPLETE, addLevel);
+				removeChild(loader);
+			}
 			
 			//Store next level name
 			nextLevelName = loader.params.nextLevelName;

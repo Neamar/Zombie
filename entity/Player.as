@@ -12,7 +12,10 @@ package entity
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import levels.Level;
 	import levels.LevelParams;
 	import weapon.Handgun;
@@ -24,6 +27,18 @@ package entity
 	 */
 	public final class Player extends Entity
 	{
+		/**
+		 * Embed objects
+		 */
+		[Embed(source="../assets/sprite/player/player.png")]
+		public static const spritesClass:Class;
+		
+		[Embed(source="../assets/sprite/player/weapons.png")]
+		public static const weaponSpritesClass:Class;
+		
+		[Embed(source="../assets/sprite/player/deflagration.png")]
+		public static const deflagrationClass:Class;
+		
 		/**
 		 * Events.
 		 */
@@ -137,7 +152,7 @@ package entity
 		/**
 		 * Shape for the weapon deflagration when shooting
 		 */
-		public var weaponDeflagration:Shape = new Shape();
+		public var weaponDeflagration:Bitmap;
 		
 		/**
 		 * Matrix to use to draw lamp torch.
@@ -217,6 +232,38 @@ package entity
 		public var level:Level;
 		
 		/**
+		 * Player sprites for his foot
+		 * Will be masked using playerSpritesRect
+		 */
+		protected var playerSprites:Bitmap;
+		
+		/**
+		 * Rectangle to use for scrollRect (to clip the sprite)
+		 */
+		protected var playerSpritesRect:Rectangle = new Rectangle(0, 0, 65, 28);
+		
+		/**
+		 * Current animation-index
+		 */
+		protected var currentPlayerSpriteOffset:int = 0;
+		
+		/**
+		 * Player sprites for his weapon
+		 * Will be masked using scrollRect
+		 */
+		protected var weaponSprites:Bitmap;
+		
+		/**
+		 * Rectangle to use for scrollRect (to clip the sprite)
+		 */
+		protected var weaponSpritesRect:Rectangle = new Rectangle(0, 0, 65, 28);
+		
+		/**
+		 * Current animation-index
+		 */
+		protected var currentWeaponSpriteOffset:int = 0;
+		
+		/**
 		 * Create the player
 		 * @param	parent
 		 * @param	params needed to get start information
@@ -232,17 +279,27 @@ package entity
 			level = parent;
 			
 			//Player graphics
-			this.graphics.lineStyle(2);
-			this.graphics.beginFill(0xAAAAAA, 1);
-			this.graphics.drawCircle(0, 0, RADIUS);
-			this.graphics.lineTo(0, 0);
-			this.alpha = .7;
-			this.cacheAsBitmap = true;
+			playerSprites = new spritesClass();
+			playerSprites.scrollRect = playerSpritesRect;
+			playerSprites.y = -playerSpritesRect.height / 2;
+			playerSprites.x = -playerSpritesRect.width / 2;
+			addChild(playerSprites);
 			
-			//Great effect, but may causes flickering
+			weaponSprites = new weaponSpritesClass();
+			weaponSprites.bitmapData.applyFilter(weaponSprites.bitmapData, weaponSprites.bitmapData.rect, new Point(0, 0), new DropShadowFilter());
+			weaponSprites.scrollRect = weaponSpritesRect;
+			weaponSprites.y = -weaponSpritesRect.height / 2;
+			weaponSprites.x = -weaponSpritesRect.width / 2;
+			addChild(weaponSprites);
+			
 			lightMask.filters = [new BlurFilter()];
 			transformationMatrix.createGradientBox(2 * DEPTH_VISIBILITY, 2 * DEPTH_VISIBILITY, 0);
+			
+			weaponDeflagration = new deflagrationClass();
 			addChild(weaponDeflagration);
+			weaponDeflagration.y = -15;
+			weaponDeflagration.x = 18;
+			weaponDeflagration.visible = false;
 			
 			//Blood rush
 			var bd:BitmapData = new BitmapData(Main.WIDTH, Main.WIDTH);
@@ -306,6 +363,10 @@ package entity
 			
 			currentWeapon = availableWeapons[offset];
 			dispatchEvent(new Event(WEAPON_CHANGED));
+			
+			//Display the player with the correct weapon
+			weaponSpritesRect.y = offset * 28;
+			weaponSprites.scrollRect = weaponSpritesRect;
 		}
 		
 		protected function onKeyDown(e:KeyboardEvent):void
@@ -351,8 +412,14 @@ package entity
 		
 		protected function onKeyUp(e:KeyboardEvent):void
 		{
-			if(bindings[e.keyCode] == currentAction)
+			if (bindings[e.keyCode] == currentAction)
+			{
+				//Display idle sprite :
+				currentPlayerSpriteOffset = 0;
+				playerSpritesRect.y = currentPlayerSpriteOffset * 28;
+				playerSprites.scrollRect = playerSpritesRect;
 				currentAction = 0;
+			}
 		}
 		
 		protected function onMouseDown(e:MouseEvent):void
@@ -399,8 +466,8 @@ package entity
 			var hasMoved:Boolean = false;
 			
 			//Shall we turn the player ?
-			var angle:Number = Math.atan2(y - parent.mouseY, x - parent.mouseX);
-			var newRotation:Number = (Math.PI + angle) * TO_DEGREE;
+			var angle:Number = Math.PI + Math.atan2(y - parent.mouseY, x - parent.mouseX);
+			var newRotation:Number = angle * TO_DEGREE;
 			if (rotation != newRotation)
 			{
 				rotation = newRotation;
@@ -447,6 +514,23 @@ package entity
 					y = destY;
 					hasMoved = true;
 				}
+				
+				//Animate player :
+				if (frameNumber % 2 == 0)
+				{
+					if(currentAction == UP) //Player is going forward: play animation from left to right
+						currentPlayerSpriteOffset = 1 + (currentPlayerSpriteOffset + 1) % 16;
+					else
+					{
+						//Player is going backward: play animation from right to left, skipping index 0 (still frame).
+						currentPlayerSpriteOffset = (currentPlayerSpriteOffset - 1) % 16;
+						if (currentPlayerSpriteOffset < 1)
+							currentPlayerSpriteOffset += 16;
+					}
+					trace(currentPlayerSpriteOffset);
+					playerSpritesRect.y = currentPlayerSpriteOffset * 28;
+					playerSprites.scrollRect = playerSpritesRect;
+				}
 			}
 			
 			//Recompute mask only if needed.
@@ -471,7 +555,7 @@ package entity
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.WIDTH2, Main.WIDTH, Main.WIDTH);
 				
 				//And his line of sight
-				maskGraphics.moveTo(x + (RADIUS + 2) * Math.cos(startAngle), y + (RADIUS + 2) * Math.sin(startAngle));
+				maskGraphics.moveTo(x + RADIUS*Math.cos(angle), y + RADIUS*Math.sin(angle));
 				transformationMatrix.tx = x;
 				transformationMatrix.ty = y;
 				
@@ -491,22 +575,20 @@ package entity
 					}
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
-				maskGraphics.lineTo(x + (RADIUS + 2) * Math.cos(endAngle), y + (RADIUS + 2) * Math.sin(endAngle));
+				maskGraphics.lineTo(x + RADIUS*Math.cos(angle), y + RADIUS*Math.sin(angle));
 				maskGraphics.endFill();
 				
 				if (hasShot > 0)
 				{
-					weaponDeflagration.graphics.clear();
+					weaponDeflagration.visible = true;
+					weaponDeflagration.alpha = hasShot / 5;
+					
 					//Bit operation <=> /2
 					hasShot = hasShot >> 1;
 					
-					if (hasShot > 0)
+					if (hasShot == 0)
 					{
-						weaponDeflagration.graphics.beginFill(0xFFFF00, .5);
-						weaponDeflagration.graphics.drawCircle(RADIUS + hasShot, 0, hasShot << 1);
-						weaponDeflagration.graphics.endFill();
-						weaponDeflagration.graphics.beginFill(0xFFFF00, .3);
-						weaponDeflagration.graphics.drawEllipse(RADIUS + hasShot, -hasShot >> 1, hasShot * 4, hasShot);
+						weaponDeflagration.visible = false;
 					}
 				}
 			}

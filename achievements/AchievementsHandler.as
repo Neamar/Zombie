@@ -39,7 +39,7 @@ package achievements
 			[0, 2, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 20],
 			[7, 3, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 15],
 			[0, 4, "Faster reload for the handgun", ReloadAchievement, Handgun, 30],
-			[0, 4, "Automatic reload for the handgun", AutomaticAchievement, Handgun, true],
+			[6, 4, "Automatic reload for the handgun", AutomaticAchievement, Handgun, true],
 			[8, 9, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 8],
 			[9, 9, "Faster reload for the handgun", ReloadAchievement, Handgun, 15],
 		],
@@ -56,7 +56,7 @@ package achievements
 			[6, 5, "Faster cooldown for the shotgun", CooldownAchievement, Shotgun, 20],
 			[0, 4, "Faster reload for the shotgun", ReloadAchievement, Shotgun, 40],
 			[0, 5, "Automatic reload for the shotgun", AutomaticAchievement, Shotgun, true],
-			[0, 5, "Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 14],
+			[2, 5, "Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 14],
 			[10, 7, "Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 16],
 			[7, 9, "Faster cooldown for the shotgun", CooldownAchievement, Shotgun, 15],
 			[8, 9, "Faster reload for the shotgun", ReloadAchievement, Shotgun, 35],
@@ -82,7 +82,7 @@ package achievements
 			[5, 6, "Higher capacity for the uzi : 30 bullets", CapacityAchievement, Uzi, 30],
 			[0, 7, "Faster cooldown for the uzi", CooldownAchievement, Uzi, 2],
 			[0, 7, "Faster reload for the uzi", ReloadAchievement, Uzi, 15],
-			[0, 8, "Automatic reload for the uzi", AutomaticAchievement, Uzi, true],
+			[4, 8, "Automatic reload for the uzi", AutomaticAchievement, Uzi, true],
 			[6, 9, "Higher capacity for the uzi : 50 bullets", CapacityAchievement, Uzi, 50],
 		],
 		
@@ -132,7 +132,7 @@ package achievements
 			var unlocked:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
 			unlocked.push(Vector.<int>([0, 0]));
 			
-			achievementsScreen = new AchievementsScreen(achievementsList, 2, unlocked);
+			achievementsScreen = new AchievementsScreen(achievementsList, 10, unlocked);
 			return achievementsScreen;
 		}
 		
@@ -168,6 +168,8 @@ package achievements
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
+import flash.events.MouseEvent;
+import flash.filters.ColorMatrixFilter;
 import flash.filters.GlowFilter;
 import flash.utils.Dictionary;
 
@@ -198,9 +200,9 @@ class AchievementsScreen extends Sprite
 	public var achievements:Dictionary = new Dictionary(true);
 	
 	/**
-	 * Translate an ID to a bitmap object.
+	 * Translate an ID to a sprite object.
 	 */
-	public var idToBitmap:Vector.<Vector.<Bitmap>> = new Vector.<Vector.<Bitmap>>();
+	public var idToBitmap:Vector.<Vector.<Sprite>> = new Vector.<Vector.<Sprite>>();
 	
 	public function AchievementsScreen(tree:Vector.<Array>, maxDepth:int, unlocked:Vector.<Vector.<int>>)
 	{
@@ -216,9 +218,10 @@ class AchievementsScreen extends Sprite
 		//Display all icons
 		for (var subtreeId:int = 0; subtreeId < tree.length; subtreeId++)
 		{
-			idToBitmap[subtreeId] = new Vector.<Bitmap>(tree[subtreeId].length);
-			var root:Bitmap = addAchievement(subtreeId * subtreeLength, subtreeLength, 0, 1, 0, tree[subtreeId], subtreeId);
-			enableAchievement(root);
+			idToBitmap[subtreeId] = new Vector.<Sprite>(tree[subtreeId].length);
+			var root:Sprite = addAchievement(subtreeId * subtreeLength, subtreeLength, 0, 1, 0, tree[subtreeId], subtreeId);
+			if(tree[subtreeId][0][1] <= maxDepth)
+				enableAchievement(root);
 		}
 
 		//Check unlocked items
@@ -241,16 +244,21 @@ class AchievementsScreen extends Sprite
 	 * 
 	 * @return newly added image
 	 */
-	public function addAchievement(marginLeft:int, availableWidth:int, childIndex:int, numChildren:int, currentItem:int, tree:Array, subtreeId:int):Bitmap
+	public function addAchievement(marginLeft:int, availableWidth:int, childIndex:int, numChildren:int, currentItem:int, tree:Array, subtreeId:int):Sprite
 	{
 		//Position the achievement
-		var achievement:Bitmap = new Bitmap(achievementsBitmapData);
-		achievement.y = marginLeft + (childIndex + .5) * (availableWidth / numChildren) - achievement.height/2;
-		achievement.x = 30 + tree[currentItem][1] * 50 - achievement.width / 2;
+		var achievement:Sprite = new Sprite();
+		var image:Bitmap = new Bitmap(achievementsBitmapData);
+		image.x = -image.width / 2;
+		image.y = -image.height / 2;
+		achievement.addChild(image);
+		achievement.y = marginLeft + (childIndex + .5) * (availableWidth / numChildren);
+		achievement.x = 30 + tree[currentItem][1] * 50;
+		achievement.filters = [new ColorMatrixFilter([1/3, 1/3, 1/3, 0, 0,1/3, 1/3, 1/3, 0, 0, 1/3, 1/3, 1/3, 0, 0, 0, 0, 0, 1, 0])]
 		addChild(achievement);
 		
 		//Store bitmap :
-		achievements[achievement] = new Vector.<Bitmap>();
+		achievements[achievement] = new Vector.<Sprite>();
 		achievementsData[achievement] = tree[currentItem];
 		idToBitmap[subtreeId][currentItem] = achievement;
 		
@@ -267,23 +275,24 @@ class AchievementsScreen extends Sprite
 		
 		if (children.length > 0)
 		{
-			graphics.moveTo(achievement.x, achievement.y + achievement.height/2);
-			graphics.lineTo(achievement.x + achievement.width + 20, achievement.y + achievement.height/2);
+			graphics.moveTo(achievement.x, achievement.y);
+			graphics.lineTo(achievement.x + 20, achievement.y);
 				
 			for (i = 0; i < children.length; i++)
 			{
-				var child:Bitmap = addAchievement(newMarginLeft, newAvailableWidth, i, children.length, children[i], tree, subtreeId);
-				(achievements[achievement] as Vector.<Bitmap>).push(child);
+				var child:Sprite = addAchievement(newMarginLeft, newAvailableWidth, i, children.length, children[i], tree, subtreeId);
+				(achievements[achievement] as Vector.<Sprite>).push(child);
 				
-				graphics.moveTo(achievement.x + achievement.width + 20, achievement.y + achievement.height/2);
-				graphics.lineTo(achievement.x + achievement.width + 20, child.y + child.height/2);
-				graphics.lineTo(child.x, child.y + child.height/2);
+				graphics.moveTo(achievement.x + 20, achievement.y);
+				graphics.lineTo(achievement.x + 20, child.y);
+				graphics.lineTo(child.x, child.y);
 			}
 		}
 		return achievement;
 	}
 	
-	public function checkAchievement(achievement:Bitmap):void
+	public function checkAchievementListener(e:MouseEvent):void { checkAchievement(e.target as Sprite) }
+	public function checkAchievement(achievement:Sprite):void
 	{
 		//First, disable the achievements to remove listeners
 		disableAchievement(achievement);
@@ -291,21 +300,22 @@ class AchievementsScreen extends Sprite
 		achievement.filters = [new GlowFilter(0x0FF00)];
 		
 		//Enable all available children.
-		for each(var children:Bitmap in (achievements[achievement] as Vector.<Bitmap>))
+		for each(var children:Sprite in (achievements[achievement] as Vector.<Sprite>))
 		{
 			if(achievementsData[children][1] <= maxDepth)
 				enableAchievement(children);
 		}
 	}
 	
-	public function enableAchievement(achievement:Bitmap):void
-	{
-		achievement.filters = [new GlowFilter(0xFFFFFF, 1, 8, 8, 2, 2)];
-		//achievement.addEventListener(
-	}
-	
-	public function disableAchievement(achievement:Bitmap)
+	public function enableAchievement(achievement:Sprite):void
 	{
 		achievement.filters = [];
+		achievement.addEventListener(MouseEvent.CLICK, checkAchievementListener);
+	}
+	
+	public function disableAchievement(achievement:Sprite):void
+	{
+		achievement.filters = [];
+		achievement.removeEventListener(MouseEvent.CLICK, checkAchievementListener);
 	}
 }

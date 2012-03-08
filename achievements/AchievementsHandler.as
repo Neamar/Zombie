@@ -2,6 +2,7 @@ package achievements
 {
 	import achievements.player.*;
 	import achievements.weapon.*;
+	import entity.Player;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import weapon.*;
@@ -9,6 +10,8 @@ package achievements
 	 * Handle the list of unlocks.
 	 * 
 	 * TODO : remove event zombie dead
+	 * TODO : remove code handling hot-plugging achievements
+	 * 
 	 * @author Neamar
 	 */
 	public class AchievementsHandler 
@@ -53,41 +56,44 @@ package achievements
 			[0, 5, "Automatic reload for the shotgun", AutomaticAchievement, Shotgun, true],
 			[0, 5, "Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 14],
 			[10, 7, "Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 16],
-		]
+		],
 		
+		//Railgun achievement tree
+		[
+			[-1, 2, "Unlock Railgun", UnlockAchievement, Railgun],
+			[0, 4, "Infinite range for the railgun", RangeAchievement, Railgun, 3000],
+			[0, 3, "Faster cooldown for the handgun", CooldownAchievement, Railgun, 30],
+			[2, 5, "Faster cooldown for the railgun", CooldownAchievement, Railgun, 20],
+		],
 		
+		//Uzi achievement tree
+		[
+			[-1, 4, "Unlock Uzi", UnlockAchievement, Uzi],
+			[0, 5, "Increased range for the uzi", RangeAchievement, Uzi, 150],
+			[1, 7, "Increased range for the uzi", RangeAchievement, Uzi, 200],
+			[2, 8, "Infinite range for the uzi", RangeAchievement, Uzi, 3000],
+			[0, 5, "Jungle-style reload for the uzi", JungleAchievement, Uzi, true],
+			[0, 5, "Higher capacity for the uzi : 25 bullets", CapacityAchievement, Uzi, 25],
+			[5, 6, "Higher capacity for the uzi : 30 bullets", CapacityAchievement, Uzi, 30],
+			[0, 7, "Faster cooldown for the uzi", CooldownAchievement, Uzi, 2],
+			[0, 7, "Faster reload for the uzi", ReloadAchievement, Uzi, 15],
+			[0, 8, "Automatic reload for the uzi", AutomaticAchievement, Uzi, true],
+		],
+		
+		//Player achievement tree
+		[
+			[-1, 2, "Enable Player Achievement", LifeAchievement, 50],
+			[0, 3, "Increased subconscious vision (10%)", SubconcsiousVisionAchievement, 10],
+			[1, 5, "Increased subconscious vision (15%)", SubconcsiousVisionAchievement, 15],
+			[2, 7, "Increased subconscious vision (20%)", SubconcsiousVisionAchievement, 20],
+			[0, 4, "More life for the player", LifeAchievement, 75],
+			[4, 6, "More life for the player", LifeAchievement, 100],
+			[0, 3,"Faster recuperation for the player", ConvalescenceAchievement, 2],
+			[6, 5, "Faster recuperation for the player", ConvalescenceAchievement, 1],
+			[0, 4, "Wider vision for the player", VisionAchievement, 60],
+			[0, 6, "Tamed bloodrush", BloodrushAchievement, true],	
+		],
 		]);
-			
-		/*	
-			["Increased subconscious vision (10%)", SubconcsiousVisionAchievement, 10],
-			
-			["More life for the player", LifeAchievement, 75],
-			
-			["Faster recuperation for the player", ConvalescenceAchievement, 2],
-			["Railgun unlocked. Now default weapon", UnlockAchievement, Railgun],
-			["Wider vision for the player", VisionAchievement, 60],
-			
-			["Faster recuperation for the player", ConvalescenceAchievement, 1],
-			["Infinite range for the railgun", RangeAchievement, Railgun, 3000],
-
-			["Uzi unlocked. Now default weapon", UnlockAchievement, Uzi],
-			["Increased subconscious vision (15%)", SubconcsiousVisionAchievement, 15],
-
-			["Increased range for the railgun", RangeAchievement, Uzi, 150],
-			["Faster cooldown for the handgun", CooldownAchievement, Railgun, 30],
-			["Faster cooldown for the railgun", CooldownAchievement, Railgun, 20],
-			["More life for the player", LifeAchievement, 100],
-			["Higher capacity for the uzi : 25 bullets", CapacityAchievement, Uzi, 25],
-			["Increased range for the uzi", RangeAchievement, Uzi, 200],
-			["Jungle-style reload for the uzi", JungleAchievement, Uzi, true],
-			["Tamed bloodrush", BloodrushAchievement, true],
-			["Higher capacity for the uzi : 30 bullets", CapacityAchievement, Uzi, 30],
-			["Faster cooldown for the uzi", CooldownAchievement, Uzi, 2],
-			["Faster reload for the uzi", ReloadAchievement, Uzi, 15],
-			["Infinite range for the uzi", RangeAchievement, Uzi, 3000],
-			["Increased subconscious vision (20%)", SubconcsiousVisionAchievement, 20],
-			["Automatic reload for the uzi", AutomaticAchievement, Uzi, true],*/
-		
 		
 		/**
 		 * Game associated with those achievements

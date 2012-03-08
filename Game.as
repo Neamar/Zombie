@@ -48,10 +48,10 @@ package
 		
 		public function Game() 
 		{
+			achievementHandler = new AchievementsHandler(this, 40);
+						
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
-			
-			achievementHandler = new AchievementsHandler(this, 40);
 			
 			hud = new Hud();
 			addChild(hud);
@@ -98,6 +98,8 @@ package
 		 */
 		protected function prepareLevel(levelName:String):void
 		{
+			addChild(achievementHandler.getAchievementsScreen());
+			return;
 			//Load current level
 			loader = new LevelLoader(levelName);
 			addChild(loader);

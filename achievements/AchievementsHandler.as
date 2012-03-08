@@ -2,6 +2,7 @@ package achievements
 {
 	import achievements.player.*;
 	import achievements.weapon.*;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import weapon.*;
 	/**
@@ -25,17 +26,17 @@ package achievements
 		
 		//Handgun achievement tree
 		[
-			[0, "Handgun unlocked. Now default weapon", UnlockAchievement, Shotgun],
-			[0, "Increased range for the handgun", RangeAchievement, Handgun, 250],
-			[1, "Infinite range for the handgun", RangeAchievement, Handgun, 3000],
-			[0, "Higher capacity for the handgun: 6 bullets", CapacityAchievement, Handgun, 6],
-			[3, "Higher capacity for the handgun: 10 bullets", CapacityAchievement, Handgun, 10],
-			[4, "Higher capacity for the handgun : 16 bullets", CapacityAchievement, Handgun, 16],
-			[0, "Jungle-style reload for the handgun", JungleAchievement, Handgun, true],
-			[0, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 20],
-			[7, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 15],
-			[0, "Faster reload for the handgun", ReloadAchievement, Handgun, 30],			
-			[0, "Automatic reload for the handgun", AutomaticAchievement, Handgun, true],
+			[-1, 0, "Handgun unlocked. Now default weapon", UnlockAchievement, Shotgun],
+			[0, 1, "Increased range for the handgun", RangeAchievement, Handgun, 250],
+			[1, 2, "Infinite range for the handgun", RangeAchievement, Handgun, 3000],
+			[0, 1, "Higher capacity for the handgun: 6 bullets", CapacityAchievement, Handgun, 6],
+			[3, 2, "Higher capacity for the handgun: 10 bullets", CapacityAchievement, Handgun, 10],
+			[4, 3, "Higher capacity for the handgun : 16 bullets", CapacityAchievement, Handgun, 16],
+			[0, 1, "Jungle-style reload for the handgun", JungleAchievement, Handgun, true],
+			[0, 1, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 20],
+			[7, 2, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 15],
+			[0, 1, "Faster reload for the handgun", ReloadAchievement, Handgun, 30],			
+			[0, 1, "Automatic reload for the handgun", AutomaticAchievement, Handgun, true],
 		]
 		]);
 			
@@ -81,6 +82,11 @@ package achievements
 		 */
 		public var game:Game;
 
+		/**
+		 * The sprite which display all achievements.
+		 * null when it is not displayed.
+		 */
+		private var achievementsScreen:AchievementsScreen = null;
 		
 		/**
 		 * Creates the handler.
@@ -90,6 +96,16 @@ package achievements
 		public function AchievementsHandler(game:Game, startAtAchievement:int = 0) 
 		{
 			this.game = game;
+		}
+		
+		/**
+		 * Create a new sprite, displaying all the achievements.
+		 * @return the interactive sprite with all the achievements.
+		 */
+		public function getAchievementsScreen():Sprite
+		{
+			achievementsScreen = new AchievementsScreen(achievementsList);
+			return achievementsScreen;
 		}
 		
 		/**
@@ -116,5 +132,68 @@ package achievements
 			
 			return datas[0];
 		}
+	}
+}
+
+
+
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.Sprite;
+
+class AchievementsScreen extends Sprite
+{
+	[Embed(source = "../assets/achievements/achievement.png")]
+	public static const achievementsClass:Class;
+	public static const achievementsData:BitmapData = (new AchievementsScreen.achievementsClass).bitmapData;
+	
+	public function AchievementsScreen(tree:Vector.<Array>)
+	{
+		//Which is the maximal size we can allow for a subtree ?
+		var subtreeLength:int = Main.WIDTH / tree.length;
+		
+		for (var subtreeId:int = 0; subtreeId < tree.length; subtreeId++)
+		{
+			addAchievement(subtreeId * subtreeLength, subtreeLength, 0, 1, 0, tree[subtreeId]);
+		}
+	}
+
+	/**
+	 * Add a new achivement tile on the screen.
+	 * 
+	 * @param	marginLeft constrain the item between marginLeft...
+	 * @param	availableWidth ...and availableWidth.
+	 * @param	childIndex index of the current child
+	 * @param	numChildren number of child to fit on this hierarchy
+	 * @param	currentItem current item id in the tree array
+	 * @param	tree global array
+	 * 
+	 * @return newly added image
+	 */
+	public function addAchievement(marginLeft:int, availableWidth:int, childIndex:int, numChildren:int, currentItem:int, tree:Array):Bitmap
+	{
+		//Position the achievement
+		var achievement:Bitmap = new Bitmap(achievementsData);
+		achievement.x = marginLeft + (childIndex + .5) * (availableWidth / numChildren) - achievement.width/2;
+		achievement.y = 30 + tree[currentItem][1] * 50 - achievement.height/2;
+		addChild(achievement);
+		
+		//Find all childs and add them
+		var children:Vector.<int> = new Vector.<int>();
+		for (var i:int = 0; i < tree.length; i++)
+		{
+			if (tree[i][0] == currentItem)
+				children.push(i);
+		}
+		
+		var newMarginLeft:int = marginLeft + childIndex * availableWidth / numChildren;
+		var newAvailableWidth:int = availableWidth / numChildren;
+		
+		for (i = 0; i < children.length; i++)
+		{
+			addAchievement(newMarginLeft, newAvailableWidth, i, children.length, children[i], tree);
+		}
+		
+		return achievement;
 	}
 }

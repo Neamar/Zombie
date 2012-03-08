@@ -141,9 +141,6 @@ package
 			level.addEventListener(Level.WIN, onSuccess);
 			level.addEventListener(Level.LOST, onFailure);
 			
-			//Achievements
-			level.addEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
-			
 			//HUD
 			level.player.addEventListener(Player.WEAPON_CHANGED, hud.updateWeapon);
 			level.player.addEventListener(Player.WEAPON_SHOT, hud.updateBullets);
@@ -158,7 +155,6 @@ package
 		{
 			level.removeEventListener(Level.WIN, onSuccess);
 			level.removeEventListener(Level.LOST, onFailure);
-			level.removeEventListener(Zombie.ZOMBIE_DEAD, achievementHandler.onZombieKilled);
 			level.player.removeEventListener(Player.WEAPON_CHANGED, hud.updateWeapon);
 			level.player.removeEventListener(Player.WEAPON_SHOT, hud.updateBullets);
 		}

@@ -26,7 +26,7 @@ package achievements
 		
 		//Handgun achievement tree
 		[
-			[-1, 0, "Handgun unlocked. Now default weapon", UnlockAchievement, Shotgun],
+			[-1, 0, "Handgun unlocked.", UnlockAchievement, Handgun],
 			[0, 1, "Increased range for the handgun", RangeAchievement, Handgun, 250],
 			[1, 2, "Infinite range for the handgun", RangeAchievement, Handgun, 3000],
 			[0, 1, "Higher capacity for the handgun: 6 bullets", CapacityAchievement, Handgun, 6],
@@ -37,41 +37,53 @@ package achievements
 			[7, 3, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 15],
 			[0, 4, "Faster reload for the handgun", ReloadAchievement, Handgun, 30],			
 			[0, 4, "Automatic reload for the handgun", AutomaticAchievement, Handgun, true],
+		],
+		
+		//Shotgun achievement tree
+		[
+			[-1, 1, "Shotgun unlocked.", UnlockAchievement, Shotgun],
+			[0, 2, "Increased range for the shotgun", RangeAchievement, Shotgun, 200],
+			[1, 3, "Increased range for the shotgun", RangeAchievement, Shotgun, 300],
+			[2, 6, "Infinite range for the shotgun", RangeAchievement, Shotgun, 3000],
+			[0, 2, "Higher capacity for the shotgun : 2 bullets", CapacityAchievement, Shotgun, 2],
+			[4, 4, "Higher capacity for the shotgun : 6 bullets", CapacityAchievement, Shotgun, 6],
+			[0, 3, "Faster cooldown for the shotgun", CooldownAchievement, Shotgun, 30],
+			[6, 5, "Faster cooldown for the shotgun", CooldownAchievement, Shotgun, 20],
+			[0, 4, "Faster reload for the shotgun", ReloadAchievement, Shotgun, 40],
+			[0, 5, "Automatic reload for the shotgun", AutomaticAchievement, Shotgun, true],
+			[0, 5, "Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 14],
+			[10, 7, "Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 16],
 		]
+		
+		
 		]);
 			
-		/*	["Increased range for the shotgun", RangeAchievement, Shotgun, 200],
+		/*	
 			["Increased subconscious vision (10%)", SubconcsiousVisionAchievement, 10],
-			[-1, "Shotgun unlocked. Now default weapon", UnlockAchievement, Shotgun],
+			
 			["More life for the player", LifeAchievement, 75],
-			["Increased range for the shotgun", RangeAchievement, Shotgun, 300],
+			
 			["Faster recuperation for the player", ConvalescenceAchievement, 2],
 			["Railgun unlocked. Now default weapon", UnlockAchievement, Railgun],
 			["Wider vision for the player", VisionAchievement, 60],
-			["Higher capacity for the shotgun : 2 bullets", CapacityAchievement, Shotgun, 2],
-			["Infinite range for the shotgun", RangeAchievement, Shotgun, 3000],
+			
 			["Faster recuperation for the player", ConvalescenceAchievement, 1],
 			["Infinite range for the railgun", RangeAchievement, Railgun, 3000],
-			["Faster cooldown for the shotgun", CooldownAchievement, Shotgun, 30],
-			["Higher capacity for the shotgun : 6 bullets", CapacityAchievement, Shotgun, 6],
+
 			["Uzi unlocked. Now default weapon", UnlockAchievement, Uzi],
 			["Increased subconscious vision (15%)", SubconcsiousVisionAchievement, 15],
-			["Faster reload for the shotgun", ReloadAchievement, Shotgun, 40],
-			["Faster cooldown for the shotgun", CooldownAchievement, Shotgun, 20],
+
 			["Increased range for the railgun", RangeAchievement, Uzi, 150],
 			["Faster cooldown for the handgun", CooldownAchievement, Railgun, 30],
 			["Faster cooldown for the railgun", CooldownAchievement, Railgun, 20],
 			["More life for the player", LifeAchievement, 100],
 			["Higher capacity for the uzi : 25 bullets", CapacityAchievement, Uzi, 25],
-			["Automatic reload for the shotgun", AutomaticAchievement, Shotgun, true],
 			["Increased range for the uzi", RangeAchievement, Uzi, 200],
 			["Jungle-style reload for the uzi", JungleAchievement, Uzi, true],
-			["Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 14],
 			["Tamed bloodrush", BloodrushAchievement, true],
 			["Higher capacity for the uzi : 30 bullets", CapacityAchievement, Uzi, 30],
 			["Faster cooldown for the uzi", CooldownAchievement, Uzi, 2],
 			["Faster reload for the uzi", ReloadAchievement, Uzi, 15],
-			["Wider shot for the shotgun", AmplitudeAchievement, Shotgun, 16],
 			["Infinite range for the uzi", RangeAchievement, Uzi, 3000],
 			["Increased subconscious vision (20%)", SubconcsiousVisionAchievement, 20],
 			["Automatic reload for the uzi", AutomaticAchievement, Uzi, true],*/

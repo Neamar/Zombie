@@ -54,7 +54,7 @@ package
 			prepareLevel(FIRST_LEVEL);
 			
 			hud = new Hud();
-			addChild(hud);
+			//addChild(hud);
 		}
 		
 		/**

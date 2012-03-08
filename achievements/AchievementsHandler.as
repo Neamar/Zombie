@@ -193,8 +193,8 @@ class AchievementsScreen extends Sprite
 	{
 		//Position the achievement
 		var achievement:Bitmap = new Bitmap(achievementsData);
-		achievement.x = marginLeft + (childIndex + .5) * (availableWidth / numChildren) - achievement.width/2;
-		achievement.y = 30 + tree[currentItem][1] * 50 - achievement.height/2;
+		achievement.y = marginLeft + (childIndex + .5) * (availableWidth / numChildren) - achievement.height/2;
+		achievement.x = 30 + tree[currentItem][1] * 50 - achievement.width/2;
 		addChild(achievement);
 		
 		//Find all childs and add them
@@ -210,16 +210,16 @@ class AchievementsScreen extends Sprite
 		
 		if (children.length > 0)
 		{
-			graphics.moveTo(achievement.x + achievement.width/2, achievement.y);
-			graphics.lineTo(achievement.x + achievement.width/2, achievement.y + 25);
+			graphics.moveTo(achievement.x, achievement.y + achievement.height/2);
+			graphics.lineTo(achievement.x + achievement.width + 20, achievement.y + achievement.height/2);
 				
 			for (i = 0; i < children.length; i++)
 			{
 				var child:Bitmap = addAchievement(newMarginLeft, newAvailableWidth, i, children.length, children[i], tree);
 				
-				graphics.moveTo(achievement.x + achievement.width/2, achievement.y + 25);
-				graphics.lineTo(child.x + child.width/2, achievement.y + 25);
-				graphics.lineTo(child.x + child.width/2, child.y);
+				graphics.moveTo(achievement.x + achievement.width + 20, achievement.y + achievement.height/2);
+				graphics.lineTo(achievement.x + achievement.width + 20, child.y + child.height/2);
+				graphics.lineTo(child.x, child.y + child.height/2);
 			}
 		}
 		return achievement;

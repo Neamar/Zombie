@@ -31,12 +31,12 @@ package achievements
 			[1, 2, "Infinite range for the handgun", RangeAchievement, Handgun, 3000],
 			[0, 1, "Higher capacity for the handgun: 6 bullets", CapacityAchievement, Handgun, 6],
 			[3, 2, "Higher capacity for the handgun: 10 bullets", CapacityAchievement, Handgun, 10],
-			[4, 3, "Higher capacity for the handgun : 16 bullets", CapacityAchievement, Handgun, 16],
+			[4, 4, "Higher capacity for the handgun : 16 bullets", CapacityAchievement, Handgun, 16],
 			[0, 1, "Jungle-style reload for the handgun", JungleAchievement, Handgun, true],
-			[0, 1, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 20],
-			[7, 2, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 15],
-			[0, 1, "Faster reload for the handgun", ReloadAchievement, Handgun, 30],			
-			[0, 1, "Automatic reload for the handgun", AutomaticAchievement, Handgun, true],
+			[0, 2, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 20],
+			[7, 3, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 15],
+			[0, 4, "Faster reload for the handgun", ReloadAchievement, Handgun, 30],			
+			[0, 4, "Automatic reload for the handgun", AutomaticAchievement, Handgun, true],
 		]
 		]);
 			
@@ -149,6 +149,7 @@ class AchievementsScreen extends Sprite
 	
 	public function AchievementsScreen(tree:Vector.<Array>)
 	{
+		graphics.lineStyle(1, 0xAAAAAA);
 		//Which is the maximal size we can allow for a subtree ?
 		var subtreeLength:int = Main.WIDTH / tree.length;
 		
@@ -189,11 +190,20 @@ class AchievementsScreen extends Sprite
 		var newMarginLeft:int = marginLeft + childIndex * availableWidth / numChildren;
 		var newAvailableWidth:int = availableWidth / numChildren;
 		
-		for (i = 0; i < children.length; i++)
+		if (children.length > 0)
 		{
-			addAchievement(newMarginLeft, newAvailableWidth, i, children.length, children[i], tree);
+			graphics.moveTo(achievement.x + achievement.width/2, achievement.y);
+			graphics.lineTo(achievement.x + achievement.width/2, achievement.y + 25);
+				
+			for (i = 0; i < children.length; i++)
+			{
+				var child:Bitmap = addAchievement(newMarginLeft, newAvailableWidth, i, children.length, children[i], tree);
+				
+				graphics.moveTo(achievement.x + achievement.width/2, achievement.y + 25);
+				graphics.lineTo(child.x + child.width/2, achievement.y + 25);
+				graphics.lineTo(child.x + child.width/2, child.y);
+			}
 		}
-		
 		return achievement;
 	}
 }

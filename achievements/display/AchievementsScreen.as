@@ -20,6 +20,18 @@ package achievements.display
 	 */
 	public final class AchievementsScreen extends Sprite
 	{
+		
+		/**
+		 * Defines the tree and weight of each tree for its layout
+		 */
+		public var treeWeight:Vector.<Array> = Vector.<Array>([
+			["Handgun",	1],
+			["Shotgun",	1],
+			["Railgun",	.4],
+			["Uzi",	1],
+			["Player",	.75]
+		]);
+		
 		/**
 		 * The handler for the achievements
 		 */
@@ -53,24 +65,32 @@ package achievements.display
 			//Define the style for the graph lines
 			graphics.lineStyle(1, 0xAAAAAA);
 			
+			var totalWeight:Number = 0;
+			for each(var w:Array in treeWeight)
+				totalWeight += w[1];
+			
 			//What is the maximal size we can allow for a subtree ?
 			//Keep 20px of room for a little padding on top and bottom.
-			var subtreeLength:int = (Main.WIDTH - 20) / tree.length;
-			this.y = 10;
+			const margin:int = 3;
+			var totalHeight:int = Main.WIDTH - margin;
+			var currentTop:int = 0;
+			this.y = margin;
 			
 			//Display all icons
 			for (var subtreeId:int = 0; subtreeId < tree.length; subtreeId++)
 			{
 				//Create the vector for future access using the achievement coordinates (subtree_id, item_id)
 				idToItem[subtreeId] = new Vector.<AchievementItem>(tree[subtreeId].length);
-				
+		
 				//Create the root item for this tree
 				//This function is recursive and will build the whole subtree.
-				var root:AchievementItem = addAchievementItem(subtreeId * subtreeLength, subtreeLength, 0, 1, 0, tree[subtreeId], subtreeId);
+				var root:AchievementItem = addAchievementItem(currentTop + margin, totalHeight * treeWeight[subtreeId][1] / totalWeight - 20, 0, 1, 0, tree[subtreeId], subtreeId);
 				
 				//Enable the item for click only if it is reachable, i.e it's depth is accessible.
 				if(tree[subtreeId][0].depth <= maxDepth)
 					root.enable();
+					
+				currentTop += totalHeight * treeWeight[subtreeId][1] / totalWeight;
 			}
 
 			//Activate previously unlocked items
@@ -93,8 +113,8 @@ package achievements.display
 		/**
 		 * Add a new achievement item on the screen.
 		 * 
-		 * @param	marginLeft constrain the item's y-position between marginLeft...
-		 * @param	availableWidth ...and availableWidth.
+		 * @param	marginTop constrain the item's y-position between marginTop...
+		 * @param	availableHeight ...and availableHeight.
 		 * @param	childIndex index of the current child
 		 * @param	numChildren number of child to fit on this hierarchy
 		 * @param	currentItem current item id in the tree parameter
@@ -103,11 +123,11 @@ package achievements.display
 		 * 
 		 * @return newly added item
 		 */
-		public function addAchievementItem(marginLeft:int, availableWidth:int, childIndex:int, numChildren:int, currentItem:int, tree:Vector.<Achievement>, subtreeId:int):AchievementItem
+		public function addAchievementItem(marginTop:int, availableHeight:int, childIndex:int, numChildren:int, currentItem:int, tree:Vector.<Achievement>, subtreeId:int):AchievementItem
 		{
 			//Create and position the achievement
 			var achievement:AchievementItem = new AchievementItem(this, tree[currentItem]);
-			achievement.y = marginLeft + (childIndex + .5) * (availableWidth / numChildren);
+			achievement.y = marginTop + (childIndex + .5) * (availableHeight / numChildren);
 			achievement.x = 30 + tree[currentItem].depth * 50;
 			addChild(achievement);
 			
@@ -123,8 +143,8 @@ package achievements.display
 			}
 			
 			//Compute where we'll be able to put the children
-			var newMarginLeft:int = marginLeft + childIndex * availableWidth / numChildren;
-			var newAvailableWidth:int = availableWidth / numChildren;
+			var newMarginLeft:int = marginTop + childIndex * availableHeight / numChildren;
+			var newAvailableWidth:int = availableHeight / numChildren;
 			
 			if (children.length > 0)
 			{
@@ -138,8 +158,17 @@ package achievements.display
 					achievement.children.push(child);
 					
 					graphics.moveTo(achievement.x + 20, achievement.y);
-					graphics.lineTo(achievement.x + 20, child.y);
-					graphics.lineTo(child.x, child.y);
+					
+					if (children.length > 1)
+					{
+						graphics.lineTo(achievement.x + 20, child.y);
+						graphics.lineTo(child.x, child.y);
+					}
+					else
+					{
+						//Workaround for rounding bug
+						graphics.lineTo(child.x, achievement.y);
+					}
 				}
 			}
 			

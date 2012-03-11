@@ -133,7 +133,7 @@ package achievements
 			var unlocked:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
 			unlocked.push(Vector.<int>([0, 0]));
 			
-			achievementsScreen = new AchievementsScreen(achievementsList, 10, unlocked);
+			achievementsScreen = new AchievementsScreen(achievementsList, 3, unlocked);
 			return achievementsScreen;
 		}
 		

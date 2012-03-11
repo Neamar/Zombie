@@ -20,7 +20,15 @@ package achievements.display
 	 */
 	public final class AchievementsScreen extends Sprite
 	{
+		/**
+		 * Number of achievement to pick between each level
+		 */
 		public const ACHIEVEMENTS_TO_PICK_PER_LEVEL:int = 3;
+		
+		/**
+		 * Width (in pixels) for one unity of depth
+		 */
+		public const WIDTH_PER_DEPTH:int = 50;
 		
 		/**
 		 * Defines the tree and weight of each tree for its layout
@@ -65,9 +73,6 @@ package achievements.display
 			this.handler = handler;
 			this.maxDepth = maxDepth;
 			
-			//Define the style for the graph lines
-			graphics.lineStyle(1, 0xAAAAAA);
-			
 			var totalWeight:Number = 0;
 			for each(var w:Array in treeWeight)
 				totalWeight += w[1];
@@ -78,6 +83,14 @@ package achievements.display
 			var totalHeight:int = Main.WIDTH - margin;
 			var currentTop:int = 0;
 			this.y = margin;
+			
+			//Display a rectangle for unselectable items
+			this.graphics.beginFill(0x222222, 1);
+			this.graphics.drawRect(maxDepth * WIDTH_PER_DEPTH, 0, Main.WIDTH, totalHeight);
+			this.graphics.endFill();
+			
+			//Define the style for the graph lines
+			graphics.lineStyle(1, 0xAAAAAA);
 			
 			//Display all icons
 			for (var subtreeId:int = 0; subtreeId < tree.length; subtreeId++)
@@ -131,7 +144,7 @@ package achievements.display
 			//Create and position the achievement
 			var achievement:AchievementItem = new AchievementItem(this, tree[currentItem]);
 			achievement.y = marginTop + (childIndex + .5) * (availableHeight / numChildren);
-			achievement.x = 30 + tree[currentItem].depth * 50;
+			achievement.x = 30 + tree[currentItem].depth * WIDTH_PER_DEPTH;
 			addChild(achievement);
 			
 			//Store for future access by coordinates :

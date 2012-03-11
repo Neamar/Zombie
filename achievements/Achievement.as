@@ -11,14 +11,20 @@ package achievements
 	public class Achievement
 	{
 		protected var game:Game;
-		protected var level:Level;
-		protected var player:Player;
 		
 		public function setGame(game:Game):void
 		{
 			this.game = game;
-			level = game.level;
-			player = level.player;
+		}
+		
+		public function get level():Level
+		{
+			return game.level;
+		}
+		
+		public function get player():Player
+		{
+			return game.level.player;
 		}
 		
 		/**

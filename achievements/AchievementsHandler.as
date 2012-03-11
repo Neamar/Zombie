@@ -114,6 +114,8 @@ package achievements
 		 */
 		private var achievementsScreen:AchievementsScreen = null;
 		
+		private var achievementsUnlocked:Vector.<Achievement> = new Vector.<Achievement>();
+		
 		/**
 		 * Creates the handler.
 		 * @param	game to operate on
@@ -133,33 +135,28 @@ package achievements
 			var unlocked:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
 			unlocked.push(Vector.<int>([0, 0]));
 			
-			achievementsScreen = new AchievementsScreen(achievementsList, 3, unlocked);
+			achievementsScreen = new AchievementsScreen(this, achievementsList, 3, unlocked);
 			return achievementsScreen;
 		}
 		
 		/**
-		 * Apply achievement precedently recorded (from another game, or another level)
+		 * Apply all the achievement currently stacked
 		 */
 		public function applyDefaultsAchievements():void
 		{
-			//TODO
+			for each(var achievement:Achievement in achievementsUnlocked)
+			{
+				achievement.apply();
+			}
 		}
 		
 		/**
-		 * Apply the achievement.
-		 * 
-		 * @param	datas an array, respecting the row-structure of achievementsList
-		 * @return achievement string (to be displayed)
+		 * Stack a new achievement, which will be applied on the start of each level
+		 * @param	achievement
 		 */
-		protected function applyAchievement(datas:Array):String
+		public function stackAchievement(achievement:Achievement):void
 		{
-			var currentAchievement:Achievement = new datas[1]();
-			currentAchievement.setGame(game);
-			currentAchievement.setParams(datas.slice(2));
-
-			currentAchievement.apply();
-			
-			return datas[0];
+			achievementsUnlocked.push(achievement);
 		}
 	}
 }

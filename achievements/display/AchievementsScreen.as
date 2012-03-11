@@ -1,5 +1,7 @@
 package achievements.display
 {
+	import achievements.Achievement;
+	import achievements.AchievementsHandler;
 	import achievements.display.AchievementItem;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -17,6 +19,11 @@ package achievements.display
 	public final class AchievementsScreen extends Sprite
 	{
 		/**
+		 * The handler for the achievements
+		 */
+		public var handler:AchievementsHandler;
+		
+		/**
 		 * Maximal depth ; beyond that you can't unlock an achievement.
 		 */
 		public var maxDepth:int;
@@ -31,12 +38,14 @@ package achievements.display
 		/**
 		 * Create a new screen to display the achievements
 		 * 
+		 * @param	handler the object managing achievements
 		 * @param	tree the tree with all the datas in it. The content of this array is explained in AchievementsHandler::achievementsList
 		 * @param	maxDepth the maximal depth achievements can be unlocked
 		 * @param	unlocked an array of the already unlocked achievements.
 		 */
-		public function AchievementsScreen(tree:Vector.<Array>, maxDepth:int, unlocked:Vector.<Vector.<int>>)
+		public function AchievementsScreen(handler:AchievementsHandler, tree:Vector.<Array>, maxDepth:int, unlocked:Vector.<Vector.<int>>)
 		{
+			this.handler = handler;
 			this.maxDepth = maxDepth;
 			
 			//Define the style for the graph lines
@@ -55,7 +64,7 @@ package achievements.display
 				
 				//Create the root item for this tree
 				//This function is recursive and will build the whole subtree.
-				var root:AchievementItem = addAchievement(subtreeId * subtreeLength, subtreeLength, 0, 1, 0, tree[subtreeId], subtreeId);
+				var root:AchievementItem = addAchievementItem(subtreeId * subtreeLength, subtreeLength, 0, 1, 0, tree[subtreeId], subtreeId);
 				
 				//Enable the item for click only if it is reachable, i.e it's depth is accessible.
 				if(tree[subtreeId][0][1] <= maxDepth)
@@ -83,7 +92,7 @@ package achievements.display
 		 * 
 		 * @return newly added item
 		 */
-		public function addAchievement(marginLeft:int, availableWidth:int, childIndex:int, numChildren:int, currentItem:int, tree:Array, subtreeId:int):AchievementItem
+		public function addAchievementItem(marginLeft:int, availableWidth:int, childIndex:int, numChildren:int, currentItem:int, tree:Array, subtreeId:int):AchievementItem
 		{
 			//Create and position the achievement
 			var achievement:AchievementItem = new AchievementItem(this, tree[currentItem]);
@@ -94,7 +103,7 @@ package achievements.display
 			//Store for future access by coordinates :
 			idToItem[subtreeId][currentItem] = achievement;
 			
-			//Find all childs of this particular item
+			//Find all children of this particular item
 			var children:Vector.<int> = new Vector.<int>();
 			for (var i:int = 0; i < tree.length; i++)
 			{
@@ -114,7 +123,7 @@ package achievements.display
 				//Add all children on the screen
 				for (i = 0; i < children.length; i++)
 				{
-					var child:AchievementItem = addAchievement(newMarginLeft, newAvailableWidth, i, children.length, children[i], tree, subtreeId);
+					var child:AchievementItem = addAchievementItem(newMarginLeft, newAvailableWidth, i, children.length, children[i], tree, subtreeId);
 					achievement.children.push(child);
 					
 					graphics.moveTo(achievement.x + 20, achievement.y);
@@ -124,6 +133,11 @@ package achievements.display
 			}
 			
 			return achievement;
+		}
+		
+		public function stackAchievement(achievement:Achievement):void
+		{
+			handler.stackAchievement(achievement);
 		}
 	}
 }

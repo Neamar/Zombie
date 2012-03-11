@@ -54,7 +54,7 @@ package
 			prepareLevel(FIRST_LEVEL);
 			
 			hud = new Hud();
-			//addChild(hud);
+			addChild(hud);
 		}
 		
 		/**
@@ -98,7 +98,8 @@ package
 		 */
 		protected function prepareLevel(levelName:String):void
 		{
-			addChild(achievementHandler.getAchievementsScreen());
+			var screen:Sprite = achievementHandler.getAchievementsScreen();
+			addChild(screen);
 			return;
 			//Load current level
 			loader = new LevelLoader(levelName);

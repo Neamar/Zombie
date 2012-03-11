@@ -70,6 +70,11 @@ package achievements.display
 			return datas[1];
 		}
 		
+		public function getMessage():String
+		{
+			return datas[2];
+		}
+		
 		/**
 		 * Give the player the selected achievement
 		 * @param	e
@@ -87,6 +92,15 @@ package achievements.display
 			{
 				if(child.getDepth() <= container.maxDepth)
 					child.enable();
+			}
+			
+			//If the event is null, it means we've been called directly and there is no need
+			//to inform our parent.
+			//Else,bubble up the information.
+			if (e != null)
+			{
+				//Eventually, inform our parent we've been picked
+				container.stackAchievement(getAchievement());
 			}
 		}
 		
@@ -106,6 +120,23 @@ package achievements.display
 		{
 			this.filters = emptyFilter;
 			this.removeEventListener(MouseEvent.CLICK, activate);
+		}
+		
+		/**
+		 * Transform the array datas to an achievement object
+		 * TODO: why not compute the achievement from front and stop messing around with all this array gibber ?
+		 * 
+		 * @param	datas an array, respecting the row-structure of achievementsList
+		 * 
+		 * @return	an achievement object
+		 */
+		protected function getAchievement():Achievement
+		{
+			var achievement:Achievement = new datas[3]();
+			achievement.setGame(container.handler.game);
+			achievement.setParams(datas.slice(4));
+
+			return achievement;
 		}
 	}
 

@@ -5,7 +5,9 @@ package achievements.display
 	import achievements.display.AchievementItem;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.ColorMatrixFilter;
 	import flash.filters.GlowFilter;
@@ -78,6 +80,15 @@ package achievements.display
 				idToItem[pos[0]][pos[1]].activate();
 			}
 		}
+		
+		public function destroy():void
+		{
+			graphics.clear();
+			while (numChildren != 0)
+			{
+				(removeChildAt(0) as AchievementItem).destroy();				
+			}
+		}
 
 		/**
 		 * Add a new achievement item on the screen.
@@ -138,6 +149,8 @@ package achievements.display
 		public function stackAchievement(achievement:Achievement):void
 		{
 			handler.stackAchievement(achievement);
+			
+			dispatchEvent(new Event(Event.COMPLETE));
 		}
 	}
 }

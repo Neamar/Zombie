@@ -1,6 +1,7 @@
 package
 {
 	import achievements.AchievementsHandler;
+	import achievements.display.AchievementsScreen;
 	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Sprite;
@@ -32,6 +33,11 @@ package
 		public var loader:LevelLoader;
 		
 		/**
+		 * Screen with all the achievements; null when not displayed
+		 */
+		public var achievementsScreen:AchievementsScreen = null;
+		
+		/**
 		 * Handler for the achievements of the level.
 		 */
 		public var achievementHandler:AchievementsHandler;
@@ -45,6 +51,16 @@ package
 		 * Hud to be displayed
 		 */
 		public var hud:Hud;
+		
+		/**
+		 * Flag set to true when the level finishes to load *before* the achievement are picked.
+		 */
+		public var hasFinishedLoading:Boolean = false;
+		
+		/**
+		 * Flag set to true when the achievements have been picked
+		 */
+		public var hasFinishedPickingAchievements:Boolean = false;
 		
 		public function Game() 
 		{
@@ -98,14 +114,36 @@ package
 		 */
 		protected function prepareLevel(levelName:String):void
 		{
-			var screen:Sprite = achievementHandler.getAchievementsScreen();
-			addChild(screen);
-			return;
-			//Load current level
-			loader = new LevelLoader(levelName);
-			addChild(loader);
+			hasFinishedLoading = hasFinishedPickingAchievements = false;
 			
+			//Pick some achievements
+			achievementsScreen = achievementHandler.getAchievementsScreen();
+			achievementsScreen.addEventListener(Event.COMPLETE, achievementsPicked);
+			addChild(achievementsScreen);
+
+			//While loading next level in the background :
+			loader = new LevelLoader(levelName);
 			loader.addEventListener(Event.COMPLETE, addLevel);
+		}
+		
+		protected function achievementsPicked(e:Event):void
+		{
+			removeChild(achievementsScreen);
+			achievementsScreen.removeEventListener(Event.COMPLETE, achievementsPicked);
+			achievementsScreen.destroy();
+			achievementsScreen = null;
+			hasFinishedPickingAchievements = true;
+			
+			if (!hasFinishedLoading)
+			{
+				//The level is still loading : display the loader and wait for the COMPLETE event.
+				addChild(loader);
+			}
+			else
+			{
+				//We spent a lot of time picking the achievements, and we can play straightforward.
+				addLevel();
+			}
 		}
 		
 		/**
@@ -114,9 +152,15 @@ package
 		 */
 		protected function addLevel(e:Event = null):void
 		{
+			loader.removeEventListener(Event.COMPLETE, addLevel);
+			hasFinishedLoading = true;
+			
+			//We shall wait for the achievements to be picked before launching new level.
+			if (!hasFinishedPickingAchievements)
+				return;
+				
 			if (contains(loader))
 			{
-				loader.removeEventListener(Event.COMPLETE, addLevel);
 				removeChild(loader);
 			}
 			

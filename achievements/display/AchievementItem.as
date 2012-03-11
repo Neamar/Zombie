@@ -61,6 +61,15 @@ package achievements.display
 			this.filters = defaultFilter;
 		}
 		
+		public function destroy():void
+		{
+			removeChildAt(0);
+			disable();
+			container = null;
+			datas = null;
+			children = null;
+		}
+		
 		/**
 		 * Return the depth of the current item
 		 * @return depth

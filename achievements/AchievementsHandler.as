@@ -107,12 +107,6 @@ package achievements
 		 * Game associated with those achievements
 		 */
 		public var game:Game;
-
-		/**
-		 * The sprite which display all achievements.
-		 * null when it is not displayed.
-		 */
-		private var achievementsScreen:AchievementsScreen = null;
 		
 		private var achievementsUnlocked:Vector.<Achievement> = new Vector.<Achievement>();
 		
@@ -130,13 +124,12 @@ package achievements
 		 * Create a new sprite, displaying all the achievements.
 		 * @return the interactive sprite with all the achievements.
 		 */
-		public function getAchievementsScreen():Sprite
+		public function getAchievementsScreen():AchievementsScreen
 		{
 			var unlocked:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
 			unlocked.push(Vector.<int>([0, 0]));
 			
-			achievementsScreen = new AchievementsScreen(this, achievementsList, 3, unlocked);
-			return achievementsScreen;
+			return new AchievementsScreen(this, achievementsList, 3, unlocked)
 		}
 		
 		/**

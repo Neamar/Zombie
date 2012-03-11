@@ -527,7 +527,6 @@ package entity
 						if (currentPlayerSpriteOffset < 1)
 							currentPlayerSpriteOffset += 16;
 					}
-					trace(currentPlayerSpriteOffset);
 					playerSpritesRect.y = currentPlayerSpriteOffset * 28;
 					playerSprites.scrollRect = playerSpritesRect;
 				}

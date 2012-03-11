@@ -45,7 +45,7 @@ package achievements.display
 		 * @param	maxDepth the maximal depth achievements can be unlocked
 		 * @param	unlocked an array of the already unlocked achievements.
 		 */
-		public function AchievementsScreen(handler:AchievementsHandler, tree:Vector.<Array>, maxDepth:int, unlocked:Vector.<Vector.<int>>)
+		public function AchievementsScreen(handler:AchievementsHandler, tree:Vector.<Vector.<Achievement>>, maxDepth:int, unlocked:Vector.<Vector.<int>>)
 		{
 			this.handler = handler;
 			this.maxDepth = maxDepth;
@@ -69,7 +69,7 @@ package achievements.display
 				var root:AchievementItem = addAchievementItem(subtreeId * subtreeLength, subtreeLength, 0, 1, 0, tree[subtreeId], subtreeId);
 				
 				//Enable the item for click only if it is reachable, i.e it's depth is accessible.
-				if(tree[subtreeId][0][1] <= maxDepth)
+				if(tree[subtreeId][0].depth <= maxDepth)
 					root.enable();
 			}
 
@@ -103,12 +103,12 @@ package achievements.display
 		 * 
 		 * @return newly added item
 		 */
-		public function addAchievementItem(marginLeft:int, availableWidth:int, childIndex:int, numChildren:int, currentItem:int, tree:Array, subtreeId:int):AchievementItem
+		public function addAchievementItem(marginLeft:int, availableWidth:int, childIndex:int, numChildren:int, currentItem:int, tree:Vector.<Achievement>, subtreeId:int):AchievementItem
 		{
 			//Create and position the achievement
 			var achievement:AchievementItem = new AchievementItem(this, tree[currentItem]);
 			achievement.y = marginLeft + (childIndex + .5) * (availableWidth / numChildren);
-			achievement.x = 30 + tree[currentItem][1] * 50;
+			achievement.x = 30 + tree[currentItem].depth * 50;
 			addChild(achievement);
 			
 			//Store for future access by coordinates :
@@ -118,7 +118,7 @@ package achievements.display
 			var children:Vector.<int> = new Vector.<int>();
 			for (var i:int = 0; i < tree.length; i++)
 			{
-				if (tree[i][0] == currentItem)
+				if (tree[i].childOf == currentItem)
 					children.push(i);
 			}
 			

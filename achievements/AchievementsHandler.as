@@ -21,12 +21,14 @@ package achievements
 		 * List of all the available achievements.
 		 * 
 		 * Each row respects the following structure :
-		 * [achievement:Achievement, ...params]
+		 * [parent:int, depth:int, message:String, achievement:Achievement, ...params]
 		 * 
 		 * where achievement is a Class (and not an object)
 		 * params is the params to use for the achievements
+		 * 
+		 * This is a simple convenience structure which will be converte to an Achievement array in the constructor.
 		 */
-		public var achievementsList:Vector.<Array> = Vector.<Array>([
+		public var achievementsListArray:Vector.<Array> = Vector.<Array>([
 		
 		//Handgun achievement tree
 		[
@@ -103,11 +105,16 @@ package achievements
 		],
 		]);
 		
+		public var achievementsList:Vector.<Vector.<Achievement>> = new Vector.<Vector.<Achievement>>();
+		
 		/**
 		 * Game associated with those achievements
 		 */
 		public var game:Game;
 		
+		/**
+		 * Store the achievement currently unlocked
+		 */
 		private var achievementsUnlocked:Vector.<Achievement> = new Vector.<Achievement>();
 		
 		/**
@@ -118,6 +125,30 @@ package achievements
 		public function AchievementsHandler(game:Game, startAtAchievement:int = 0) 
 		{
 			this.game = game;
+			
+			//Build achievements lists
+			//The array list is just for conveniently defining new achievements.
+			//We have to build a more usable structure for easier access.
+			for each(var subtree:Array in achievementsListArray)
+			{
+				var subtreeVector:Vector.<Achievement> = new Vector.<Achievement>();
+				for each(var datas:Array in subtree)
+				{
+					//Build the object
+					var achievement:Achievement = new datas[3]();
+					achievement.setGame(game);
+					achievement.childOf = datas[0];
+					achievement.depth = datas[1];
+					achievement.message = datas[2];
+					achievement.setParams(datas.slice(4));
+					subtreeVector.push(achievement);
+				}
+				
+				achievementsList.push(subtreeVector);
+			}
+			
+			//GC the array
+			achievementsListArray = null;
 		}
 		
 		/**

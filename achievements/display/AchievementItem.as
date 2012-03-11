@@ -33,7 +33,7 @@ package achievements.display
 		 * Which achievement are we holding ?
 		 * @see AchievementsHandler::achievementList
 		 */
-		protected var datas:Array;
+		protected var achievement:Achievement;
 		
 		/**
 		 * Stores the children of this item
@@ -46,10 +46,10 @@ package achievements.display
 		 * @param	container parent of this item
 		 * @param	datas the datas to use to generate tehc achievement once this item is clicked
 		 */
-		public function AchievementItem(container:AchievementsScreen, datas:Array) 
+		public function AchievementItem(container:AchievementsScreen, achievement:Achievement) 
 		{
 			this.container = container;
-			this.datas = datas;
+			this.achievement = achievement;
 			
 			//Add an image inside
 			var image:Bitmap = new Bitmap(achievementsBitmapData);
@@ -66,7 +66,7 @@ package achievements.display
 			removeChildAt(0);
 			disable();
 			container = null;
-			datas = null;
+			achievement = null;
 			children = null;
 		}
 		
@@ -76,12 +76,12 @@ package achievements.display
 		 */
 		public function getDepth():int
 		{
-			return datas[1];
+			return achievement.depth;
 		}
 		
 		public function getMessage():String
 		{
-			return datas[2];
+			return achievement.message;
 		}
 		
 		/**
@@ -109,7 +109,10 @@ package achievements.display
 			if (e != null)
 			{
 				//Eventually, inform our parent we've been picked
-				container.stackAchievement(getAchievement());
+				container.stackAchievement(achievement);
+				
+				//TODO: remove
+				container.handler.game.hud.displayMessage(achievement.message);
 			}
 		}
 		
@@ -129,23 +132,6 @@ package achievements.display
 		{
 			this.filters = emptyFilter;
 			this.removeEventListener(MouseEvent.CLICK, activate);
-		}
-		
-		/**
-		 * Transform the array datas to an achievement object
-		 * TODO: why not compute the achievement from front and stop messing around with all this array gibber ?
-		 * 
-		 * @param	datas an array, respecting the row-structure of achievementsList
-		 * 
-		 * @return	an achievement object
-		 */
-		protected function getAchievement():Achievement
-		{
-			var achievement:Achievement = new datas[3]();
-			achievement.setGame(container.handler.game);
-			achievement.setParams(datas.slice(4));
-
-			return achievement;
 		}
 	}
 

@@ -12,6 +12,13 @@ package achievements
 	{
 		protected var game:Game;
 		
+		/**
+		 * Presentational attributes : store how the object is supposed to be displayed when embeded in an AchievementItem.
+		 */
+		public var depth:int;
+		public var childOf:int;
+		public var message:String;
+		
 		public function setGame(game:Game):void
 		{
 			this.game = game;

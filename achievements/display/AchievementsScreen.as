@@ -20,6 +20,7 @@ package achievements.display
 	 */
 	public final class AchievementsScreen extends Sprite
 	{
+		public const ACHIEVEMENTS_TO_PICK_PER_LEVEL:int = 3;
 		
 		/**
 		 * Defines the tree and weight of each tree for its layout
@@ -48,6 +49,8 @@ package achievements.display
 		 * the first one being the subtree id, the second one the item id in this particular subtree.
 		 */
 		public var idToItem:Vector.<Vector.<AchievementItem>> = new Vector.<Vector.<AchievementItem>>();
+		
+		public var numberOfAchievementsPicked:int = 0;
 		
 		/**
 		 * Create a new screen to display the achievements
@@ -166,7 +169,7 @@ package achievements.display
 					}
 					else
 					{
-						//Workaround for rounding bug
+						//Workaround for rounding bug causing lines to be badly displayed (achievement.y != child.y)
 						graphics.lineTo(child.x, achievement.y);
 					}
 				}
@@ -179,7 +182,11 @@ package achievements.display
 		{
 			handler.stackAchievement(achievement);
 			
-			dispatchEvent(new Event(Event.COMPLETE));
+			numberOfAchievementsPicked++;
+			
+			//If we picked all the achievements for now, keep going.
+			if(numberOfAchievementsPicked >= ACHIEVEMENTS_TO_PICK_PER_LEVEL)			
+				dispatchEvent(new Event(Event.COMPLETE));
 		}
 	}
 }

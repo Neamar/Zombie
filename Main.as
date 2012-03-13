@@ -54,12 +54,9 @@
 			game = new Game();
 			addChild(game);
 			
-			CONFIG::debug
-			{
-				//For debug :
-				monitor = new Monitor(game);
-				stage.addChild(monitor);
-			}
+			//For debug :
+			monitor = new Monitor(game);
+			stage.addChild(monitor);
 			
 			//Clip (avoid displaying all the level on fullscreen)
 			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);

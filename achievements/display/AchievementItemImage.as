@@ -34,7 +34,6 @@ package achievements.display
 
 		public static function getImageFor(achievement:Achievement):BitmapData
 		{
-			trace(achievement)
 			if (achievement is RangeAchievement)
 				return range_achievementsBitmapData;
 			else

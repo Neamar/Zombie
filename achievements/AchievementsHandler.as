@@ -182,6 +182,7 @@ package achievements
 		{
 			for each(var coordinates:Vector.<int> in achievementsUnlocked)
 			{
+				if(coordinates[0] != 0 || coordinates[1] != 0) //Do not re-apply handgun achievement (subtree 0, item 0), which is already applied by default on the player.
 					achievementsList[coordinates[0]][coordinates[1]].apply();
 			}
 		}

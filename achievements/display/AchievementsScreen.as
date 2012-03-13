@@ -86,7 +86,7 @@ package achievements.display
 			
 			//Display a rectangle for unselectable items
 			this.graphics.beginFill(0x222222, 1);
-			this.graphics.drawRect(maxDepth * WIDTH_PER_DEPTH, 0, Main.WIDTH, totalHeight);
+			this.graphics.drawRect((maxDepth + 1) * WIDTH_PER_DEPTH, 0, Main.WIDTH, totalHeight);
 			this.graphics.endFill();
 			
 			//Define the style for the graph lines

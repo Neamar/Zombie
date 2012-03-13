@@ -62,15 +62,20 @@ package
 		 */
 		public var hasFinishedPickingAchievements:Boolean = false;
 		
+		/**
+		 * ID of the level currently in play
+		 */
+		public var levelNumber:int = 0;
+		
 		public function Game() 
 		{
-			achievementHandler = new AchievementsHandler(this, 40);
-						
-			//Load first level
-			prepareLevel(FIRST_LEVEL);
+			achievementHandler = new AchievementsHandler(this);
 			
 			hud = new Hud();
 			addChild(hud);
+			
+			//Load first level
+			prepareLevel(FIRST_LEVEL);
 		}
 		
 		/**
@@ -91,6 +96,8 @@ package
 		protected function onSuccess(e:Event):void
 		{
 			destroyCurrentLevel();
+			
+			levelNumber++;
 			
 			prepareLevel(nextLevelName);
 		}
@@ -116,10 +123,20 @@ package
 		{
 			hasFinishedLoading = hasFinishedPickingAchievements = false;
 			
-			//Pick some achievements
-			achievementsScreen = achievementHandler.getAchievementsScreen();
-			achievementsScreen.addEventListener(Event.COMPLETE, achievementsPicked);
-			addChild(achievementsScreen);
+			if (levelNumber != 0)
+			{
+				//Pick some achievements
+				achievementsScreen = achievementHandler.getAchievementsScreen(levelNumber);
+				achievementsScreen.addEventListener(Event.COMPLETE, achievementsPicked);
+				removeChild(hud);
+				addChild(achievementsScreen);
+			}
+			else
+			{
+				//No achievements to pick for first level
+				hasFinishedPickingAchievements = true;
+			}
+			
 
 			//While loading next level in the background :
 			loader = new LevelLoader(levelName);
@@ -129,6 +146,7 @@ package
 		protected function achievementsPicked(e:Event):void
 		{
 			removeChild(achievementsScreen);
+			addChild(hud);
 			achievementsScreen.removeEventListener(Event.COMPLETE, achievementsPicked);
 			achievementsScreen.destroy();
 			achievementsScreen = null;

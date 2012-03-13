@@ -18,6 +18,8 @@ package achievements
 		public var depth:int;
 		public var childOf:int;
 		public var message:String;
+		public var subtreeId:int;
+		public var itemId:int;
 		
 		public function setGame(game:Game):void
 		{

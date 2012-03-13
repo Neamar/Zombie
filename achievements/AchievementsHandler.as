@@ -26,7 +26,9 @@ package achievements
 		 * where achievement is a Class (and not an object)
 		 * params is the params to use for the achievements
 		 * 
-		 * This is a simple convenience structure which will be converte to an Achievement array in the constructor.
+		 * This is a simple convenience structure which will be converted to an Achievement array in the constructor.
+		 * 
+		 * @see achievementsList
 		 */
 		public var achievementsListArray:Vector.<Array> = Vector.<Array>([
 		
@@ -105,7 +107,11 @@ package achievements
 		],
 		]);
 		
-		
+		/**
+		 * List of all the Achievements -- machine friendly.
+		 * 
+		 * @see achievementListArray
+		 */
 		public var achievementsList:Vector.<Vector.<Achievement>> = new Vector.<Vector.<Achievement>>();
 		
 		/**
@@ -114,25 +120,30 @@ package achievements
 		public var game:Game;
 		
 		/**
-		 * Store the achievement currently unlocked
+		 * Store the achievement currently unlocked.
+		 * However, we have to serialize this object to resume the game when the player reloads the Flash Player.
+		 * Therefore, if we store the Achievements objects straightfoward, we'd loose the ability to make comparisons (==)
+		 * So we store the coordinates (tree_id, item_id).
 		 */
-		private var achievementsUnlocked:Vector.<Achievement> = new Vector.<Achievement>();
+		private var achievementsUnlocked:Vector.<Vector.<int>> = Vector.<Vector.<int>>([Vector.<int>([0, 0])]);
 		
 		/**
 		 * Creates the handler.
 		 * @param	game to operate on
 		 * @param	startAtAchievement whether or not to directly unlock some achievement (to restore previous session for instance)
 		 */
-		public function AchievementsHandler(game:Game, startAtAchievement:int = 0) 
+		public function AchievementsHandler(game:Game) 
 		{
 			this.game = game;
 			
 			//Build achievements lists
 			//The array list is just for conveniently defining new achievements.
 			//We have to build a more usable structure for easier access.
+			var subtreeId:int = 0;
 			for each(var subtree:Array in achievementsListArray)
 			{
 				var subtreeVector:Vector.<Achievement> = new Vector.<Achievement>();
+				var itemId:int = 0;
 				for each(var datas:Array in subtree)
 				{
 					//Build the object
@@ -141,11 +152,14 @@ package achievements
 					achievement.childOf = datas[0];
 					achievement.depth = datas[1];
 					achievement.message = datas[2];
+					achievement.subtreeId = subtreeId;
+					achievement.itemId = itemId;
 					achievement.setParams(datas.slice(4));
 					subtreeVector.push(achievement);
-				}
-				
+					itemId++
+				}		
 				achievementsList.push(subtreeVector);
+				subtreeId++;
 			}
 			
 			//GC the array
@@ -156,12 +170,9 @@ package achievements
 		 * Create a new sprite, displaying all the achievements.
 		 * @return the interactive sprite with all the achievements.
 		 */
-		public function getAchievementsScreen():AchievementsScreen
+		public function getAchievementsScreen(levelNumber:int):AchievementsScreen
 		{
-			var unlocked:Vector.<Vector.<int>> = new Vector.<Vector.<int>>();
-			unlocked.push(Vector.<int>([0, 0]));
-			
-			return new AchievementsScreen(this, achievementsList, 3, unlocked)
+			return new AchievementsScreen(this, achievementsList, levelNumber, achievementsUnlocked)
 		}
 		
 		/**
@@ -169,9 +180,9 @@ package achievements
 		 */
 		public function applyDefaultsAchievements():void
 		{
-			for each(var achievement:Achievement in achievementsUnlocked)
+			for each(var coordinates:Vector.<int> in achievementsUnlocked)
 			{
-				achievement.apply();
+					achievementsList[coordinates[0]][coordinates[1]].apply();
 			}
 		}
 		
@@ -181,7 +192,7 @@ package achievements
 		 */
 		public function stackAchievement(achievement:Achievement):void
 		{
-			achievementsUnlocked.push(achievement);
+			achievementsUnlocked.push(Vector.<int>([achievement.subtreeId, achievement.itemId]));
 		}
 	}
 }

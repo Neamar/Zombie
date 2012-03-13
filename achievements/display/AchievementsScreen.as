@@ -60,6 +60,8 @@ package achievements.display
 		
 		public var numberOfAchievementsPicked:int = 0;
 		
+		public var achievementsHelp:AchievementsHelp = new AchievementsHelp();
+		
 		/**
 		 * Create a new screen to display the achievements
 		 * 
@@ -115,11 +117,17 @@ package achievements.display
 			{
 				idToItem[pos[0]][pos[1]].activate();
 			}
+			
+			//Add and hide the help
+			addChild(achievementsHelp);
+			achievementsHelp.visible = false;
 		}
 		
 		public function destroy():void
 		{
 			graphics.clear();
+			removeChild(achievementsHelp);
+			achievementsHelp.graphics.clear();
 			while (numChildren != 0)
 			{
 				(removeChildAt(0) as AchievementItem).destroy();				
@@ -188,7 +196,34 @@ package achievements.display
 				}
 			}
 			
+			achievement.addEventListener(MouseEvent.MOUSE_OVER, displayHelp);
+			
 			return achievement;
+		}
+		
+		/**
+		 * Display the tooltip
+		 * @param	item the item fir which help should be displayed
+		 */
+		public function displayHelp(e:MouseEvent):void
+		{
+			var item:AchievementItem = (e.target) as AchievementItem;
+			
+			achievementsHelp.visible = true;
+			achievementsHelp.x = Math.min(Main.WIDTH - achievementsHelp.width - 2, item.x + item.width/2);
+			if (item.y + item.height/2 + 2 + achievementsHelp.height > Main.WIDTH)
+				achievementsHelp.y = item.y + item.height/2 - achievementsHelp.height - 2;
+			else
+				achievementsHelp.y = item.y + item.height/2 + 5;
+				
+			item.addEventListener(MouseEvent.MOUSE_OUT, removeHelp);
+		}
+		
+		public function removeHelp(e:MouseEvent):void
+		{
+			achievementsHelp.visible = false;
+			
+			(e.target as AchievementItem).removeEventListener(MouseEvent.MOUSE_OUT, removeHelp);
 		}
 		
 		public function stackAchievement(achievement:Achievement):void

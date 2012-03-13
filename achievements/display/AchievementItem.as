@@ -60,14 +60,10 @@ package achievements.display
 			
 			//As a default, black-and-white the item to show it is unavailable.
 			this.filters = defaultFilter;
-			
-			//Display tooltip on mouseover
-			this.addEventListener(MouseEvent.MOUSE_OVER, displayTooltip);
 		}
 		
 		public function destroy():void
 		{
-			this.removeEventListener(MouseEvent.MOUSE_OVER, displayTooltip);
 			removeChildAt(0);
 			disable();
 			container = null;
@@ -134,12 +130,6 @@ package achievements.display
 		{
 			this.filters = emptyFilter;
 			this.removeEventListener(MouseEvent.CLICK, activate);
-		}
-		
-		protected function displayTooltip(e:Event):void
-		{
-			//TODO: remove
-			container.handler.game.hud.displayMessage(achievement.message);
 		}
 	}
 

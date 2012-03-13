@@ -1,6 +1,7 @@
 package achievements.display 
 {
 	import achievements.Achievement;
+	import achievements.weapon.RangeAchievement;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -8,6 +9,9 @@ package achievements.display
 	import flash.events.MouseEvent;
 	import flash.filters.ColorMatrixFilter;
 	import flash.filters.GlowFilter;
+	import flash.utils.Dictionary;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	
 	/**
 	 * An AchievementItem.
@@ -18,10 +22,6 @@ package achievements.display
 	 */
 	public final class AchievementItem extends Sprite 
 	{
-		[Embed(source = "../../assets/achievements/achievement.png")]
-		public static const achievementsClass:Class;
-		public static const achievementsBitmapData:BitmapData = (new AchievementItem.achievementsClass).bitmapData;
-
 		public static const emptyFilter:Array = [];
 		public static const activatedFilter:Array = [new GlowFilter(0x0FF00)];
 		public static const defaultFilter:Array = [new ColorMatrixFilter([1 / 3, 1 / 3, 1 / 3, 0, 0, 1 / 3, 1 / 3, 1 / 3, 0, 0, 1 / 3, 1 / 3, 1 / 3, 0, 0, 0, 0, 0, 1, 0])];
@@ -53,7 +53,7 @@ package achievements.display
 			this.achievement = achievement;
 			
 			//Add an image inside
-			var image:Bitmap = new Bitmap(achievementsBitmapData);
+			var image:Bitmap = new Bitmap(AchievementItemImage.getImageFor(achievement));
 			image.x = -image.width / 2;
 			image.y = -image.height / 2;
 			addChild(image);

@@ -78,7 +78,7 @@ package entity
 		 */
 		public static const RESOLUTION:int = Heatmap.RESOLUTION;
 		public static const DEFAULT_COLOR:int = Heatmap.DEFAULT_COLOR;
-		public static const MAX_INFLUENCE:int = Heatmap.MAX_INFLUENCE;
+		public static const MAX_INFLUENCE:int = Heatmap.MAX_INFLUENCE - 40;
 		
 		/**
 		 * The level the zombies live on

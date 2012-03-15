@@ -18,13 +18,30 @@
 	
 	public final class Main extends Sprite
 	{
+		/**
+		 * Width used by the game.
+		 * TODO : pause game if window is smaller
+		 */
 		public static const WIDTH:int = 500;
+		
+		/**
+		 * Area covered by the player's light; technically this is the gaming area since
+		 * anything beyond is here only to provide graphical background
+		 */
 		public static const GAMING_AREA:int = 400;
+		
+		/**
+		 * Half width, pre-computed
+		 */
 		public static const WIDTH2:int = WIDTH / 2;
+		
+		/**
+		 * Half-width of the gaming area, pre-computed
+		 */
 		public static const GAMING_AREA2:int = GAMING_AREA / 2;
 		
 		/**
-		 * Current game.
+		 * Current game being played
 		 */
 		protected var game:Game;
 		
@@ -54,12 +71,9 @@
 			game = new Game();
 			addChild(game);
 			
-			CONFIG::debug
-			{
-				//For debug :
-				monitor = new Monitor(game);
-				stage.addChild(monitor);
-			}
+			//For debug :
+			monitor = new Monitor(game);
+			stage.addChild(monitor);
 			
 			//Clip (avoid displaying all the level on fullscreen)
 			scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.WIDTH);

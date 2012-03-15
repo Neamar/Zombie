@@ -10,26 +10,20 @@ package achievements.weapon
 	 */
 	public class WeaponAchievement extends Achievement
 	{
-		/**
-		 * The weapon the class applies on
-		 */
-		protected var weapon:Weapon;
-		
+		protected var weaponClass:Class
 		/**
 		 * The new value to use
 		 */
 		protected var value:int;
 		
 		/**
-		 * Get the player's weapon from the class
-		 * @param	weapon
-		 * @return null if weapon does not exist in player arsenal
+		 * Find the weapon in the list
 		 */
-		protected function getWeaponByClass(weapon:Class):Weapon
+		public function get weapon():Weapon
 		{
 			for each (var w:weapon.Weapon in player.availableWeapons)
 			{
-				if (w is weapon)
+				if (w is weaponClass)
 					return w;
 			}
 			
@@ -42,7 +36,7 @@ package achievements.weapon
 		 */
 		public override function setParams(params:Array):void
 		{
-			weapon = getWeaponByClass(params[0]);
+			weaponClass = params[0];
 			value = params[1];
 		}
 	}

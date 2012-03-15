@@ -97,14 +97,6 @@ package entity
 		public static const SWITCH:int = 4;
 		
 		/**
-		 * Special constants
-		 * TODO : those ones should not be on the player class.
-		 */
-		public static const DEBUG:int = 10;
-		public static const FORCE_WIN:int = 11;
-		public static const FULLSCREEN:int = 12;
-		
-		/**
 		 * Key-binding for moving.
 		 */
 		public var bindings:Object = {
@@ -116,9 +108,6 @@ package entity
 			/*j		key */74: DOWN,
 			/*k		key */75: UP,
 			/*tab	key */9	: SWITCH,
-			/*f		key */70: FULLSCREEN,
-			/*t		key */84: DEBUG,
-			/*w		key */87: FORCE_WIN,
 			/*r		key */82: RELOAD,
 			/*space	key */32: RELOAD};
 		
@@ -323,7 +312,13 @@ package entity
 			lightMask.filters = [];
 			
 			bloodRush.bitmapData.dispose();
-			removeListeners();
+			
+			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			
 			this.availableWeapons.length = 0;
 			this.currentWeapon = null;
@@ -383,18 +378,6 @@ package entity
 				{
 					onMouseWheel();
 				}
-				else if (action == DEBUG)
-				{
-					(parent as Level).toggleDebugMode();
-				}
-				else if (action == FORCE_WIN)
-				{
-					(parent as Level).dispatchWin();
-				}
-				else if (action == FULLSCREEN)
-				{
-					stage.displayState = StageDisplayState.FULL_SCREEN;
-				}
 				else /* if action == UP || action == DOWN */
 				{
 					currentAction = action;
@@ -403,10 +386,6 @@ package entity
 			else if (e.keyCode >= 49 && e.keyCode < 49 + availableWeapons.length)
 			{
 				changeWeapon(e.keyCode - 49);
-			}
-			else
-			{
-				trace('Unknown key : ', e.keyCode);
 			}
 		}
 		
@@ -466,8 +445,8 @@ package entity
 			var hasMoved:Boolean = false;
 			
 			//Shall we turn the player ?
-			var angle:Number = Math.atan2(y - parent.mouseY, x - parent.mouseX);
-			var newRotation:Number = (Math.PI + angle) * TO_DEGREE;
+			var angle:Number = Math.PI + Math.atan2(y - parent.mouseY, x - parent.mouseX);
+			var newRotation:Number = angle * TO_DEGREE;
 			if (rotation != newRotation)
 			{
 				rotation = newRotation;
@@ -554,7 +533,7 @@ package entity
 				maskGraphics.drawRect(x - Main.WIDTH2, y - Main.WIDTH2, Main.WIDTH, Main.WIDTH);
 				
 				//And his line of sight
-				maskGraphics.moveTo(x + (RADIUS + 2) * Math.cos(startAngle), y + (RADIUS + 2) * Math.sin(startAngle));
+				maskGraphics.moveTo(x + RADIUS*Math.cos(angle), y + RADIUS*Math.sin(angle));
 				transformationMatrix.tx = x;
 				transformationMatrix.ty = y;
 				
@@ -574,7 +553,7 @@ package entity
 					}
 					maskGraphics.lineTo(x + radius * Math.cos(theta), y + radius * Math.sin(theta));
 				}
-				maskGraphics.lineTo(x + (RADIUS + 2) * Math.cos(endAngle), y + (RADIUS + 2) * Math.sin(endAngle));
+				maskGraphics.lineTo(x + RADIUS*Math.cos(angle), y + RADIUS*Math.sin(angle));
 				maskGraphics.endFill();
 				
 				if (hasShot > 0)
@@ -664,30 +643,15 @@ package entity
 		protected function onAddedToStage(e:Event):void
 		{
 			//Add all the listeners (key, mouse...)
-			addListeners();
-			
-			//Clean the event
-			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		}
-		
-		protected function addListeners():void
-		{
 			stage.addEventListener(Event.ENTER_FRAME, onFrame);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-		}
-		
-		protected function removeListeners():void
-		{
-			stage.removeEventListener(Event.ENTER_FRAME, onFrame);
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			
+			//Clean the event
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 	}
 }

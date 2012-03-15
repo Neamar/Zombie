@@ -11,14 +11,29 @@ package achievements
 	public class Achievement
 	{
 		protected var game:Game;
-		protected var level:Level;
-		protected var player:Player;
+		
+		/**
+		 * Presentational attributes : store how the object is supposed to be displayed when embeded in an AchievementItem.
+		 */
+		public var depth:int;
+		public var childOf:int;
+		public var message:String;
+		public var subtreeId:int;
+		public var itemId:int;
 		
 		public function setGame(game:Game):void
 		{
 			this.game = game;
-			level = game.level;
-			player = level.player;
+		}
+		
+		public function get level():Level
+		{
+			return game.level;
+		}
+		
+		public function get player():Player
+		{
+			return game.level.player;
 		}
 		
 		/**

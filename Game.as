@@ -5,7 +5,9 @@ package
 	import entity.Player;
 	import entity.Zombie;
 	import flash.display.Sprite;
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import levels.Level;
 	import levels.LevelLoader;
 	
@@ -82,6 +84,22 @@ package
 		public var levelNumber:int = 0;
 		
 		/**
+		 * Special constants
+		 */
+		public static const DEBUG:int = 10;
+		public static const FORCE_WIN:int = 11;
+		public static const FULLSCREEN:int = 12;
+		
+		/**
+		 * Key-binding for the game.
+		 */
+		public var bindings:Object = {
+			/*f		key */70: FULLSCREEN, //TODO: allow fullscreen toggle while viewing achievement
+			/*t		key */84: DEBUG,
+			/*w		key */87: FORCE_WIN
+		};
+		
+		/**
 		 * Var initialisation + load first level
 		 */
 		public function Game() 
@@ -93,6 +111,38 @@ package
 			
 			//Load first level
 			prepareLevel(FIRST_LEVEL);
+			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		public function onAddedToStage(e:Event):void
+		{
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			
+			//Clean the event
+			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		public function onKeyDown(e:KeyboardEvent):void
+		{
+			var action:int = bindings[e.keyCode];
+			
+			if (action == DEBUG && level != null)
+			{
+				level.toggleDebugMode();
+			}
+			else if (action == FORCE_WIN && level != null)
+			{
+				e.stopImmediatePropagation();
+				level.dispatchWin();
+			}
+			else if (action == FULLSCREEN)
+			{
+				if(stage.displayState == StageDisplayState.NORMAL)
+					stage.displayState = StageDisplayState.FULL_SCREEN;
+				else
+					stage.displayState = StageDisplayState.NORMAL;
+			}
 		}
 		
 		/**

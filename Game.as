@@ -12,13 +12,23 @@ package
 	/**
 	 * There is one game per session.
 	 * This class embeds the levels and remember the unlocked achievements from level to level.
-	 *
+	 * It also contains the HUD to display information
+	 * 
+	 * Workflow to load new level:
+	 * - prepareLevel: start loading the level and display the achievements tree;
+	 * - achievementsPicked: display the loader if level is stille not loading
+	 * - addLevel: once the level is loaded and the achievements are picked, display the levels
+	 * - PLAY!
+	 * 		- onFailure: level failed
+	 * 		- onSuccess: level win.
+	 * 
 	 * @author Neamar
 	 */
 	public final class Game extends Sprite
 	{
 		/**
-		 * Name of the first level to load
+		 * Name of the first level to load.
+		 * Levels are stored in src/assets/levels/{level_name}
 		 */
 		public static const FIRST_LEVEL:String = "area_Intro";
 		
@@ -29,26 +39,30 @@ package
 		
 		/**
 		 * Loader used to generate current level.
+		 * We need to keep a reference to generate a new level if the current one is lost -- e.g., played died.
 		 */
 		public var loader:LevelLoader;
 		
 		/**
-		 * Screen with all the achievements; null when not displayed
+		 * Screen with all the achievements; null when not displayed.
+		 * Is is GC during the level.
 		 */
 		public var achievementsScreen:AchievementsScreen = null;
 		
 		/**
-		 * Handler for the achievements of the level.
+		 * Handler for all the achievements.
+		 * Unique for all the game.
 		 */
 		public var achievementHandler:AchievementsHandler;
 		
 		/**
-		 * Name of the next level to load
+		 * Name of the next level to load.
 		 */
 		public var nextLevelName:String;
 		
 		/**
-		 * Hud to be displayed
+		 * HUD displayed.
+		 * Unique for all the game.
 		 */
 		public var hud:Hud;
 		
@@ -67,6 +81,9 @@ package
 		 */
 		public var levelNumber:int = 0;
 		
+		/**
+		 * Var initialisation + load first level
+		 */
 		public function Game() 
 		{
 			achievementHandler = new AchievementsHandler(this);
@@ -90,7 +107,7 @@ package
 		}
 		
 		/**
-		 * Call when the WIN event is dispatched.
+		 * Called when the WIN event is dispatched.
 		 * Load the next level
 		 */
 		protected function onSuccess(e:Event):void
@@ -104,11 +121,10 @@ package
 		
 		/**
 		 * Clean up the level currently displayed.
-		 * It should be eligible for GC.
+		 * This function should render the level eligible for GC.
 		 */
 		protected function destroyCurrentLevel():void
 		{
-			//Render the level eligible for GC :
 			level.destroy();
 			removeChild(level);
 			removeListeners(level);
@@ -116,14 +132,28 @@ package
 		}
 		
 		/**
-		 * Call when a new level should be loaded
-		 * @param	levelName
+		 * Called when a new level should be loaded
+		 * @param	levelName name of the level to load
 		 */
 		protected function prepareLevel(levelName:String):void
 		{
+			//Re-set flags
 			hasFinishedLoading = hasFinishedPickingAchievements = false;
 			
-			if (levelNumber != 0)
+			//Start loading next level
+			//Note: for now, we do this in the background, since the player may be picking some achievements	
+			loader = new LevelLoader(levelName);
+			loader.addEventListener(Event.COMPLETE, addLevel);
+			
+			if (levelNumber == 0)
+			{
+				//No achievements to pick for first level
+				hasFinishedPickingAchievements = true;
+				
+				//Display the loader
+				addChild(loader);
+			}
+			else
 			{
 				//Pick some achievements
 				achievementsScreen = achievementHandler.getAchievementsScreen(levelNumber);
@@ -131,16 +161,6 @@ package
 				removeChild(hud);
 				addChild(achievementsScreen);
 			}
-			else
-			{
-				//No achievements to pick for first level
-				hasFinishedPickingAchievements = true;
-			}
-			
-
-			//While loading next level in the background :
-			loader = new LevelLoader(levelName);
-			loader.addEventListener(Event.COMPLETE, addLevel);
 		}
 		
 		protected function achievementsPicked(e:Event):void
@@ -185,7 +205,7 @@ package
 			//Store next level name
 			nextLevelName = loader.params.nextLevelName;
 			
-			//Add the level
+			//Create the level and add it :
 			level = loader.getLevel()
 			addListeners(level);
 			addChild(level);
@@ -197,7 +217,7 @@ package
 		}
 		
 		/**
-		 * All all the listeners on the level
+		 * Add all the listeners on the level
 		 * @param	level
 		 */
 		private function addListeners(level:Level):void

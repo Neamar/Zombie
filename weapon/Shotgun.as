@@ -2,6 +2,7 @@ package weapon
 {
 	import entity.Player;
 	import levels.Level;
+	import sounds.SoundManager;
 	
 	/**
 	 * Shotgun weapon
@@ -27,6 +28,9 @@ package weapon
 			halfAmplitude = 10;
 			
 			super(level, player);
+			shotSoundId = SoundManager.SHOTGUN_SHOT;
+			reloadSoundId = SoundManager.SHOTGUN_RELOAD;
+			noAmmoSoundId = SoundManager.SHOTGUN_NOAMMO;
 		}
 		
 		public override function fire():int

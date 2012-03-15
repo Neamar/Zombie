@@ -5,6 +5,7 @@
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import sounds.SoundManager;
 	
 	/**
 	 * "When in doubt, call an airstrike."
@@ -61,6 +62,8 @@
 		private function init(e:Event = null):void
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
+			
+			SoundManager.init();
 			
 			//Forbid stage resizing
 			stage.align = StageAlign.TOP_LEFT;

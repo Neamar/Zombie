@@ -3,6 +3,7 @@ package weapon
 	import entity.Player;
 	import entity.Zombie;
 	import levels.Level;
+	import sounds.SoundManager;
 	
 	/**
 	 * Railgun weapon
@@ -19,6 +20,8 @@ package weapon
 			ammoInCurrentMagazine = 50;
 			
 			super(level, player);
+			shotSoundId = SoundManager.RAILGUN_SHOT;
+			noAmmoSoundId = SoundManager.RAILGUN_NOAMMO;
 		}
 		
 		public override function fire():int

@@ -19,8 +19,8 @@ package weapon
 			magazineNumber = player.defaultMagazines.handgun;
 			super(level, player);
 			
-			firingSoundId = SoundManager.HANDGUN_NOAMMO;
-			reloadSoundId = SoundManager.HANDGUN_NOAMMO;
+			shotSoundId = SoundManager.HANDGUN_SHOT;
+			reloadSoundId = SoundManager.HANDGUN_RELOAD;
 			noAmmoSoundId = SoundManager.HANDGUN_NOAMMO;
 		}
 		

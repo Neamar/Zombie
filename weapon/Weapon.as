@@ -57,7 +57,7 @@ package weapon
 		 */
 		public var automaticReload:Boolean = false;
 		
-		public var firingSoundId:int = -1;
+		public var shotSoundId:int = -1;
 		public var noAmmoSoundId:int = -1;
 		public var reloadSoundId:int = -1;
 		
@@ -108,6 +108,7 @@ package weapon
 				if (ammoInCurrentMagazine == 0 && automaticReload)
 					reload();
 				
+				SoundManager.trigger(shotSoundId);
 				return true;
 			}
 			else
@@ -130,6 +131,8 @@ package weapon
 				//Forbid firing before reload "finish".
 				//To do this, emulate a shoot.
 				lastShot = player.frameNumber + reloadTime - cooldown;
+				
+				SoundManager.trigger(reloadSoundId);
 			}
 		}
 		

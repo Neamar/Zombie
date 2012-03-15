@@ -72,6 +72,7 @@ package achievements.display
 		 */
 		public function AchievementsScreen(handler:AchievementsHandler, tree:Vector.<Vector.<Achievement>>, maxDepth:int, unlocked:Vector.<Vector.<int>>)
 		{
+			maxDepth = 10;
 			this.handler = handler;
 			this.maxDepth = maxDepth;
 			

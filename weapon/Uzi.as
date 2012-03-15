@@ -2,6 +2,7 @@ package weapon
 {
 	import entity.Player;
 	import levels.Level;
+	import sounds.SoundManager;
 	
 	/**
 	 * Uzi weapon
@@ -20,6 +21,9 @@ package weapon
 			
 			super(level, player);
 			range = 100;
+			shotSoundId = SoundManager.UZI_SHOT;
+			reloadSoundId = SoundManager.UZI_RELOAD;
+			noAmmoSoundId = SoundManager.UZI_NOAMMO;
 		}
 		
 		public override function fire():int

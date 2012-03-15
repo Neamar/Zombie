@@ -89,6 +89,7 @@ package
 		public static const DEBUG:int = 10;
 		public static const FORCE_WIN:int = 11;
 		public static const FULLSCREEN:int = 12;
+		public static const PAUSE:int = 13;
 		
 		/**
 		 * Key-binding for the game.
@@ -96,7 +97,8 @@ package
 		public var bindings:Object = {
 			/*f		key */70: FULLSCREEN, //TODO: allow fullscreen toggle while viewing achievement
 			/*t		key */84: DEBUG,
-			/*w		key */87: FORCE_WIN
+			/*w		key */87: FORCE_WIN,
+			/*p		key */80: PAUSE
 		};
 		
 		/**
@@ -135,6 +137,13 @@ package
 			{
 				e.stopImmediatePropagation();
 				level.dispatchWin();
+			}
+			else if (action == PAUSE && level != null)
+			{
+				if (level.hasEventListener(Event.ENTER_FRAME))
+					level.removeEventListener(Event.ENTER_FRAME, level.onFrame);
+				else
+					level.addEventListener(Event.ENTER_FRAME, level.onFrame);
 			}
 			else if (action == FULLSCREEN)
 			{

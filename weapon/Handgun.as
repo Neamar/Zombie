@@ -13,16 +13,19 @@ package weapon
 	public final class Handgun extends JungleStyleWeapon
 	{
 		public function Handgun(level:Level, player:Player)
-		{
+		{		
 			cooldown = 30;
 			magazineCapacity = 3;
 			magazineNumber = player.defaultMagazines.handgun;
 			super(level, player);
+			
+			firingSoundId = SoundManager.HANDGUN_NOAMMO;
+			reloadSoundId = SoundManager.HANDGUN_NOAMMO;
+			noAmmoSoundId = SoundManager.HANDGUN_NOAMMO;
 		}
 		
 		public override function fire():int
 		{
-			SoundManager.trigger(SoundManager.HANDGUN_NOAMMO);
 			if (beforeFiring())
 			{
 				raycast(0);

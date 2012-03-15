@@ -1,6 +1,7 @@
 package sounds 
 {
 	import flash.media.Sound;
+	import flash.media.SoundChannel;
 	/**
 	 * ...
 	 * @author Paul
@@ -13,15 +14,25 @@ package sounds
 		
 		public static const HANDGUN_NOAMMO:int = 0;
 		
-		protected static const soundsList:Vector.<Class> = Vector.<Class>(
+		protected static const soundsList:Vector.<Vector.<Class>> = Vector.<Vector.<Class>>(
 		[
-			handgun_noAmmo
+			Vector.<Class>([handgun_noAmmo])
 		]);
 		
-		public static function trigger(soundName:int):void
+		/**
+		 * Trigger a sound.
+		 * @param	soundName id of the sound -- most probably a static constant from this class.
+		 * @return a new sound channel to stop the sound
+		 */
+		public static function trigger(soundId:int):SoundChannel
 		{
-			var sound:Sound = new soundsList[soundName]() as Sound;
-			sound.play();
+			if (soundId == -1)
+				return null;
+				
+			var alternativesSound:Vector.<Class> = soundsList[soundId];
+			
+			var sound:Sound = new alternativesSound[Math.floor(Math.random() * alternativesSound.length)]() as Sound;
+			return sound.play();
 		}
 	}
 

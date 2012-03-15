@@ -3,6 +3,7 @@ package weapon
 	import entity.Player;
 	import entity.Zombie;
 	import levels.Level;
+	import sounds.SoundManager;
 	
 	/**
 	 * ...
@@ -56,6 +57,10 @@ package weapon
 		 */
 		public var automaticReload:Boolean = false;
 		
+		public var firingSoundId:int = -1;
+		public var noAmmoSoundId:int = -1;
+		public var reloadSoundId:int = -1;
+		
 		public function Weapon(level:Level, player:Player)
 		{
 			this.parent = level;
@@ -100,15 +105,18 @@ package weapon
 				lastShot = player.frameNumber;
 				ammoInCurrentMagazine--;
 				
-				if (automaticReload && ammoInCurrentMagazine == 0)
-				{
+				if (ammoInCurrentMagazine == 0 && automaticReload)
 					reload();
-				}
 				
 				return true;
 			}
+			else
+			{
+				SoundManager.trigger(noAmmoSoundId);
+				return false;
+			}
 			
-			return false;
+			
 		}
 		
 		public function reload():void

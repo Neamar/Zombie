@@ -2,6 +2,7 @@ package weapon
 {
 	import entity.Player;
 	import levels.Level;
+	import sounds.SoundManager;
 	
 	/**
 	 * Handgun weapon
@@ -21,6 +22,7 @@ package weapon
 		
 		public override function fire():int
 		{
+			SoundManager.trigger(SoundManager.HANDGUN_NOAMMO);
 			if (beforeFiring())
 			{
 				raycast(0);

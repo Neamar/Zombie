@@ -116,7 +116,7 @@ package entity
 			/*j		key */74: DOWN,
 			/*k		key */75: UP,
 			/*tab	key */9	: SWITCH,
-			/*f		key */70: FULLSCREEN,
+			/*f		key */70: FULLSCREEN, //TODO: allow fullscreen toggle while viewing achievement
 			/*t		key */84: DEBUG,
 			/*w		key */87: FORCE_WIN,
 			/*r		key */82: RELOAD,
@@ -527,7 +527,6 @@ package entity
 						if (currentPlayerSpriteOffset < 1)
 							currentPlayerSpriteOffset += 16;
 					}
-					trace(currentPlayerSpriteOffset);
 					playerSpritesRect.y = currentPlayerSpriteOffset * 28;
 					playerSprites.scrollRect = playerSpritesRect;
 				}

@@ -34,26 +34,26 @@ package achievements
 		
 		//Handgun achievement tree
 		[
-			[-1, 0, "Handgun unlocked.", UnlockAchievement, Handgun],
-			[0, 1, "Increased range for the handgun", RangeAchievement, Handgun, 250],
+			[-1, 0, "Unlock the Handgun", UnlockAchievement, Handgun],
+			[0, 1, "Increase range for the handgun", RangeAchievement, Handgun, 250],
 			[1, 2, "Infinite range for the handgun", RangeAchievement, Handgun, 3000],
 			[0, 1, "Higher capacity for the handgun: 6 bullets", CapacityAchievement, Handgun, 6],
 			[3, 2, "Higher capacity for the handgun: 10 bullets", CapacityAchievement, Handgun, 10],
 			[4, 4, "Higher capacity for the handgun : 16 bullets", CapacityAchievement, Handgun, 16],
 			[0, 1, "Jungle-style reload for the handgun", JungleAchievement, Handgun, true],
 			[0, 2, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 20],
-			[7, 3, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 15],
+			[7, 3, "Event faster cooldown for the handgun", CooldownAchievement, Handgun, 15],
 			[0, 4, "Faster reload for the handgun", ReloadAchievement, Handgun, 30],
 			[6, 4, "Automatic reload for the handgun", AutomaticAchievement, Handgun, true],
-			[8, 9, "Faster cooldown for the handgun", CooldownAchievement, Handgun, 8],
-			[9, 9, "Faster reload for the handgun", ReloadAchievement, Handgun, 15],
+			[8, 9, "Incredibly faster cooldown for the handgun", CooldownAchievement, Handgun, 8],
+			[9, 9, "Incredibly faster reload for the handgun", ReloadAchievement, Handgun, 15],
 		],
 		
 		//Shotgun achievement tree
 		[
-			[-1, 1, "Shotgun unlocked.", UnlockAchievement, Shotgun],
-			[0, 2, "Increased range for the shotgun", RangeAchievement, Shotgun, 200],
-			[1, 3, "Increased range for the shotgun", RangeAchievement, Shotgun, 300],
+			[-1, 1, "Unlock the Shotgun", UnlockAchievement, Shotgun],
+			[0, 2, "Increase range for the shotgun", RangeAchievement, Shotgun, 200],
+			[1, 3, "Increase range for the shotgun", RangeAchievement, Shotgun, 300],
 			[2, 6, "Infinite range for the shotgun", RangeAchievement, Shotgun, 3000],
 			[0, 2, "Higher capacity for the shotgun : 2 bullets", CapacityAchievement, Shotgun, 2],
 			[4, 4, "Higher capacity for the shotgun : 6 bullets", CapacityAchievement, Shotgun, 6],

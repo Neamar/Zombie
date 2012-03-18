@@ -76,11 +76,6 @@ package levels
 		public var heatmap:Heatmap;
 		
 		/**
-		 * Ambient sound
-		 */
-		public var ambientSound:SoundChannel = null;
-		
-		/**
 		 * Is Help needed ?
 		 */
 		protected var levelHelper:LevelHelper = null;
@@ -138,8 +133,6 @@ package levels
 			if (params.displayHelp)
 				levelHelper = new LevelHelper(this);
 			
-			if(params.ambientSound != null && params.ambientSound.bytesTotal != 0)
-				ambientSound = params.ambientSound.play();
 		}
 		
 		public function destroy():void
@@ -148,9 +141,6 @@ package levels
 				levelHelper.destroy();
 				
 			player.destroy();
-			
-			if(ambientSound != null)
-				ambientSound.stop();
 			
 			//Remove all children for faster GC
 			while (numChildren > 0)

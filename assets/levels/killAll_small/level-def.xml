@@ -17,8 +17,5 @@
 		<zombies>
 			<spawn-zone x="0" y="0" width="400" height="760" number="75" />
 		</zombies>
-		<sounds>
-			<ambient>ambient.mp3</ambient>
-		</sounds>
 	</technical>
 </level>

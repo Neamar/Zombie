@@ -20,8 +20,5 @@
 			<spawn-zone x="215" y="215" width="1100" height="1100" number="150" />
 			<spawn-zone x="740" y="530" width="525" height="50" number="25" behemoth-probability="10" />
 		</zombies>
-		<sounds>
-			<ambient>ambient.mp3</ambient>
-		</sounds>
 	</technical>
 </level>

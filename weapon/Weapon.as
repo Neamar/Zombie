@@ -136,8 +136,12 @@ package weapon
 		{
 			var theta:Number = player.rotation * Player.TO_RADIANS + deltaAngle;
 			var hitmapTest:Function = player.hitmapTest;
-			var x:int = player.x;
-			var y:int = player.y;
+			
+			//Warning : start is not at player.x, player.y but at the position of the gun on the sprite
+			//(around 28,5  relative to sprite center, not taking into account weapon length)
+			//Using basic trigonometry, this gives 10° angle and 28.44 length
+			var x:int = player.x + 28.44 * Math.cos(0.1767 + player.rotation * Player.TO_RADIANS);
+			var y:int = player.y + 28.44 * Math.sin(0.1767 + player.rotation * Player.TO_RADIANS);
 			
 			var radius:int = 0;
 			var cos:Number = Math.cos(theta);

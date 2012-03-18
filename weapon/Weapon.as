@@ -113,7 +113,7 @@ package weapon
 			}
 			else
 			{
-				SoundManager.trigger(noAmmoSoundId);
+				SoundManager.triggerNoRepeat(noAmmoSoundId);
 				return false;
 			}
 			

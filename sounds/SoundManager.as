@@ -1,5 +1,6 @@
 package sounds 
 {
+	import flash.events.Event;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.utils.describeType;
@@ -117,6 +118,7 @@ package sounds
 		public static const RAILGUN_SHOT:int = 10;
 		
 		protected static const soundsList:Vector.<Vector.<Class>> = new Vector.<Vector.<Class>>(RAILGUN_SHOT + 1);
+		protected static const soundsPlaying:Vector.<SoundChannel> = new Vector.<SoundChannel>(RAILGUN_SHOT + 1);
 		
 		public static function init():void
 		{
@@ -142,6 +144,7 @@ package sounds
 		/**
 		 * Trigger a sound.
 		 * @param	soundName id of the sound -- most probably a static constant from this class.
+		 * 
 		 * @return a new sound channel to stop the sound
 		 */
 		public static function trigger(soundId:int):SoundChannel
@@ -153,6 +156,37 @@ package sounds
 			
 			var sound:Sound = new alternativesSound[Math.floor(Math.random() * alternativesSound.length)]() as Sound;
 			return sound.play();
+		}
+		
+		/**
+		 * Trigger a sound, forbidding repetition of this particulat sound until the current one is finished
+		 * @param	soundName id of the sound -- most probably a static constant from this class.
+		 * 
+		 * @return a new sound channel to stop the sound
+		 */
+		public static function triggerNoRepeat(soundId:int):SoundChannel
+		{
+			if (soundsPlaying[soundId] == null)
+			{
+				var soundChannel:SoundChannel = trigger(soundId);
+				soundsPlaying[soundId] = soundChannel;
+				soundChannel.addEventListener(Event.SOUND_COMPLETE, onSoundCompleted);
+				return soundChannel;
+			}
+			else
+				return null;
+		}
+		
+		private static function onSoundCompleted(e:Event):void
+		{
+			(e.target as SoundChannel).removeEventListener(Event.SOUND_COMPLETE, onSoundCompleted);
+			for (var i:int = 0; i < soundsPlaying.length; i++ )
+			{
+				if (soundsPlaying[i] == e.target)
+				{
+					soundsPlaying[i] = null;
+				}
+			}
 		}
 	}
 

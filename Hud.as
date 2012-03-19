@@ -21,6 +21,12 @@ package
 		{
 			addChild(AmmosBitmap);
 			AmmosBitmap.scaleX = AmmosBitmap.scaleY = 1 / 2;
+			
+			addChild(scoreTextfield);
+			scoreTextfield.text = "0";
+			scoreTextfield.selectable = false;
+			scoreTextfield.textColor = 0xffffff;
+			scoreTextfield.scaleX = scoreTextfield.scaleY = 2;
 		}
 /*
  * WEAPONS SECTION
@@ -93,7 +99,40 @@ package
 			AmmosBitmap.scrollRect = ammosScrollRect;
 		}
 
+/**
+ * SCORE SECTION
+ */	
+		protected var scoreTextfield:TextField = new TextField();
+		protected var score:int = 0;
+		protected var hasShotWithoutKilling:Boolean = false;
+		protected var currentCombo:int = 1;
 		
+		/**
+		 * If you shoot, and last shoot did not kill any zombies, revert to default combo.
+		 * Ele, register the shot for next time.
+		 */
+		public function updateScoreShot(e:Event):void
+		{
+			if (hasShotWithoutKilling)
+			{
+				//Last shot killed no zombies : revert to default combo
+				currentCombo = 1;
+			}
+			
+			hasShotWithoutKilling = true;
+		}
+		
+		/**
+		 * We killed a zombie ; update the score
+		 * @param	e
+		 */
+		public function updateScoreKill(e:Event):void
+		{
+			score += currentCombo;
+			scoreTextfield.text = score.toString();
+			currentCombo++;
+			hasShotWithoutKilling = false;
+		}
 /*
  * MESSAGES SECTION
  * 

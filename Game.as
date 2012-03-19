@@ -286,8 +286,12 @@ package
 			level.addEventListener(Level.LOST, onFailure);
 			
 			//HUD
+			//Weapon display
 			level.player.addEventListener(Player.WEAPON_CHANGED, hud.updateWeapon);
 			level.player.addEventListener(Player.WEAPON_SHOT, hud.updateBullets);
+			//Score
+			level.player.addEventListener(Player.WEAPON_SHOT, hud.updateScoreShot);
+			level.addEventListener(Zombie.ZOMBIE_DEAD, hud.updateScoreKill);
 		}
 		
 		/**
@@ -301,6 +305,8 @@ package
 			level.removeEventListener(Level.LOST, onFailure);
 			level.player.removeEventListener(Player.WEAPON_CHANGED, hud.updateWeapon);
 			level.player.removeEventListener(Player.WEAPON_SHOT, hud.updateBullets);
+			level.player.removeEventListener(Player.WEAPON_SHOT, hud.updateScoreShot);
+			level.removeEventListener(Zombie.ZOMBIE_DEAD, hud.updateScoreKill);
 		}
 	}
 }

@@ -372,7 +372,7 @@ package entity
 				if (action == RELOAD)
 				{
 					currentWeapon.reload();
-					dispatchEvent(new Event(WEAPON_SHOT));
+					dispatchEvent(new Event(WEAPON_CHANGED));
 				}
 				else if (action == SWITCH)
 				{

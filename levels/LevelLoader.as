@@ -7,6 +7,7 @@ package levels
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.MouseEvent;
 	import flash.events.ProgressEvent;
 	import flash.filters.BevelFilter;
 	import flash.geom.Rectangle;
@@ -248,9 +249,16 @@ package levels
 				
 				updateDisplay(100);
 				
-				//Dispatch event
-				dispatchEvent(new Event(Event.COMPLETE));
+				addEventListener(MouseEvent.CLICK, clickToBegin);
 			}
+		}
+		
+		private function clickToBegin(e:Event):void
+		{
+			removeEventListener(MouseEvent.CLICK, clickToBegin);
+			
+			//Start level
+			dispatchEvent(new Event(Event.COMPLETE));
 		}
 
 		

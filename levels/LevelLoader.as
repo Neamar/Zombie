@@ -249,18 +249,10 @@ package levels
 				
 				updateDisplay(100);
 				
-				addEventListener(MouseEvent.CLICK, clickToBegin);
+				//Start level
+				dispatchEvent(new Event(Event.COMPLETE));
 			}
 		}
-		
-		private function clickToBegin(e:Event):void
-		{
-			removeEventListener(MouseEvent.CLICK, clickToBegin);
-			
-			//Start level
-			dispatchEvent(new Event(Event.COMPLETE));
-		}
-
 		
 		/**
 		 * Helper to build URL

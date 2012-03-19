@@ -8,6 +8,7 @@ package
 	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
 	import levels.Level;
 	import levels.LevelLoader;
 	
@@ -17,12 +18,13 @@ package
 	 * It also contains the HUD to display information
 	 * 
 	 * Workflow to load new level:
-	 * - prepareLevel: start loading the level and display the achievements tree;
-	 * - achievementsPicked: display the loader if level is stille not loading
-	 * - addLevel: once the level is loaded and the achievements are picked, display the levels
+	 * - loadLevelInfos: start loading the level and display the achievements tree;
+	 * - onAchievementsPicked: display the loader if level is still not loading
+	 * - displayWaiter: once the level is loaded and the achievements are picked, display a screen waiting for user confirmation to start level
+	 * - startLevel: actually start the level!
 	 * - PLAY!
-	 * 		- onFailure: level failed
-	 * 		- onSuccess: level win.
+	 * 		- onLevelFailed: level failed; show waiter again
+	 * 		- onLevelSuccess: level win; load next level
 	 * 
 	 * @author Neamar
 	 */
@@ -32,7 +34,7 @@ package
 		 * Name of the first level to load.
 		 * Levels are stored in src/assets/levels/{level_name}
 		 */
-		public static const FIRST_LEVEL:String = "area_Intro";
+		public static const FIRST_LEVEL:String = "killAll_Intro";
 		
 		/**
 		 * Level currently displayed
@@ -69,16 +71,6 @@ package
 		public var hud:Hud;
 		
 		/**
-		 * Flag set to true when the level finishes to load *before* the achievement are picked.
-		 */
-		public var hasFinishedLoading:Boolean = false;
-		
-		/**
-		 * Flag set to true when the achievements have been picked
-		 */
-		public var hasFinishedPickingAchievements:Boolean = false;
-		
-		/**
 		 * ID of the level currently in play
 		 */
 		public var levelNumber:int = 0;
@@ -112,7 +104,7 @@ package
 			addChild(hud);
 			
 			//Load first level
-			prepareLevel(FIRST_LEVEL);
+			loadLevelInfos(FIRST_LEVEL);
 			
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -125,6 +117,10 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
+		/**
+		 * Game-level key bindings: fullscreen, pause...
+		 * @param	e
+		 */
 		public function onKeyDown(e:KeyboardEvent):void
 		{
 			var action:int = bindings[e.keyCode];
@@ -158,24 +154,25 @@ package
 		 * The level says it failed, retry.
 		 * @param	e
 		 */
-		protected function onFailure(e:Event):void
+		protected function onLevelFailed(e:Event):void
 		{
 			destroyCurrentLevel();
 			
-			addLevel();
+			addChild(loader);
+			displayWaiter();
 		}
 		
 		/**
 		 * Called when the WIN event is dispatched.
 		 * Load the next level
 		 */
-		protected function onSuccess(e:Event):void
+		protected function onLevelSuccess(e:Event):void
 		{
 			destroyCurrentLevel();
 			
 			levelNumber++;
 			
-			prepareLevel(nextLevelName);
+			loadLevelInfos(nextLevelName);
 		}
 		
 		/**
@@ -194,72 +191,61 @@ package
 		 * Called when a new level should be loaded
 		 * @param	levelName name of the level to load
 		 */
-		protected function prepareLevel(levelName:String):void
-		{
-			//Re-set flags
-			hasFinishedLoading = hasFinishedPickingAchievements = false;
-			
+		protected function loadLevelInfos(levelName:String):void
+		{		
 			//Start loading next level
 			//Note: for now, we do this in the background, since the player may be picking some achievements	
 			loader = new LevelLoader(levelName);
-			loader.addEventListener(Event.COMPLETE, addLevel);
+			loader.addEventListener(Event.COMPLETE, displayWaiter);
 			
 			if (levelNumber == 0)
 			{
-				//No achievements to pick for first level
-				hasFinishedPickingAchievements = true;
-				
-				//Display the loader
+				//Display the loader : no achievement to pick for first level
 				addChild(loader);
 			}
 			else
 			{
 				//Pick some achievements
 				achievementsScreen = achievementHandler.getAchievementsScreen(levelNumber);
-				achievementsScreen.addEventListener(Event.COMPLETE, achievementsPicked);
+				achievementsScreen.addEventListener(Event.COMPLETE, onAchievementsPicked);
 				removeChild(hud);
 				addChild(achievementsScreen);
 			}
 		}
 		
-		protected function achievementsPicked(e:Event):void
+		/**
+		 * Called when the player has picked all the achievements
+		 * @param	e
+		 */
+		protected function onAchievementsPicked(e:Event):void
 		{
 			removeChild(achievementsScreen);
 			addChild(hud);
-			achievementsScreen.removeEventListener(Event.COMPLETE, achievementsPicked);
+			addChild(loader);
+			achievementsScreen.removeEventListener(Event.COMPLETE, onAchievementsPicked);
 			achievementsScreen.destroy();
 			achievementsScreen = null;
-			hasFinishedPickingAchievements = true;
-			
-			if (!hasFinishedLoading)
-			{
-				//The level is still loading : display the loader and wait for the COMPLETE event.
-				addChild(loader);
-			}
-			else
-			{
-				//We spent a lot of time picking the achievements, and we can play straightforward.
-				addLevel();
-			}
 		}
 		
 		/**
-		 * Call when a new level is ready for play
+		 * Call when a new level is ready for play.
+		 * Will wait for a click to begin
 		 * @param	e
 		 */
-		protected function addLevel(e:Event = null):void
+		protected function displayWaiter(e:Event = null):void
 		{
-			loader.removeEventListener(Event.COMPLETE, addLevel);
-			hasFinishedLoading = true;
-			
-			//We shall wait for the achievements to be picked before launching new level.
-			if (!hasFinishedPickingAchievements)
-				return;
-				
-			if (contains(loader))
-			{
-				removeChild(loader);
-			}
+			loader.removeEventListener(Event.COMPLETE, displayWaiter);
+			loader.addEventListener(MouseEvent.CLICK,  startLevel);
+		}
+		
+		/**
+		 * Start the level after click on the loader
+		 * @param	e
+		 */
+		protected function startLevel(e:Event):void
+		{
+			loader.removeEventListener(MouseEvent.CLICK, startLevel);
+			removeChild(loader);
 			
 			//Store next level name
 			nextLevelName = loader.params.nextLevelName;
@@ -282,8 +268,8 @@ package
 		private function addListeners(level:Level):void
 		{
 			//Failure and success
-			level.addEventListener(Level.WIN, onSuccess);
-			level.addEventListener(Level.LOST, onFailure);
+			level.addEventListener(Level.WIN, onLevelSuccess);
+			level.addEventListener(Level.LOST, onLevelFailed);
 			
 			//HUD
 			//Weapon display
@@ -301,8 +287,8 @@ package
 		 */
 		private function removeListeners(level:Level):void
 		{
-			level.removeEventListener(Level.WIN, onSuccess);
-			level.removeEventListener(Level.LOST, onFailure);
+			level.removeEventListener(Level.WIN, onLevelSuccess);
+			level.removeEventListener(Level.LOST, onLevelFailed);
 			level.player.removeEventListener(Player.WEAPON_CHANGED, hud.updateWeapon);
 			level.player.removeEventListener(Player.WEAPON_SHOT, hud.updateBullets);
 			level.player.removeEventListener(Player.WEAPON_SHOT, hud.updateScoreShot);

@@ -4,8 +4,11 @@ package
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.Rectangle;
+	import flash.media.SoundMixer;
+	import flash.media.SoundTransform;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -19,9 +22,44 @@ package
 	{
 		public function Hud()
 		{
+			muteSprite.graphics.beginFill(0xFF0000);
+			muteSprite.graphics.drawRoundRect( -10, -10, 20, 20, 3, 3);
+			muteSprite.x = Main.WIDTH - 40;
+			muteSprite.y = 40;
+			addChild(muteSprite);
+			muteSprite.addEventListener(MouseEvent.MOUSE_DOWN, onMuteClick, false, 32);
+			
 			addChild(AmmosBitmap);
 			AmmosBitmap.scaleX = AmmosBitmap.scaleY = 1 / 2;
 		}
+	
+/**
+ * SOUNDS SECTION
+ */
+		private var muteSprite:Sprite = new Sprite();
+		private var isMute:Boolean = false;
+		
+		/**
+		 * Mute sound.
+		 * Prevent event propagation, to avoid useless shot.
+		 * 
+		 * @param	e
+		 */
+		private function onMuteClick(e:Event):void
+		{
+			var globalSoundTransform:SoundTransform = SoundMixer.soundTransform;
+			if (isMute)
+				globalSoundTransform.volume = 0;
+			else
+				globalSoundTransform.volume = 1;
+			
+			SoundMixer.soundTransform = globalSoundTransform;
+			
+			isMute = !isMute;
+			
+			e.stopImmediatePropagation();
+		}
+		
 /*
  * WEAPONS SECTION
  * 

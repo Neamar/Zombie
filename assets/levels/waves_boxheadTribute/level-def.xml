@@ -39,8 +39,5 @@
 		<zombies>
 			<!-- No zombies at startup. -->
 		</zombies>
-		<sounds>
-			<ambient>ambient.mp3</ambient>
-		</sounds>
 	</technical>
 </level>

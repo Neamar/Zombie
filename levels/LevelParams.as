@@ -64,11 +64,6 @@ package levels
 		 */
 		public var nextLevelName:String;
 		
-		/**
-		 * Sound to play in the background
-		 */
-		public var ambientSound:Sound;
-		
 		/////////////////////////////////////
 		// SPECIAL PARAMETERS : AccessingAreaLevel
 		/////////////////////////////////////

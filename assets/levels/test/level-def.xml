@@ -19,8 +19,5 @@
 		<zombies>
 			<spawn-zone x="34" y="150" width="1900" height="894" number="200" behemoth-probability="1000000" satanus-probability="1000000" />
 		</zombies>
-		<sounds>
-			<ambient>ambient.mp3</ambient>
-		</sounds>
 	</technical>
 </level>

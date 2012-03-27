@@ -112,7 +112,6 @@ package levels
 			// Load external assets asap
 			var bitmapUrl:String = buildLevelUrl(xml.visible.bitmap);
 			var hitmapUrl:String = buildLevelUrl(xml.technical.hitmap);
-			var ambientUrl:String = BASE_URL + "/sounds/ambient/" + xml.technical.sounds.ambient;
 			loadAssets(bitmapUrl, function(e:Event):void
 				{
 					params.bitmap = e.target.content
@@ -121,12 +120,6 @@ package levels
 				{
 					params.hitmap = e.target.content
 				});
-				
-
-			params.ambientSound = new Sound();
-			//TODO : allow GC
-			params.ambientSound.addEventListener(IOErrorEvent.IO_ERROR, function(e:IOErrorEvent):void { trace(e); e.preventDefault(); } );
-			params.ambientSound.load(new URLRequest(ambientUrl));
 			
 			/**
 			 * Read other parameters and parse them into LevelParams

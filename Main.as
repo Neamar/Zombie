@@ -5,6 +5,7 @@
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import sounds.MusicManager;
 	import sounds.SoundManager;
 	
 	/**
@@ -64,6 +65,7 @@
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			SoundManager.init();
+			MusicManager.play(0);
 			
 			//Forbid stage resizing
 			stage.align = StageAlign.TOP_LEFT;
